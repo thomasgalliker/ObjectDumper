@@ -1,1 +1,2 @@
-*.ps linguist-vendored
+*.ps1 linguist-vendored
+*.ps1 linguist-language=C#
