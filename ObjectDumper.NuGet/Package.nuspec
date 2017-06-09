@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>ObjectDumper</id>
+    <id>ObjectDumper.NET</id>
     <version>1.0.0</version>
-    <title>ObjectDumper</title>
+    <title>ObjectDumper.NET</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <projectUrl>https://github.com/thomasgalliker/ObjectDumper</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>ObjectDumper is a utility for reading embedded resources from assemblies.</summary>
-    <description>ObjectDumper is a utility for reading embedded resources from assemblies.</description>
+    <summary>ObjectDumper is a utility which aims to serialize C# objects to string for debugging and logging purposes.</summary>
+    <description>ObjectDumper is a utility which aims to serialize C# objects to string for debugging and logging purposes.</description>
     <tags>
-      ObjectDumper load embedded resource string stream assembly dll
-      windows phone winphone wp8 wpa81 win81 windowsphone android xamarin.forms xamarin.ios ios monoandroid monodroid monotouch
+      objectdumper dump c# objects debug logging tracing
     </tags>
     <releaseNotes>
       1.0.0
