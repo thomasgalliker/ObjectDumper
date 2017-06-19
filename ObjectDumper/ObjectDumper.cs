@@ -53,7 +53,7 @@ namespace System.Diagnostics
                 var enumerableElement = element as IEnumerable;
                 if (enumerableElement != null)
                 {
-                    foreach (object item in enumerableElement)
+                    foreach (var item in enumerableElement)
                     {
                         if (item is IEnumerable && !(item is string))
                         {
@@ -76,14 +76,9 @@ namespace System.Diagnostics
                 }
                 else
                 {
-                    var fields = element.GetType().GetRuntimeFields().Where(f => !f.IsPrivate);
-                    foreach (var fieldInfo in fields)
+                    var publicFields = element.GetType().GetRuntimeFields().Where(f => !f.IsPrivate);
+                    foreach (var fieldInfo in publicFields)
                     {
-                        if (fieldInfo == null)
-                        {
-                            continue;
-                        }
-
                         object value = fieldInfo.GetValue(element);
 
                         if (fieldInfo.FieldType.GetTypeInfo().IsValueType || fieldInfo.FieldType == typeof(string))
@@ -109,14 +104,10 @@ namespace System.Diagnostics
                         }
                     }
 
-                    var properties = element.GetType().GetRuntimeProperties();
-                    foreach (var propertyInfo in properties)
+                    var publicProperties = element.GetType().GetRuntimeProperties()
+                        .Where(p => p.GetMethod != null && p.GetMethod.IsStatic == false);
+                    foreach (var propertyInfo in publicProperties)
                     {
-                        if (propertyInfo == null)
-                        {
-                            continue;
-                        }
-
                         var type = propertyInfo.PropertyType;
                         object value = propertyInfo.GetValue(element, null);
 

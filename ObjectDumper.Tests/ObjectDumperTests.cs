@@ -12,7 +12,7 @@ namespace System.Diagnostics.Tests
         public void ShouldDumpObject()
         {
             // Arrange
-            var person = new Person { Name = "Thomas", Age = 30, };
+            var person = new Person { Name = "Thomas", Age = 30, SetOnly = 40};
 
             // Act
             var dump = ObjectDumper.Dump(person);
