@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ObjectDumper.NET</id>
-    <version>1.0.1</version>
+    <version>1.0.2-pre1</version>
     <title>ObjectDumper.NET</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
@@ -15,6 +15,10 @@
       objectdumper dump c# objects debug logging tracing
     </tags>
     <releaseNotes>
+1.0.2-pre
+- Bug fix: Filter COM objects
+- Bug fix: Catch exceptions if properties/fields cannot be accessed
+
 1.0.1
 - Bug fix: Ignore non-public properties
       

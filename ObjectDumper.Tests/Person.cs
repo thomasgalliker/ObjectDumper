@@ -4,7 +4,8 @@
     {
         public Person()
         {
-            this.GetOnly = 50;
+            this.GetOnly = 11;
+            this.SetOnly = 99;
         }
 
         public string Name { get; set; }
