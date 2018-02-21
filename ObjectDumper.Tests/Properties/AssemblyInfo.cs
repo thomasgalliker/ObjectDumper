@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Thomas Galliker")]
 [assembly: AssemblyProduct("ObjectDumper.Tests")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.2")]
 [assembly: AssemblyVersion("1.0.2")]
-[assembly: AssemblyFileVersion("1.0.2-pre1")]
+[assembly: AssemblyFileVersion("1.0.2")]
