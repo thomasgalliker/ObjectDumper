@@ -1,67 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{868D8CDE-AB2E-495D-9936-92F8393CB56D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectDumperSample.Netfx</RootNamespace>
-    <AssemblyName>ObjectDumperSample.Netfx</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <PackageReleaseNotes>Support to .NET Core 2.0</PackageReleaseNotes>
+	<PackageTags>NETCOREAPP objectdumper dump c# objects debug logging tracing</PackageTags>
+	<Company>Thomas Galliker</Company>
+	<Copyright>Copyright © 2016-2018</Copyright>
+	<Version>1.0.3</Version>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<RootNamespace>System.Diagnostics</RootNamespace>
+	<PackageProjectUrl>https://github.com/thomasgalliker/ObjectDumper</PackageProjectUrl>
+	<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png</PackageIconUrl>
+	<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+	<Description>ObjectDumper is a utility which aims to serialize C# objects to string for debugging and logging purposes.</Description>
+	<RepositoryUrl>https://github.com/thomasgalliker/ObjectDumper</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Person.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\..\ObjectDumper\ObjectDumper.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="App.config" />
+    <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\ObjectDumper\ObjectDumper.csproj">
-      <Project>{00c0cf40-4dd0-480a-b87f-7f05f38aeff8}</Project>
-      <Name>ObjectDumper</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+ 
 </Project>
