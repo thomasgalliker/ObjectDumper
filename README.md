@@ -1,5 +1,8 @@
 # ObjectDumper.NET
-<img src="https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png" width="100" height="100" alt="ObjectDumper" align="right">
+[![NuGet](https://img.shields.io/nuget/dt/ObjectDumper.NET.svg)](https://www.nuget.org/packages/ObjectDumper.NET)  [![NuGet Downloads](https://img.shields.io/nuget/dt/ObjectDumper.NET)](https://www.nuget.org/packages/ObjectDumper.NET)
+
+<img src="https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png" width="100" height="100" alt="ObjectDumper" align="right"></img>
+
 ObjectDumper is a utility which aims to serialize C# objects to string for debugging and logging purposes.
 
 ### Download and Install ObjectDumper.NET
@@ -40,4 +43,4 @@ The output on the console looks like following:
 ```
 
 ### License
-This project is Copyright &copy; 2017 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2018 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
