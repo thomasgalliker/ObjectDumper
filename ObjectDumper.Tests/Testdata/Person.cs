@@ -1,4 +1,4 @@
-﻿namespace System.Diagnostics.Tests
+﻿namespace System.Diagnostics.Tests.Testdata
 {
     public class Person
     {
