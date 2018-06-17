@@ -7,9 +7,9 @@ namespace System.Diagnostics
     /// <summary>
     ///     Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
     /// </summary>
-    public class ObjectDumper : DumperBase
+    public class ObjectDumperCSharp : DumperBase
     {
-        public ObjectDumper(int indentSize = 2) : base(indentSize)
+        public ObjectDumperCSharp(int indentSize = 2) : base(indentSize)
         {
         }
 
@@ -20,7 +20,7 @@ namespace System.Diagnostics
 
         public static string Dump(object element, int indentSize)
         {
-            var instance = new ObjectDumper(indentSize);
+            var instance = new ObjectDumperCSharp(indentSize);
             return instance.DumpElement(element);
         }
 
@@ -160,10 +160,10 @@ namespace System.Diagnostics
                 return "null";
             }
 
-            //if (o is DateTime)
-            //{
-            //    return ((DateTime)o).ToShortDateString();
-            //}
+            if (o is DateTime)
+            {
+                return "new DateTime()";
+            }
 
             if (o is string)
             {

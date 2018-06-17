@@ -9,6 +9,8 @@
     <Import_RootNamespace>System.Diagnostics</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DumperBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObjectDumperCSharp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObjectDumper.cs" />
   </ItemGroup>
 </Project>
