@@ -1,65 +1,93 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using Enumerable = System.Linq.Enumerable;
+using IntrospectionExtensions = System.Reflection.IntrospectionExtensions;
+using RuntimeReflectionExtensions = System.Reflection.RuntimeReflectionExtensions;
 
 namespace System.Diagnostics
 {
     /// <summary>
-    /// Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
+    ///  Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
     /// </summary>
-    public class ObjectDumper
+    public sealed class ObjectDumper
     {
-        private int level;
-        private readonly int indentSize;
-        private readonly StringBuilder stringBuilder;
-        private readonly List<int> hashListOfFoundElements;
+        #region Public Constructors
 
-        public ObjectDumper(int indentSize = 2)
+        public ObjectDumper(Int32 indentSize = 2)
         {
-            this.indentSize = indentSize;
-            this.stringBuilder = new StringBuilder();
-            this.hashListOfFoundElements = new List<int>();
+            this._indentSize = indentSize;
+            this._stringBuilder = new Text.StringBuilder();
+            this._hashListOfFoundElements = new Collections.Generic.List<Int32>();
         }
 
-        public static string Dump(object element)
-        {
-            return Dump(element, 2);
-        }
+        #endregion Public Constructors
 
-        public static string Dump(object element, int indentSize)
+        #region Private Fields
+
+        private readonly Collections.Generic.List<Int32> _hashListOfFoundElements;
+        private readonly Int32 _indentSize;
+        private readonly Text.StringBuilder _stringBuilder;
+        private Int32 _level;
+
+        #endregion Private Fields
+
+        #region Public Methods
+
+        public static String Dump(Object element) => ObjectDumper.Dump(element, 2);
+
+        public static String Dump(Object element, Int32 indentSize)
         {
             var instance = new ObjectDumper(indentSize);
             return instance.DumpElement(element);
         }
 
-        private string DumpElement(object element)
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private Boolean AlreadyTouched(Object value)
         {
-            if (element == null || element is ValueType || element is string)
+            if (value == null)
+            {
+                return false;
+            }
+
+            var hash = value.GetHashCode();
+            foreach (var t in this._hashListOfFoundElements)
+            {
+                if (t == hash)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private String DumpElement(Object element)
+        {
+            if (element == null || element is ValueType || element is String)
             {
                 this.Write(this.FormatValue(element));
             }
             else
             {
                 var objectType = element.GetType();
-                if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
+                if (!IntrospectionExtensions.GetTypeInfo(typeof(Collections.IEnumerable))
+                    .IsAssignableFrom(IntrospectionExtensions.GetTypeInfo(objectType)))
                 {
                     this.Write("{{{0}}}", objectType.FullName);
-                    this.hashListOfFoundElements.Add(element.GetHashCode());
-                    this.level++;
+                    this._hashListOfFoundElements.Add(element.GetHashCode());
+                    this._level++;
                 }
 
-                var enumerableElement = element as IEnumerable;
-                if (enumerableElement != null)
+                if (element is Collections.IEnumerable enumerableElement)
                 {
                     foreach (var item in enumerableElement)
                     {
-                        if (item is IEnumerable && !(item is string))
+                        if (item is Collections.IEnumerable && !(item is String))
                         {
-                            this.level++;
+                            this._level++;
                             this.DumpElement(item);
-                            this.level--;
+                            this._level--;
                         }
                         else
                         {
@@ -76,10 +104,12 @@ namespace System.Diagnostics
                 }
                 else
                 {
-                    var publicFields = element.GetType().GetRuntimeFields().Where(f => !f.IsPrivate);
+                    Collections.Generic.IEnumerable<Reflection.FieldInfo> publicFields =
+                        Enumerable.Where(RuntimeReflectionExtensions.GetRuntimeFields(element.GetType()),
+                            f => !f.IsPrivate);
                     foreach (var fieldInfo in publicFields)
                     {
-                        object value;
+                        Object value;
                         try
                         {
                             value = fieldInfo.GetValue(element);
@@ -89,17 +119,19 @@ namespace System.Diagnostics
                             value = $"{{{ex.Message}}}";
                         }
 
-                        if (fieldInfo.FieldType.GetTypeInfo().IsValueType || fieldInfo.FieldType == typeof(string))
+                        if (IntrospectionExtensions.GetTypeInfo(fieldInfo.FieldType).IsValueType ||
+                            fieldInfo.FieldType == typeof(String))
                         {
                             this.Write("{0}: {1}", fieldInfo.Name, this.FormatValue(value));
                         }
                         else
                         {
-                            var isEnumerable = typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(fieldInfo.FieldType.GetTypeInfo());
+                            var isEnumerable = IntrospectionExtensions.GetTypeInfo(typeof(Collections.IEnumerable))
+                                .IsAssignableFrom(IntrospectionExtensions.GetTypeInfo(fieldInfo.FieldType));
                             this.Write("{0}: {1}", fieldInfo.Name, isEnumerable ? "..." : "{ }");
 
                             var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
-                            this.level++;
+                            this._level++;
                             if (!alreadyTouched)
                             {
                                 this.DumpElement(value);
@@ -108,16 +140,18 @@ namespace System.Diagnostics
                             {
                                 this.Write("{{{0}}} <-- bidirectional reference found", value.GetType().FullName);
                             }
-                            this.level--;
+
+                            this._level--;
                         }
                     }
 
-                    var publicProperties = element.GetType().GetRuntimeProperties()
-                        .Where(p => p.GetMethod != null && p.GetMethod.IsStatic == false);
+                    Collections.Generic.IEnumerable<Reflection.PropertyInfo> publicProperties =
+                        Enumerable.Where(RuntimeReflectionExtensions.GetRuntimeProperties(element.GetType()),
+                            p => p.GetMethod != null && p.GetMethod.IsStatic == false);
                     foreach (var propertyInfo in publicProperties)
                     {
                         var type = propertyInfo.PropertyType;
-                        object value;
+                        Object value;
                         try
                         {
                             value = propertyInfo.GetValue(element, null);
@@ -127,17 +161,18 @@ namespace System.Diagnostics
                             value = $"{{{ex.Message}}}";
                         }
 
-                        if (type.GetTypeInfo().IsValueType || type == typeof(string))
+                        if (IntrospectionExtensions.GetTypeInfo(type).IsValueType || type == typeof(String))
                         {
                             this.Write("{0}: {1}", propertyInfo.Name, this.FormatValue(value));
                         }
                         else
                         {
-                            var isEnumerable = typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+                            var isEnumerable = IntrospectionExtensions.GetTypeInfo(typeof(Collections.IEnumerable))
+                                .IsAssignableFrom(IntrospectionExtensions.GetTypeInfo(type));
                             this.Write("{0}: {1}", propertyInfo.Name, isEnumerable ? "..." : "{ }");
 
                             var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
-                            this.level++;
+                            this._level++;
                             if (!alreadyTouched)
                             {
                                 this.DumpElement(value);
@@ -146,83 +181,60 @@ namespace System.Diagnostics
                             {
                                 this.Write("{{{0}}} <-- bidirectional reference found", value.GetType().FullName);
                             }
-                            this.level--;
+
+                            this._level--;
                         }
                     }
                 }
 
-                if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
+                if (!IntrospectionExtensions.GetTypeInfo(typeof(Collections.IEnumerable))
+                    .IsAssignableFrom(IntrospectionExtensions.GetTypeInfo(objectType)))
                 {
-                    this.level--;
+                    this._level--;
                 }
             }
 
-            return this.stringBuilder.ToString();
+            return this._stringBuilder.ToString();
         }
 
-        private bool AlreadyTouched(object value)
+        private String FormatValue(Object o)
         {
-            if (value == null)
+            switch (o)
             {
-                return false;
-            }
+                case null:
+                    return "null";
 
-            var hash = value.GetHashCode();
-            for (var i = 0; i < this.hashListOfFoundElements.Count; i++)
-            {
-                if (this.hashListOfFoundElements[i] == hash)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+                case DateTime time:
+                    return time.ToString("MM.dd.yyyy HH:mm:ss");
 
-        private void Write(string value, params object[] args)
-        {
-            var space = new string(' ', this.level * this.indentSize);
+                case String _:
+                    return $"\"{o}\"";
 
-            if (args != null && args.Length > 0)
-            {
-                value = string.Format(value, args);
-            }
+                case Char _ when (Char)o == '\0':
+                    return String.Empty;
 
-            this.stringBuilder.AppendLine(space + value);
-        }
+                case ValueType _:
+                    return o.ToString();
 
-        private string FormatValue(object o)
-        {
-            if (o == null)
-            {
-                return "null";
-            }
-
-            //if (o is DateTime)
-            //{
-            //    return ((DateTime)o).ToShortDateString();
-            //}
-
-            if (o is string)
-            {
-                return $"\"{o}\"";
-            }
-
-            if (o is char && (char)o == '\0')
-            {
-                return string.Empty;
-            }
-
-            if (o is ValueType)
-            {
-                return o.ToString();
-            }
-
-            if (o is IEnumerable)
-            {
-                return "...";
+                case Collections.IEnumerable _:
+                    return "...";
             }
 
             return "{ }";
         }
+
+        private void Write(String value, params Object[] args)
+        {
+            var space = new String(' ', this._level * this._indentSize);
+
+            if (args != null && args.Length > 0)
+            {
+                value = String.Format(value, args);
+            }
+
+            this._stringBuilder.AppendLine(space + value);
+        }
+
+        #endregion Private Methods
     }
 }
