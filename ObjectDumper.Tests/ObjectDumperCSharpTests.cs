@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.Tests.Testdata;
+﻿using System.Diagnostics.Tests.Testdata;
 using System.Linq;
 using FluentAssertions;
 
@@ -27,14 +26,15 @@ namespace System.Diagnostics.Tests
             var dump = ObjectDumperCSharp.Dump(person);
 
             // Assert
+            this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person1 = new System.Diagnostics.Tests.Testdata.Person\r\n" +
-                             "{\r\n" +
-                             "  Name: \"Thomas\"\r\n" +
-                             "  Age: 30\r\n" +
-                             "  SetOnly: 40\r\n" +
-                             "  GetOnly: 11\r\n" +
-                             "  Private: 0\r\n" +
+            dump.Should().Be("var person = new Person\n\r" +
+                             "{\n\r" +
+                             "  Name = \"Thomas\",\n\r" +
+                             "  Age = 30,\n\r" +
+                             "  SetOnly = 40,\n\r" +
+                             "  GetOnly = 11,\n\r" +
+                             "  Private = 0\n\r" +
                              "};");
         }
 
@@ -42,68 +42,73 @@ namespace System.Diagnostics.Tests
         public void ShouldDumpEnumerable()
         {
             // Arrange
-            var persons = PersonFactory.GeneratePersons(count: 2);
+            var persons = PersonFactory.GeneratePersons(count: 2).ToList();
 
             // Act
             var dump = ObjectDumperCSharp.Dump(persons);
 
             // Assert
+            this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var personList1 = new List<System.Diagnostics.Tests.Testdata.Person>\r\n" +
-                             "{" +
-                             "  new System.Diagnostics.Tests.Testdata.Person\r\n" +
-                             "  {\r\n" +
-                             "    Name: \"Thomas\"\r\n" +
-                             "    Age: 30\r\n" +
-                             "    SetOnly: 40\r\n" +
-                             "    GetOnly: 11\r\n" +
-                             "    Private: 0\r\n" +
-                             "  }," +
-                             "  {" +
-                             "  new System.Diagnostics.Tests.Testdata.Person\r\n" +
-                             "  {\r\n" +
-                             "    Name: \"Thomas\"\r\n" +
-                             "    Age: 30\r\n" +
-                             "    SetOnly: 40\r\n" +
-                             "    GetOnly: 11\r\n" +
-                             "    Private: 0\r\n" +
-                             "  }" +
+            dump.Should().Be("var listperson = new List<Person>\n\r" +
+                             "{\n\r  new Person\n\r" +
+                             "  {\n\r    Name = \"Person 1\",\n\r" +
+                             "    Age = 3,\n\r" +
+                             "    SetOnly = 3,\n\r" +
+                             "    GetOnly = 11,\n\r" +
+                             "    Private = 0\n\r" +
+                             "  },\n\r" +
+                             "  new Person\n\r" +
+                             "  {\n\r" +
+                             "    Name = \"Person 2\",\n\r" +
+                             "    Age = 3,\n\r" +
+                             "    SetOnly = 3,\n\r" +
+                             "    GetOnly = 11,\n\r" +
+                             "    Private = 0\n\r" +
+                             "  }\n\r" +
                              "};");
         }
 
-        //[Fact]
-        //public void ShouldDumpNestedObjects()
-        //{
-        //    // Arrange
-        //    var persons = PersonFactory.GeneratePersons(count: 2).ToList();
-        //    var organization = new Organization { Name = "superdev gmbh", Persons = persons };
+        [Fact]
+        public void ShouldDumpNestedObjects()
+        {
+            // Arrange
+            var persons = PersonFactory.GeneratePersons(count: 2).ToList();
+            var organization = new Organization { Name = "superdev gmbh", Persons = persons };
 
-        //    // Act
-        //    var dump = ObjectDumperCSharp.Dump(organization);
+            // Act
+            var dump = ObjectDumperCSharp.Dump(organization);
 
-        //    // Assert
-        //    this.testOutputHelper.WriteLine(dump);
-
-        //    dump.Should().NotBeNull();
-        //    dump.Should().Be("{System.Diagnostics.Tests.Testdata.Organization}\r\n" +
-        //                     "  Name: \"superdev gmbh\"\r\n" +
-        //                     "  Persons: ...\r\n" +
-        //                     "    {System.Diagnostics.Tests.Testdata.Person}\r\n" +
-        //                     "      Name: \"Person 1\"\r\n" +
-        //                     "      Age: 3\r\n" +
-        //                     "      SetOnly: 3\r\n" +
-        //                     "      GetOnly: 11\r\n" +
-        //                     "      Private: 0\r\n" +
-        //                     "    {System.Diagnostics.Tests.Testdata.Person}\r\n" +
-        //                     "      Name: \"Person 2\"\r\n" +
-        //                     "      Age: 3\r\n" +
-        //                     "      SetOnly: 3\r\n" +
-        //                     "      GetOnly: 11\r\n" +
-        //                     "      Private: 0\r\n");
-        //}
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var organization = new Organization\n\r" +
+                             "{\n\r" +
+                             "  Name = \"superdev gmbh\",\n\r" +
+                             "  Persons = new List<Person>\n\r" +
+                             "  {\n\r" +
+                             "    new Person\n\r" +
+                             "    {\n\r" +
+                             "      Name = \"Person 1\",\n\r" +
+                             "      Age = 3,\n\r" +
+                             "      SetOnly = 3,\n\r" +
+                             "      GetOnly = 11,\n\r" +
+                             "      Private = 0\n\r" +
+                             "    },\n\r" +
+                             "    new Person\n\r" +
+                             "    {\n\r" +
+                             "      Name = \"Person 2\",\n\r" +
+                             "      Age = 3,\n\r" +
+                             "      SetOnly = 3,\n\r" +
+                             "      GetOnly = 11,\n\r" +
+                             "      Private = 0\n\r" +
+                             "    }\n\r" +
+                             "  }\n\r" +
+                             "};");
+        }
 
         [Fact]
-        public void ShouldDumpStruct()
+        public void ShouldDumpDateTime()
         {
             // Arrange
             var datetime = new DateTime(2000, 01, 01, 23, 59, 59);
@@ -112,8 +117,9 @@ namespace System.Diagnostics.Tests
             var dump = ObjectDumperCSharp.Dump(datetime);
 
             // Assert
+            this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dateTime1 = new DateTime(2000, 01, 01, 23, 59, 59);\r\n");
+            dump.Should().Be("var datetime = DateTime.Parse(\"01.01.2000 23:59:59\");");
         }
 
         [Fact]
@@ -126,8 +132,24 @@ namespace System.Diagnostics.Tests
             var dump = ObjectDumperCSharp.Dump(datetime);
 
             // Assert
+            this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dateTime1 = (DateTime?)null;\r\n");
+            dump.Should().Be("null");
+        }
+
+        [Fact]
+        public void ShouldDumpEnum()
+        {
+            // Arrange
+            var dateTimeKind = DateTimeKind.Utc;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(dateTimeKind);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var datetimekind = System.DateTimeKind.Utc;");
         }
     }
 }

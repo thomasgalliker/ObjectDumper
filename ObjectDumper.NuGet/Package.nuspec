@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ObjectDumper.NET</id>
-    <version>1.0.3-pre1</version>
+    <version>1.0.3-pre2</version>
     <title>ObjectDumper.NET</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
@@ -17,6 +17,7 @@
     <releaseNotes>
 1.0.3
 - Add support for .Net Standard
+- Add ObjectDumperCSharp which produces C# initializer code from in-memory objects
 
 1.0.2
 - Bug fix: Filter COM objects

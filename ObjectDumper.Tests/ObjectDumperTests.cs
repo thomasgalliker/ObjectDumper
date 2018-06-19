@@ -92,7 +92,7 @@ namespace System.Diagnostics.Tests
         }
 
         [Fact]
-        public void ShouldDumpStruct()
+        public void ShouldDumpDateTime()
         {
             // Arrange
             var datetime = new DateTime(2000, 01, 01, 23, 59, 59);

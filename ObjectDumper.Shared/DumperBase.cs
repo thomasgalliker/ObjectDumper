@@ -20,16 +20,26 @@ namespace System.Diagnostics
 
         public int Level { get; set; }
 
-        protected void Write(string value, params object[] args)
+        protected void StartLine(string value)
         {
             var space = new string(' ', this.Level * this.IndentSize);
 
+            this.stringBuilder.Append(space + value);
+        }
+
+        protected void LineBreak()
+        {
+            this.stringBuilder.Append("\n\r");
+        }
+
+        protected void Write(string value, params object[] args)
+        {
             if (args != null && args.Length > 0)
             {
                 value = string.Format(value, args);
             }
 
-            this.stringBuilder.AppendLine(space + value);
+            this.stringBuilder.Append(value);
         }
 
         protected void AddAlreadyTouched(object element)

@@ -159,12 +159,7 @@ namespace System.Diagnostics
             {
                 return "null";
             }
-
-            //if (o is DateTime)
-            //{
-            //    return ((DateTime)o).ToShortDateString();
-            //}
-
+            
             if (o is string)
             {
                 return $"\"{o}\"";
