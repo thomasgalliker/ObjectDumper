@@ -4,6 +4,7 @@
     {
         private int? indentSize;
         private char? indentChar;
+        private string lineBreakChar;
         private bool? setPropertiesOnly;
 
         public int IndentSize
@@ -16,6 +17,12 @@
         {
             get => this.indentChar ?? ' ';
             set => this.indentChar = value;
+        }
+
+        public string LineBreakChar
+        {
+            get => this.lineBreakChar ?? "\n\r";
+            set => this.lineBreakChar = value;
         }
 
         public bool SetPropertiesOnly

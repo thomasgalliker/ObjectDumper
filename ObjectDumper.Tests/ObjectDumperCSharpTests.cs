@@ -45,8 +45,9 @@ namespace System.Diagnostics.Tests
             var person = PersonFactory.GetPersonThomas();
             var options = new DumpOptions
             {
-                IndentChar = '\t',
                 IndentSize = 1,
+                IndentChar = '\t',
+                LineBreakChar = "\n",
                 SetPropertiesOnly = true
             };
 
@@ -56,13 +57,13 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\n\r" +
-                             "{\n\r" +
-                             "	Name = \"Thomas\",\n\r" +
-                             "	Age = 30,\n\r" +
-                             "	SetOnly = 40,\n\r" +
-                             "	GetOnly = 11,\n\r" +
-                             "	Private = 0\n\r" +
+            dump.Should().Be("var person = new Person\n" +
+                             "{\n" +
+                             "	Name = \"Thomas\",\n" +
+                             "	Age = 30,\n" +
+                             "	SetOnly = 40,\n" +
+                             "	GetOnly = 11,\n" +
+                             "	Private = 0\n" +
                              "};");
         }
 

@@ -29,7 +29,7 @@ namespace System.Diagnostics
 
         protected void LineBreak()
         {
-            this.stringBuilder.Append("\n\r");
+            this.stringBuilder.Append(this.dumpOptions.LineBreakChar);
         }
 
         protected void Write(string value, params object[] args)

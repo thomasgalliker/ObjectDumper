@@ -24,14 +24,15 @@ namespace System.Diagnostics
         {
             if (element == null || element is ValueType || element is string)
             {
-                this.Write(this.FormatValue(element));
+                this.StartLine(this.FormatValue(element));
             }
             else
             {
                 var objectType = element.GetType();
                 if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
                 {
-                    this.Write("{{{0}}}", objectType.FullName);
+                    this.StartLine($"{{{objectType.FullName}}}");
+                    this.LineBreak();
                     this.AddAlreadyTouched(element);
                     this.Level++;
                 }
@@ -77,13 +78,15 @@ namespace System.Diagnostics
 
                         if (fieldInfo.FieldType.GetTypeInfo().IsValueType || fieldInfo.FieldType == typeof(string))
                         {
-                            this.Write("{0}: {1}", fieldInfo.Name, this.FormatValue(value));
+                            this.StartLine($"{fieldInfo.Name}: {this.FormatValue(value)}");
+                            this.LineBreak();
                         }
                         else
                         {
                             var isEnumerable = typeof(IEnumerable).GetTypeInfo()
                                 .IsAssignableFrom(fieldInfo.FieldType.GetTypeInfo());
-                            this.Write("{0}: {1}", fieldInfo.Name, isEnumerable ? "..." : "{ }");
+                            this.StartLine($"{fieldInfo.Name}: {(isEnumerable ? "..." : "{ }")}");
+                            this.LineBreak();
 
                             var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
                             this.Level++;
@@ -117,12 +120,14 @@ namespace System.Diagnostics
 
                         if (type.GetTypeInfo().IsValueType || type == typeof(string))
                         {
-                            this.Write("{0}: {1}", propertyInfo.Name, this.FormatValue(value));
+                            this.StartLine($"{propertyInfo.Name}: {this.FormatValue(value)}");
+                            this.LineBreak();
                         }
                         else
                         {
                             var isEnumerable = typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
-                            this.Write("{0}: {1}", propertyInfo.Name, isEnumerable ? "..." : "{ }");
+                            this.StartLine($"{propertyInfo.Name}: {(isEnumerable ? "..." : "{ }")}");
+                            this.LineBreak();
 
                             var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
                             this.Level++;
