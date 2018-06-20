@@ -1,4 +1,4 @@
-﻿namespace System.Diagnostics.Tests
+﻿namespace System.Diagnostics
 {
     public struct DumpOptions
     {
