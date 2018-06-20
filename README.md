@@ -42,5 +42,46 @@ The output on the console looks like following:
   Age: 30
 ```
 
+#### Dumping C# initializer code from in-memory objects to Console.WriteLine
+The following sample program shows how ObjectDumper can be used to write C# initializer code from in-memory to the console output:
+```
+static void Main(string[] args)
+{
+    var persons = new List<Person>
+    {
+	new Person { Name = "John", Age = 20, },
+	new Person { Name = "Thomas", Age = 30, },
+    };
+
+    // Act
+    var personsDump = ObjectDumperCSharp.Dump(persons);
+
+    Console.WriteLine(personsDump);
+    Console.ReadLine();
+}
+```
+The output on the console looks like following:
+```
+var listperson = new List<Person>
+{
+  new Person
+  {
+    Name = "John",
+    Age = 20,
+    SetOnly = 99,
+    GetOnly = 11,
+    Private = 0
+  },
+  new Person
+  {
+    Name = "Thomas",
+    Age = 30,
+    SetOnly = 99,
+    GetOnly = 11,
+    Private = 0
+  }
+};
+```
+
 ### License
 This project is Copyright &copy; 2018 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
