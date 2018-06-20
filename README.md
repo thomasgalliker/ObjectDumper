@@ -25,7 +25,6 @@ static void Main(string[] args)
 		new Person { Name = "Thomas", Age = 30, },
 	};
 
-	// Act
 	var personsDump = ObjectDumper.Dump(persons);
 
 	Console.WriteLine(personsDump);
@@ -40,6 +39,46 @@ The output on the console looks like following:
 {ObjectDumperSample.Netfx.Person}
   Name: "Thomas"
   Age: 30
+```
+
+#### Dumping C# initializer code from in-memory objects to Console.WriteLine
+The following sample program shows how ObjectDumper can be used to write C# initializer code from in-memory to the console output:
+```
+static void Main(string[] args)
+{
+    var persons = new List<Person>
+    {
+	new Person { Name = "John", Age = 20, },
+	new Person { Name = "Thomas", Age = 30, },
+    };
+
+    var personsDump = ObjectDumperCSharp.Dump(persons);
+
+    Console.WriteLine(personsDump);
+    Console.ReadLine();
+}
+```
+The output on the console looks like following:
+```
+var listperson = new List<Person>
+{
+  new Person
+  {
+    Name = "John",
+    Age = 20,
+    SetOnly = 99,
+    GetOnly = 11,
+    Private = 0
+  },
+  new Person
+  {
+    Name = "Thomas",
+    Age = 30,
+    SetOnly = 99,
+    GetOnly = 11,
+    Private = 0
+  }
+};
 ```
 
 ### License
