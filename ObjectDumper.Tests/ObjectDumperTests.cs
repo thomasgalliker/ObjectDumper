@@ -1,43 +1,98 @@
-﻿using System.Collections.Generic;
-
+﻿using System.Diagnostics.Tests.Testdata;
+using System.Linq;
 using FluentAssertions;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace System.Diagnostics.Tests
 {
     public class ObjectDumperTests
     {
+        private readonly ITestOutputHelper testOutputHelper;
+
+        public ObjectDumperTests(ITestOutputHelper testOutputHelper)
+        {
+            this.testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void ShouldDumpObject()
         {
             // Arrange
-            var person = new Person { Name = "Thomas", Age = 30, SetOnly = 40};
+            var person = PersonFactory.GetPersonThomas();
 
             // Act
             var dump = ObjectDumper.Dump(person);
 
             // Assert
             dump.Should().NotBeNull();
-            dump.Should().Be("{System.Diagnostics.Tests.Person}\r\n  Name: \"Thomas\"\r\n  Age: 30\r\n  SetOnly: 40\r\n  GetOnly: 11\r\n  Private: 0\r\n");
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\r\n" +
+                             "  Name: \"Thomas\"\r\n" +
+                             "  Age: 30\r\n" +
+                             "  SetOnly: 40\r\n" +
+                             "  GetOnly: 11\r\n" +
+                             "  Private: 0\r\n");
         }
 
         [Fact]
         public void ShouldDumpEnumerable()
         {
             // Arrange
-            var persons = new List<Person> { new Person { Name = "Person1", Age = 1, }, new Person { Name = "Person2", Age = 2, } };
+            var persons = PersonFactory.GeneratePersons(count: 2);
 
             // Act
             var dump = ObjectDumper.Dump(persons);
 
             // Assert
             dump.Should().NotBeNull();
-            dump.Should().Be("{System.Diagnostics.Tests.Person}\r\n  Name: \"Person1\"\r\n  Age: 1\r\n  SetOnly: 99\r\n  GetOnly: 11\r\n  Private: 0\r\n{System.Diagnostics.Tests.Person}\r\n  Name: \"Person2\"\r\n  Age: 2\r\n  SetOnly: 99\r\n  GetOnly: 11\r\n  Private: 0\r\n");
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\r\n" +
+                             "  Name: \"Person 1\"\r\n" +
+                             "  Age: 3\r\n" +
+                             "  SetOnly: 3\r\n" +
+                             "  GetOnly: 11\r\n" +
+                             "  Private: 0\r\n" +
+                             "{System.Diagnostics.Tests.Testdata.Person}\r\n" +
+                             "  Name: \"Person 2\"\r\n" +
+                             "  Age: 3\r\n" +
+                             "  SetOnly: 3\r\n" +
+                             "  GetOnly: 11\r\n" +
+                             "  Private: 0\r\n");
         }
 
         [Fact]
-        public void ShouldDumpStruct()
+        public void ShouldDumpNestedObjects()
+        {
+            // Arrange
+            var persons = PersonFactory.GeneratePersons(count: 2).ToList();
+            var organization = new Organization { Name = "superdev gmbh", Persons = persons };
+
+            // Act
+            var dump = ObjectDumper.Dump(organization);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+
+            dump.Should().NotBeNull();
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Organization}\r\n" +
+                             "  Name: \"superdev gmbh\"\r\n" +
+                             "  Persons: ...\r\n" +
+                             "    {System.Diagnostics.Tests.Testdata.Person}\r\n" +
+                             "      Name: \"Person 1\"\r\n" +
+                             "      Age: 3\r\n" +
+                             "      SetOnly: 3\r\n" +
+                             "      GetOnly: 11\r\n" +
+                             "      Private: 0\r\n" +
+                             "    {System.Diagnostics.Tests.Testdata.Person}\r\n" +
+                             "      Name: \"Person 2\"\r\n" +
+                             "      Age: 3\r\n" +
+                             "      SetOnly: 3\r\n" +
+                             "      GetOnly: 11\r\n" +
+                             "      Private: 0\r\n");
+        }
+
+        [Fact]
+        public void ShouldDumpDateTime()
         {
             // Arrange
             var datetime = new DateTime(2000, 01, 01, 23, 59, 59);

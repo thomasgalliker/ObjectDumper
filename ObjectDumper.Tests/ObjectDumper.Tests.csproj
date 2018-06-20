@@ -72,7 +72,10 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Person.cs" />
+    <Compile Include="ObjectDumperCSharpTests.cs" />
+    <Compile Include="Testdata\Organization.cs" />
+    <Compile Include="Testdata\PersonFactory.cs" />
+    <Compile Include="Testdata\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ObjectDumperTests.cs" />
   </ItemGroup>
