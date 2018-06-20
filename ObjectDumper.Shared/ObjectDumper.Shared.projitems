@@ -11,7 +11,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DumperBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DumpOptions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ObjectDumperCSharp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DumpStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObjectDumper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObjectDumperCSharp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObjectDumperConsole.cs" />
   </ItemGroup>
 </Project>

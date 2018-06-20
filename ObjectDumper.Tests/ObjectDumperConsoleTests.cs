@@ -7,11 +7,11 @@ using Xunit.Abstractions;
 
 namespace System.Diagnostics.Tests
 {
-    public class ObjectDumperTests
+    public class ObjectDumperConsoleTests
     {
         private readonly ITestOutputHelper testOutputHelper;
 
-        public ObjectDumperTests(ITestOutputHelper testOutputHelper)
+        public ObjectDumperConsoleTests(ITestOutputHelper testOutputHelper)
         {
             this.testOutputHelper = testOutputHelper;
         }
@@ -23,7 +23,7 @@ namespace System.Diagnostics.Tests
             var person = PersonFactory.GetPersonThomas();
 
             // Act
-            var dump = ObjectDumper.Dump(person);
+            var dump = ObjectDumperConsole.Dump(person);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -49,7 +49,7 @@ namespace System.Diagnostics.Tests
             };
 
             // Act
-            var dump = ObjectDumper.Dump(person, options);
+            var dump = ObjectDumperConsole.Dump(person, options);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -69,7 +69,7 @@ namespace System.Diagnostics.Tests
             var persons = PersonFactory.GeneratePersons(count: 2);
 
             // Act
-            var dump = ObjectDumper.Dump(persons);
+            var dump = ObjectDumperConsole.Dump(persons);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -96,7 +96,7 @@ namespace System.Diagnostics.Tests
             var organization = new Organization { Name = "superdev gmbh", Persons = persons };
 
             // Act
-            var dump = ObjectDumper.Dump(organization);
+            var dump = ObjectDumperConsole.Dump(organization);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -126,7 +126,7 @@ namespace System.Diagnostics.Tests
             var datetime = new DateTime(2000, 01, 01, 23, 59, 59);
 
             // Act
-            var dump = ObjectDumper.Dump(datetime);
+            var dump = ObjectDumperConsole.Dump(datetime);
 
             // Assert
             dump.Should().NotBeNull();
@@ -141,7 +141,7 @@ namespace System.Diagnostics.Tests
             var datetime = new DateTime?();
 
             // Act
-            var dump = ObjectDumper.Dump(datetime);
+            var dump = ObjectDumperConsole.Dump(datetime);
 
             // Assert
             dump.Should().NotBeNull();

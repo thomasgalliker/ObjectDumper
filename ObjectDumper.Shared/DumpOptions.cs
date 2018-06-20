@@ -2,10 +2,17 @@
 {
     public struct DumpOptions
     {
+        private DumpStyle? dumpStyle;
         private int? indentSize;
         private char? indentChar;
         private string lineBreakChar;
         private bool? setPropertiesOnly;
+
+        public DumpStyle DumpStyle
+        {
+            get { return this.dumpStyle ?? DumpStyle.Console; }
+            set { this.dumpStyle = value; }
+        }
 
         public int IndentSize
         {

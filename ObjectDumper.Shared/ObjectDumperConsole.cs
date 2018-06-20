@@ -7,73 +7,31 @@ namespace System.Diagnostics
     /// <summary>
     ///     Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
     /// </summary>
-    internal class ObjectDumperCSharp : DumperBase
+    internal class ObjectDumperConsole : DumperBase
     {
-        public ObjectDumperCSharp(DumpOptions dumpOptions) : base(dumpOptions)
+        public ObjectDumperConsole(DumpOptions dumpOptions) : base(dumpOptions)
         {
         }
 
         public static string Dump(object element, DumpOptions dumpOptions = default(DumpOptions))
         {
-            var instance = new ObjectDumperCSharp(dumpOptions);
-            if (element == null)
-            {
-                instance.Write("null");
-            }
-            else
-            {
-                instance.Write($"var {instance.GetClassName(element).ToLower().Replace("<", "").Replace(">", "")} = ");
-                instance.FormatValue(element);
-                instance.Write(";");
-            }
-
-            return instance.ToString();
+            var instance = new ObjectDumperConsole(dumpOptions);
+            return instance.DumpElement(element);
         }
 
-        private void CreateObject(object o)
-        {
-            this.StartLine($"new {this.GetClassName(o)}");
-            this.LineBreak();
-            this.StartLine("{");
-            this.LineBreak();
-            this.Level++;
-
-            var properties = o.GetType().GetRuntimeProperties().ToList();
-            var last = properties.LastOrDefault();
-            foreach (var property in properties)
-            {
-                var value = property.GetValue(o);
-                if (value != null)
-                {
-                    this.StartLine($"{property.Name} = ");
-                    this.FormatValue(value);
-                    if (!Equals(property, last))
-                    {
-                        this.Write(",");
-                    }
-                    this.LineBreak();
-                }
-            }
-            this.Level--;
-            this.StartLine("}");
-        }
-
-        /*
         private string DumpElement(object element)
         {
-            this.FormatValue(element);
-            return "";
             if (element == null || element is ValueType || element is string)
             {
-                this.FormatValue(element);
+                this.StartLine(this.FormatValue(element));
             }
             else
             {
                 var objectType = element.GetType();
                 if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
                 {
-                    this.Write($"new {objectType.Namespace}.{objectType.Name}()");
-                    this.Write("{");
+                    this.StartLine($"{{{objectType.FullName}}}");
+                    this.LineBreak();
                     this.AddAlreadyTouched(element);
                     this.Level++;
                 }
@@ -88,7 +46,6 @@ namespace System.Diagnostics
                             this.Level++;
                             this.DumpElement(item);
                             this.Level--;
-                            this.Write("}");
                         }
                         else
                         {
@@ -120,15 +77,15 @@ namespace System.Diagnostics
 
                         if (fieldInfo.FieldType.GetTypeInfo().IsValueType || fieldInfo.FieldType == typeof(string))
                         {
-                            this.Write("{0} = ", fieldInfo.Name);
-                            this.FormatValue(value);
-                            this.Write(",\n\r");
+                            this.StartLine($"{fieldInfo.Name}: {this.FormatValue(value)}");
+                            this.LineBreak();
                         }
                         else
                         {
                             var isEnumerable = typeof(IEnumerable).GetTypeInfo()
                                 .IsAssignableFrom(fieldInfo.FieldType.GetTypeInfo());
-                            this.Write("{0} = {1}", fieldInfo.Name, isEnumerable ? "" : "{ }");
+                            this.StartLine($"{fieldInfo.Name}: {(isEnumerable ? "..." : "{ }")}");
+                            this.LineBreak();
 
                             var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
                             this.Level++;
@@ -142,7 +99,6 @@ namespace System.Diagnostics
                             }
 
                             this.Level--;
-                            this.Write("}");
                         }
                     }
 
@@ -163,14 +119,14 @@ namespace System.Diagnostics
 
                         if (type.GetTypeInfo().IsValueType || type == typeof(string))
                         {
-                            this.Write("{0} = ", propertyInfo.Name);
-                            this.FormatValue(value);
-                            this.Write(",\n\r");
+                            this.StartLine($"{propertyInfo.Name}: {this.FormatValue(value)}");
+                            this.LineBreak();
                         }
                         else
                         {
                             var isEnumerable = typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
-                            this.Write("{0} = {1}", propertyInfo.Name, isEnumerable ? "" : "{ }");
+                            this.StartLine($"{propertyInfo.Name}: {(isEnumerable ? "..." : "{ }")}");
+                            this.LineBreak();
 
                             var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
                             this.Level++;
@@ -184,7 +140,6 @@ namespace System.Diagnostics
                             }
 
                             this.Level--;
-                            this.Write("}");
                         }
                     }
                 }
@@ -192,99 +147,40 @@ namespace System.Diagnostics
                 if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
                 {
                     this.Level--;
-                    this.Write("}");
                 }
             }
 
             return this.ToString();
         }
-        */
 
-        private void FormatValue(object o)
+        private string FormatValue(object o)
         {
-            if (o is bool)
+            if (o == null)
             {
-                this.Write($"{o.ToString().ToLower()}");
-                return;
+                return "null";
             }
 
             if (o is string)
             {
-                this.Write($"\"{o}\"");
-                return;
+                return $"\"{o}\"";
             }
 
-            if (o is int)
+            if (o is char && (char)o == '\0')
             {
-                this.Write($"{o}");
-                return;
+                return string.Empty;
             }
 
-            if (o is decimal)
+            if (o is ValueType)
             {
-                this.Write($"{o}m");
-                return;
-            }
-
-            if (o is DateTime)
-            {
-                this.Write($"DateTime.Parse(\"{o}\")");
-                return;
-            }
-
-            if (o is Enum)
-            {
-                this.Write($"{o.GetType().FullName}.{o}");
-                return;
+                return o.ToString();
             }
 
             if (o is IEnumerable)
             {
-                this.Write($"new {this.GetClassName(o)}");
-                this.LineBreak();
-                this.StartLine("{");
-                this.LineBreak();
-                this.WriteItems((IEnumerable)o);
-                this.StartLine("}");
-                return;
+                return "...";
             }
 
-            this.CreateObject(o);
-        }
-
-        private void WriteItems(IEnumerable items)
-        {
-            this.Level++;
-            var e = items.GetEnumerator();
-            if (e.MoveNext())
-            {
-                this.FormatValue(e.Current);
-
-                while (e.MoveNext())
-                {
-                    this.Write(",");
-                    this.LineBreak();
-
-                    this.FormatValue(e.Current);
-                }
-
-                this.LineBreak();
-            }
-
-            this.Level--;
-        }
-
-        private string GetClassName(object o)
-        {
-            var type = o.GetType();
-
-            if (type.GetTypeInfo().IsGenericType)
-            {
-                var arg = type.GetTypeInfo().GenericTypeArguments.First().Name;
-                return type.Name.Replace("`1", $"<{arg}>");
-            }
-
-            return type.Name;
+            return "{ }";
         }
     }
 }
