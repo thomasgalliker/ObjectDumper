@@ -1,28 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Tests;
 using System.Text;
 
 namespace System.Diagnostics
 {
     public abstract class DumperBase
     {
+        private readonly DumpOptions dumpOptions;
         private readonly List<int> hashListOfFoundElements;
         private readonly StringBuilder stringBuilder;
 
-        protected DumperBase(int indentSize)
+        protected DumperBase(DumpOptions dumpOptions)
         {
-            this.IndentSize = indentSize;
+            this.dumpOptions = dumpOptions;
             this.Level = 0;
             this.stringBuilder = new StringBuilder();
             this.hashListOfFoundElements = new List<int>();
         }
 
-        public int IndentSize { get; }
-
         public int Level { get; set; }
 
         protected void StartLine(string value)
         {
-            var space = new string(' ', this.Level * this.IndentSize);
+            var space = new string(this.dumpOptions.IndentChar, this.Level * this.dumpOptions.IndentSize);
 
             this.stringBuilder.Append(space + value);
         }

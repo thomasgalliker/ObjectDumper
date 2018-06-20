@@ -36,6 +36,32 @@ namespace System.Diagnostics.Tests
         }
 
         [Fact]
+        public void ShouldDumpObject_WithDumpOptions()
+        {
+            // Arrange
+            var person = PersonFactory.GetPersonThomas();
+            var options = new DumpOptions
+            {
+                IndentChar = '\t',
+                IndentSize = 1,
+                SetPropertiesOnly = true
+            };
+
+            // Act
+            var dump = ObjectDumper.Dump(person, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\r\n" +
+                             "  Name: \"Thomas\"\r\n" +
+                             "  Age: 30\r\n" +
+                             "  SetOnly: 40\r\n" +
+                             "  GetOnly: 11\r\n" +
+                             "  Private: 0\r\n");
+        }
+
+        [Fact]
         public void ShouldDumpEnumerable()
         {
             // Arrange

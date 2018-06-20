@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DumperBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DumpOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObjectDumperCSharp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObjectDumper.cs" />
   </ItemGroup>

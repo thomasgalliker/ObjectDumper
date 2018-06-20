@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.Tests;
 using System.Linq;
 using System.Reflection;
 
@@ -9,18 +10,13 @@ namespace System.Diagnostics
     /// </summary>
     public class ObjectDumper : DumperBase
     {
-        public ObjectDumper(int indentSize = 2) : base(indentSize)
+        public ObjectDumper(DumpOptions dumpOptions) : base(dumpOptions)
         {
         }
 
-        public static string Dump(object element)
+        public static string Dump(object element, DumpOptions dumpOptions = default(DumpOptions))
         {
-            return Dump(element, 2);
-        }
-
-        public static string Dump(object element, int indentSize)
-        {
-            var instance = new ObjectDumper(indentSize);
+            var instance = new ObjectDumper(dumpOptions);
             return instance.DumpElement(element);
         }
 
