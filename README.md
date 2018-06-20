@@ -25,7 +25,6 @@ static void Main(string[] args)
 		new Person { Name = "Thomas", Age = 30, },
 	};
 
-	// Act
 	var personsDump = ObjectDumper.Dump(persons);
 
 	Console.WriteLine(personsDump);
@@ -53,7 +52,6 @@ static void Main(string[] args)
 	new Person { Name = "Thomas", Age = 30, },
     };
 
-    // Act
     var personsDump = ObjectDumperCSharp.Dump(persons);
 
     Console.WriteLine(personsDump);
