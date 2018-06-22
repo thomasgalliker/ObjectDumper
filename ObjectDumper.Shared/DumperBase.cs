@@ -19,9 +19,9 @@ namespace System.Diagnostics
 
         public int Level { get; set; }
 
-        public bool SetPropertiesOnly
+        protected DumpOptions DumpOptions
         {
-            get { return this.dumpOptions.SetPropertiesOnly; }
+            get { return this.dumpOptions; }
         }
 
         private static string CalculateSpace(char c, int level, int size)

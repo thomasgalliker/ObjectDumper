@@ -42,7 +42,7 @@ namespace System.Diagnostics
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
                 .ToList();
 
-            if (this.SetPropertiesOnly)
+            if (this.DumpOptions.SetPropertiesOnly)
             {
                 properties = properties
                     .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
