@@ -19,26 +19,32 @@ namespace System.Diagnostics
 
         public int Level { get; set; }
 
+        public bool SetPropertiesOnly
+        {
+            get { return this.dumpOptions.SetPropertiesOnly; }
+        }
+
+        private static string CalculateSpace(char c, int level, int size)
+        {
+            var space = new string(c, level * size);
+            return space;
+        }
+
         protected void StartLine(string value)
         {
-            var space = new string(this.dumpOptions.IndentChar, this.Level * this.dumpOptions.IndentSize);
+            var space = CalculateSpace(this.dumpOptions.IndentChar, this.Level, this.dumpOptions.IndentSize);
+            this.stringBuilder.Append(space + value);
+        }
 
+        protected void Write(string value, int? intentLevel = null)
+        {
+            var space = CalculateSpace(this.dumpOptions.IndentChar, intentLevel ?? 0, this.dumpOptions.IndentSize);
             this.stringBuilder.Append(space + value);
         }
 
         protected void LineBreak()
         {
             this.stringBuilder.Append(this.dumpOptions.LineBreakChar);
-        }
-
-        protected void Write(string value, params object[] args)
-        {
-            if (args != null && args.Length > 0)
-            {
-                value = string.Format(value, args);
-            }
-
-            this.stringBuilder.Append(value);
         }
 
         protected void AddAlreadyTouched(object element)

@@ -73,6 +73,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ObjectDumperCSharpTests.cs" />
+    <Compile Include="Testdata\TestObject.cs" />
     <Compile Include="Testdata\Organization.cs" />
     <Compile Include="Testdata\PersonFactory.cs" />
     <Compile Include="Testdata\Person.cs" />

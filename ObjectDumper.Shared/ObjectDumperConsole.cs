@@ -55,9 +55,10 @@ namespace System.Diagnostics
                             }
                             else
                             {
-                                this.Write("{{{0}}} <-- bidirectional reference found", item.GetType().FullName);
+                                this.Write($"{{{item.GetType().FullName}}} <-- bidirectional reference found");
                             }
                         }
+                        this.LineBreak();
                     }
                 }
                 else
@@ -95,16 +96,25 @@ namespace System.Diagnostics
                             }
                             else
                             {
-                                this.Write("{{{0}}} <-- bidirectional reference found", value.GetType().FullName);
+                                this.Write($"{{{value.GetType().FullName}}} <-- bidirectional reference found");
                             }
 
                             this.Level--;
                         }
                     }
 
-                    var publicProperties = element.GetType().GetRuntimeProperties()
-                        .Where(p => p.GetMethod != null && p.GetMethod.IsStatic == false);
-                    foreach (var propertyInfo in publicProperties)
+                    var properties = element.GetType().GetRuntimeProperties()
+                        .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
+                        .ToList();
+
+                    if (this.SetPropertiesOnly)
+                    {
+                        properties = properties
+                            .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
+                            .ToList();
+                    }
+
+                    foreach (var propertyInfo in properties)
                     {
                         var type = propertyInfo.PropertyType;
                         object value;
@@ -136,7 +146,7 @@ namespace System.Diagnostics
                             }
                             else
                             {
-                                this.Write("{{{0}}} <-- bidirectional reference found", value.GetType().FullName);
+                                this.Write($"{{{value.GetType().FullName}}} <-- bidirectional reference found");
                             }
 
                             this.Level--;

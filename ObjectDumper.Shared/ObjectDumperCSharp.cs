@@ -22,7 +22,7 @@ namespace System.Diagnostics
             }
             else
             {
-                instance.Write($"var {instance.GetClassName(element).ToLower().Replace("<", "").Replace(">", "")} = ");
+                instance.Write($"var {GetClassName(element).ToLower().Replace("<", "").Replace(">", "")} = ");
                 instance.FormatValue(element);
                 instance.Write(";");
             }
@@ -30,16 +30,27 @@ namespace System.Diagnostics
             return instance.ToString();
         }
 
-        private void CreateObject(object o)
+        private void CreateObject(object o, int? intentLevel = null)
         {
-            this.StartLine($"new {this.GetClassName(o)}");
+            this.Write($"new {GetClassName(o)}", intentLevel);
             this.LineBreak();
             this.StartLine("{");
             this.LineBreak();
             this.Level++;
 
-            var properties = o.GetType().GetRuntimeProperties().ToList();
+            var properties = o.GetType().GetRuntimeProperties()
+                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
+                .ToList();
+
+            if (this.SetPropertiesOnly)
+            {
+                properties = properties
+                    .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
+                    .ToList();
+            }
+
             var last = properties.LastOrDefault();
+
             foreach (var property in properties)
             {
                 var value = property.GetValue(o);
@@ -51,9 +62,11 @@ namespace System.Diagnostics
                     {
                         this.Write(",");
                     }
+
                     this.LineBreak();
                 }
             }
+
             this.Level--;
             this.StartLine("}");
         }
@@ -200,47 +213,84 @@ namespace System.Diagnostics
         }
         */
 
-        private void FormatValue(object o)
+        private void FormatValue(object o, int? intentLevel = null)
         {
             if (o is bool)
             {
-                this.Write($"{o.ToString().ToLower()}");
+                this.Write($"{o.ToString().ToLower()}", intentLevel);
                 return;
             }
 
             if (o is string)
             {
-                this.Write($"\"{o}\"");
+                this.Write("\"" + $@"{o}" + "\"", intentLevel);
                 return;
             }
 
-            if (o is int)
+            if (o is char)
             {
-                this.Write($"{o}");
+                var c = o.ToString().Replace("\0", "").Trim();
+                this.Write($"\'{c}\'", intentLevel);
+                return;
+            }
+
+            if (o is double)
+            {
+                this.Write($"{o}d", intentLevel);
                 return;
             }
 
             if (o is decimal)
             {
-                this.Write($"{o}m");
+                this.Write($"{o}m", intentLevel);
+                return;
+            }
+
+            if (o is byte || o is sbyte)
+            {
+                this.Write($"{o}", intentLevel);
+                return;
+            }
+
+            if (o is float)
+            {
+                this.Write($"{o}f", intentLevel);
+                return;
+            }
+
+            if (o is int || o is uint)
+            {
+                this.Write($"{o}", intentLevel);
+                return;
+            }
+
+            if (o is long || o is ulong)
+            {
+                this.Write($"{o}l", intentLevel);
+                return;
+            }
+
+            if (o is short || o is ushort)
+            {
+                this.Write($"{o}", intentLevel);
                 return;
             }
 
             if (o is DateTime)
             {
-                this.Write($"DateTime.Parse(\"{o}\")");
+                this.Write($"DateTime.Parse(\"{o}\")", intentLevel);
                 return;
             }
 
             if (o is Enum)
             {
-                this.Write($"{o.GetType().FullName}.{o}");
+                this.Write($"{o.GetType().FullName}.{o}", intentLevel);
                 return;
             }
 
             if (o is IEnumerable)
             {
-                this.Write($"new {this.GetClassName(o)}");
+                this.Write($"new {GetClassName(o)}", intentLevel);
                 this.LineBreak();
                 this.StartLine("{");
                 this.LineBreak();
@@ -249,7 +299,7 @@ namespace System.Diagnostics
                 return;
             }
 
-            this.CreateObject(o);
+            this.CreateObject(o, intentLevel);
         }
 
         private void WriteItems(IEnumerable items)
@@ -258,14 +308,14 @@ namespace System.Diagnostics
             var e = items.GetEnumerator();
             if (e.MoveNext())
             {
-                this.FormatValue(e.Current);
+                this.FormatValue(e.Current, this.Level);
 
                 while (e.MoveNext())
                 {
                     this.Write(",");
                     this.LineBreak();
 
-                    this.FormatValue(e.Current);
+                    this.FormatValue(e.Current, this.Level);
                 }
 
                 this.LineBreak();
@@ -274,7 +324,7 @@ namespace System.Diagnostics
             this.Level--;
         }
 
-        private string GetClassName(object o)
+        private static string GetClassName(object o)
         {
             var type = o.GetType();
 

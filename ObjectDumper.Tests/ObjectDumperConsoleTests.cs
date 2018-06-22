@@ -28,12 +28,7 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\n\r" +
-                             "  Name: \"Thomas\"\n\r" +
-                             "  Age: 30\n\r" +
-                             "  SetOnly: 40\n\r" +
-                             "  GetOnly: 11\n\r" +
-                             "  Private: 0\n\r");
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\n\r  Name: \"Thomas\"\n\r  Char: \n\r  Age: 30\n\r  GetOnly: 11\n\r  Bool: False\n\r  Byte: 0\n\r  ByteArray: ...\n\r    1\n\r    2\n\r    3\n\r    4\n\r  SByte: 0\n\r  Float: 0\n\r  Uint: 0\n\r  Long: 0\n\r  ULong: 0\n\r  Short: 0\n\r  UShort: 0\n\r  Decimal: 0\n\r  Double: 0\n\r  DateTime: 01.01.0001 00:00:00\n\r  NullableDateTime: null\n\r  Enum: Unspecified\n\r");
         }
 
         [Fact]
@@ -54,12 +49,7 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\n\r" +
-                             "	Name: \"Thomas\"\n\r" +
-                             "	Age: 30\n\r" +
-                             "	SetOnly: 40\n\r" +
-                             "	GetOnly: 11\n\r" +
-                             "	Private: 0\n\r");
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\n\r	Name: \"Thomas\"\n\r	Char: \n\r	Age: 30\n\r	Bool: False\n\r	Byte: 0\n\r	ByteArray: ...\n\r		1\n\r		2\n\r		3\n\r		4\n\r	SByte: 0\n\r	Float: 0\n\r	Uint: 0\n\r	Long: 0\n\r	ULong: 0\n\r	Short: 0\n\r	UShort: 0\n\r	Decimal: 0\n\r	Double: 0\n\r	DateTime: 01.01.0001 00:00:00\n\r	NullableDateTime: null\n\r	Enum: Unspecified\n\r");
         }
 
         [Fact]
@@ -74,18 +64,7 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\n\r" +
-                             "  Name: \"Person 1\"\n\r" +
-                             "  Age: 3\n\r" +
-                             "  SetOnly: 3\n\r" +
-                             "  GetOnly: 11\n\r" +
-                             "  Private: 0\n\r" +
-                             "{System.Diagnostics.Tests.Testdata.Person}\n\r" +
-                             "  Name: \"Person 2\"\n\r" +
-                             "  Age: 3\n\r" +
-                             "  SetOnly: 3\n\r" +
-                             "  GetOnly: 11\n\r" +
-                             "  Private: 0\n\r");
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Person}\n\r  Name: \"Person 1\"\n\r  Char: \n\r  Age: 3\n\r  GetOnly: 11\n\r  Bool: False\n\r  Byte: 0\n\r  ByteArray: ...\n\r    1\n\r    2\n\r    3\n\r    4\n\r  SByte: 0\n\r  Float: 0\n\r  Uint: 0\n\r  Long: 0\n\r  ULong: 0\n\r  Short: 0\n\r  UShort: 0\n\r  Decimal: 0\n\r  Double: 0\n\r  DateTime: 01.01.0001 00:00:00\n\r  NullableDateTime: null\n\r  Enum: Unspecified\n\r\n\r{System.Diagnostics.Tests.Testdata.Person}\n\r  Name: \"Person 2\"\n\r  Char: \n\r  Age: 3\n\r  GetOnly: 11\n\r  Bool: False\n\r  Byte: 0\n\r  ByteArray: ...\n\r    1\n\r    2\n\r    3\n\r    4\n\r  SByte: 0\n\r  Float: 0\n\r  Uint: 0\n\r  Long: 0\n\r  ULong: 0\n\r  Short: 0\n\r  UShort: 0\n\r  Decimal: 0\n\r  Double: 0\n\r  DateTime: 01.01.0001 00:00:00\n\r  NullableDateTime: null\n\r  Enum: Unspecified\n\r\n\r");
         }
 
         [Fact]
@@ -102,21 +81,7 @@ namespace System.Diagnostics.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Organization}\n\r" +
-                             "  Name: \"superdev gmbh\"\n\r" +
-                             "  Persons: ...\n\r" +
-                             "    {System.Diagnostics.Tests.Testdata.Person}\n\r" +
-                             "      Name: \"Person 1\"\n\r" +
-                             "      Age: 3\n\r" +
-                             "      SetOnly: 3\n\r" +
-                             "      GetOnly: 11\n\r" +
-                             "      Private: 0\n\r" +
-                             "    {System.Diagnostics.Tests.Testdata.Person}\n\r" +
-                             "      Name: \"Person 2\"\n\r" +
-                             "      Age: 3\n\r" +
-                             "      SetOnly: 3\n\r" +
-                             "      GetOnly: 11\n\r" +
-                             "      Private: 0\n\r");
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.Organization}\n\r  Name: \"superdev gmbh\"\n\r  Persons: ...\n\r    {System.Diagnostics.Tests.Testdata.Person}\n\r      Name: \"Person 1\"\n\r      Char: \n\r      Age: 3\n\r      GetOnly: 11\n\r      Bool: False\n\r      Byte: 0\n\r      ByteArray: ...\n\r        1\n\r        2\n\r        3\n\r        4\n\r      SByte: 0\n\r      Float: 0\n\r      Uint: 0\n\r      Long: 0\n\r      ULong: 0\n\r      Short: 0\n\r      UShort: 0\n\r      Decimal: 0\n\r      Double: 0\n\r      DateTime: 01.01.0001 00:00:00\n\r      NullableDateTime: null\n\r      Enum: Unspecified\n\r\n\r    {System.Diagnostics.Tests.Testdata.Person}\n\r      Name: \"Person 2\"\n\r      Char: \n\r      Age: 3\n\r      GetOnly: 11\n\r      Bool: False\n\r      Byte: 0\n\r      ByteArray: ...\n\r        1\n\r        2\n\r        3\n\r        4\n\r      SByte: 0\n\r      Float: 0\n\r      Uint: 0\n\r      Long: 0\n\r      ULong: 0\n\r      Short: 0\n\r      UShort: 0\n\r      Decimal: 0\n\r      Double: 0\n\r      DateTime: 01.01.0001 00:00:00\n\r      NullableDateTime: null\n\r      Enum: Unspecified\n\r\n\r");
         }
 
         [Fact]
@@ -129,6 +94,8 @@ namespace System.Diagnostics.Tests
             var dump = ObjectDumperConsole.Dump(datetime);
 
             // Assert
+            this.testOutputHelper.WriteLine(dump);
+
             dump.Should().NotBeNull();
             dump.Should().Be("01.01.2000 23:59:59");
         }
@@ -144,6 +111,8 @@ namespace System.Diagnostics.Tests
             var dump = ObjectDumperConsole.Dump(datetime);
 
             // Assert
+            this.testOutputHelper.WriteLine(dump);
+
             dump.Should().NotBeNull();
             dump.Should().Be("null");
         }
