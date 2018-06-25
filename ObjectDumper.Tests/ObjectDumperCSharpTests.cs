@@ -65,7 +65,7 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var listperson = new List<Person>\n\r{\n\r  new Person\n\r  {\n\r    Name = \"Person 1\",\n\r    Char = '',\n\r    Age = 3,\n\r    GetOnly = 11,\n\r    Bool = false,\n\r    Byte = 0,\n\r    ByteArray = new Byte[]\n\r    {\n\r      1,\n\r      2,\n\r      3,\n\r      4\n\r    },\n\r    SByte = 0,\n\r    Float = 0f,\n\r    Uint = 0,\n\r    Long = 0l,\n\r    ULong = 0l,\n\r    Short = 0,\n\r    UShort = 0,\n\r    Decimal = 0m,\n\r    Double = 0d,\n\r    DateTime = DateTime.Parse(\"01.01.0001 00:00:00\"),\n\r    Enum = System.DateTimeKind.Unspecified\n\r  },\n\r  new Person\n\r  {\n\r    Name = \"Person 2\",\n\r    Char = '',\n\r    Age = 3,\n\r    GetOnly = 11,\n\r    Bool = false,\n\r    Byte = 0,\n\r    ByteArray = new Byte[]\n\r    {\n\r      1,\n\r      2,\n\r      3,\n\r      4\n\r    },\n\r    SByte = 0,\n\r    Float = 0f,\n\r    Uint = 0,\n\r    Long = 0l,\n\r    ULong = 0l,\n\r    Short = 0,\n\r    UShort = 0,\n\r    Decimal = 0m,\n\r    Double = 0d,\n\r    DateTime = DateTime.Parse(\"01.01.0001 00:00:00\"),\n\r    Enum = System.DateTimeKind.Unspecified\n\r  }\n\r};");
+            dump.Should().Be("var listPerson = new List<Person>\n\r{\n\r  new Person\n\r  {\n\r    Name = \"Person 1\",\n\r    Char = '',\n\r    Age = 3,\n\r    GetOnly = 11,\n\r    Bool = false,\n\r    Byte = 0,\n\r    ByteArray = new Byte[]\n\r    {\n\r      1,\n\r      2,\n\r      3,\n\r      4\n\r    },\n\r    SByte = 0,\n\r    Float = 0f,\n\r    Uint = 0,\n\r    Long = 0l,\n\r    ULong = 0l,\n\r    Short = 0,\n\r    UShort = 0,\n\r    Decimal = 0m,\n\r    Double = 0d,\n\r    DateTime = DateTime.Parse(\"01.01.0001 00:00:00\"),\n\r    Enum = System.DateTimeKind.Unspecified\n\r  },\n\r  new Person\n\r  {\n\r    Name = \"Person 2\",\n\r    Char = '',\n\r    Age = 3,\n\r    GetOnly = 11,\n\r    Bool = false,\n\r    Byte = 0,\n\r    ByteArray = new Byte[]\n\r    {\n\r      1,\n\r      2,\n\r      3,\n\r      4\n\r    },\n\r    SByte = 0,\n\r    Float = 0f,\n\r    Uint = 0,\n\r    Long = 0l,\n\r    ULong = 0l,\n\r    Short = 0,\n\r    UShort = 0,\n\r    Decimal = 0m,\n\r    Double = 0d,\n\r    DateTime = DateTime.Parse(\"01.01.0001 00:00:00\"),\n\r    Enum = System.DateTimeKind.Unspecified\n\r  }\n\r};");
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var datetime = DateTime.Parse(\"01.01.2000 23:59:59\");");
+            dump.Should().Be("var dateTime = DateTime.Parse(\"01.01.2000 23:59:59\");");
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var datetimekind = System.DateTimeKind.Utc;");
+            dump.Should().Be("var dateTimeKind = System.DateTimeKind.Utc;");
         }
     }
 }

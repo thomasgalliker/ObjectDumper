@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.Extensions;
 using System.Linq;
 using System.Reflection;
 
@@ -22,7 +23,7 @@ namespace System.Diagnostics
             }
             else
             {
-                instance.Write($"var {GetClassName(element).ToLower().Replace("<", "").Replace(">", "")} = ");
+                instance.Write($"var {GetVariableName(element)} = ");
                 instance.FormatValue(element);
                 instance.Write(";");
             }
@@ -327,14 +328,15 @@ namespace System.Diagnostics
         private static string GetClassName(object o)
         {
             var type = o.GetType();
+            var className = type.GetFormattedName();
+            return className;
+        }
 
-            if (type.GetTypeInfo().IsGenericType)
-            {
-                var arg = type.GetTypeInfo().GenericTypeArguments.First().Name;
-                return type.Name.Replace("`1", $"<{arg}>");
-            }
-
-            return type.Name;
+        private static string GetVariableName(object element)
+        {
+            var className = GetClassName(element);
+            var variableName = className.ToLowerFirst().Replace("<", "").Replace(">", "");
+            return variableName;
         }
     }
 }
