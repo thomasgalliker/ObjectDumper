@@ -334,9 +334,23 @@ namespace System.Diagnostics
 
         private static string GetVariableName(object element)
         {
-            var className = GetClassName(element);
-            var variableName = className.ToLowerFirst().Replace("<", "").Replace(">", "");
-            return variableName;
+            var type = element.GetType();
+            var variableName = type.Name;
+
+            if (element is IEnumerable)
+            {
+                variableName = GetClassName(element)
+                    .Replace("<", "")
+                    .Replace(">", "")
+                    .Replace(" ", "")
+                    .Replace(",", "");
+            }
+            else if (type.GetTypeInfo().IsGenericType)
+            {
+                variableName = $"{type.Name.Substring(0, type.Name.IndexOf('`'))}";
+            }
+
+            return variableName.ToLowerFirst();
         }
     }
 }
