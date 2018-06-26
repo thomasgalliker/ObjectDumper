@@ -85,6 +85,22 @@ namespace System.Diagnostics.Tests
         }
 
         [Fact]
+        public void ShouldDumpMultipleGenericTypes()
+        {
+            // Arrange
+            var person = PersonFactory.GeneratePersons(count: 1).First();
+            var genericClass = new GenericClass<string, float, Person> { Prop1 = "Test", Prop2 = 123.45f, Prop3 = person };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(genericClass);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.GenericClass<System.String, System.Single, System.Diagnostics.Tests.Testdata.Person>}\n\r  Prop1: \"Test\"\n\r  Prop2: 123.45\n\r  Prop3: { }\n\r    {System.Diagnostics.Tests.Testdata.Person}\n\r      Name: \"Person 1\"\n\r      Char: \n\r      Age: 2\n\r      GetOnly: 11\n\r      Bool: False\n\r      Byte: 0\n\r      ByteArray: ...\n\r        1\n\r        2\n\r        3\n\r        4\n\r      SByte: 0\n\r      Float: 0\n\r      Uint: 0\n\r      Long: 0\n\r      ULong: 0\n\r      Short: 0\n\r      UShort: 0\n\r      Decimal: 0\n\r      Double: 0\n\r      DateTime: 01.01.0001 00:00:00\n\r      NullableDateTime: null\n\r      Enum: Unspecified\n\r");
+        }
+
+        [Fact]
         public void ShouldDumpDateTime()
         {
             // Arrange

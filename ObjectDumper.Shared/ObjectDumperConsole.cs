@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.Extensions;
 using System.Linq;
 using System.Reflection;
 
@@ -30,7 +31,7 @@ namespace System.Diagnostics
                 var objectType = element.GetType();
                 if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
                 {
-                    this.StartLine($"{{{objectType.FullName}}}");
+                    this.StartLine(GetClassName(element));
                     this.LineBreak();
                     this.AddAlreadyTouched(element);
                     this.Level++;
@@ -55,7 +56,7 @@ namespace System.Diagnostics
                             }
                             else
                             {
-                                this.Write($"{{{item.GetType().FullName}}} <-- bidirectional reference found");
+                                this.Write($"{GetClassName(element)} <-- bidirectional reference found");
                             }
                         }
                         this.LineBreak();
@@ -96,7 +97,7 @@ namespace System.Diagnostics
                             }
                             else
                             {
-                                this.Write($"{{{value.GetType().FullName}}} <-- bidirectional reference found");
+                                this.Write($"{GetClassName(element)} <-- bidirectional reference found");
                             }
 
                             this.Level--;
@@ -146,7 +147,7 @@ namespace System.Diagnostics
                             }
                             else
                             {
-                                this.Write($"{{{value.GetType().FullName}}} <-- bidirectional reference found");
+                                this.Write($"{GetClassName(element)} <-- bidirectional reference found");
                             }
 
                             this.Level--;
@@ -191,6 +192,13 @@ namespace System.Diagnostics
             }
 
             return "{ }";
+        }
+
+        private static string GetClassName(object element)
+        {
+            var type = element.GetType();
+            var className = type.GetFormattedName(useFullName: true);
+            return $"{{{className}}}";
         }
     }
 }
