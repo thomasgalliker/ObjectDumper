@@ -216,6 +216,11 @@ namespace System.Diagnostics
 
         private void FormatValue(object o, int? intentLevel = null)
         {
+            if (this.IsMaxLevel())
+            {
+                return;
+            }
+
             if (o is bool)
             {
                 this.Write($"{o.ToString().ToLower()}", intentLevel);
@@ -306,6 +311,14 @@ namespace System.Diagnostics
         private void WriteItems(IEnumerable items)
         {
             this.Level++;
+            if (this.IsMaxLevel())
+            {
+                ////this.StartLine("// Omitted code");
+                ////this.LineBreak();
+                this.Level--;
+                return;
+            }
+
             var e = items.GetEnumerator();
             if (e.MoveNext())
             {

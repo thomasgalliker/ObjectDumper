@@ -22,6 +22,11 @@ namespace System.Diagnostics
 
         private string DumpElement(object element)
         {
+            if (this.Level > this.DumpOptions.MaxLevel)
+            {
+                return this.ToString();
+            }
+
             if (element == null || element is ValueType || element is string)
             {
                 this.StartLine(this.FormatValue(element));
@@ -57,6 +62,7 @@ namespace System.Diagnostics
                             else
                             {
                                 this.Write($"{GetClassName(element)} <-- bidirectional reference found");
+                                this.LineBreak();
                             }
                         }
                         this.LineBreak();
@@ -98,6 +104,7 @@ namespace System.Diagnostics
                             else
                             {
                                 this.Write($"{GetClassName(element)} <-- bidirectional reference found");
+                                this.LineBreak();
                             }
 
                             this.Level--;
@@ -148,6 +155,7 @@ namespace System.Diagnostics
                             else
                             {
                                 this.Write($"{GetClassName(element)} <-- bidirectional reference found");
+                                this.LineBreak();
                             }
 
                             this.Level--;

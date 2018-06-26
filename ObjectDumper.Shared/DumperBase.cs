@@ -19,6 +19,11 @@ namespace System.Diagnostics
 
         public int Level { get; set; }
 
+        public bool IsMaxLevel()
+        {
+            return this.Level > this.dumpOptions.MaxLevel;
+        }
+
         protected DumpOptions DumpOptions
         {
             get { return this.dumpOptions; }

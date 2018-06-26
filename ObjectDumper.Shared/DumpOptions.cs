@@ -7,6 +7,7 @@
         private char? indentChar;
         private string lineBreakChar;
         private bool? setPropertiesOnly;
+        private int? maxLevel;
 
         public DumpStyle DumpStyle
         {
@@ -36,6 +37,12 @@
         {
             get => this.setPropertiesOnly ?? false;
             set => this.setPropertiesOnly = value;
+        }
+
+        public int MaxLevel
+        {
+            get { return this.maxLevel ?? int.MaxValue; }
+            set { this.maxLevel = value; }
         }
     }
 }

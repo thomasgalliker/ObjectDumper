@@ -101,6 +101,24 @@ namespace System.Diagnostics.Tests
         }
 
         [Fact]
+        public void ShouldDumpObjectWithMaxLevel()
+        {
+            // Arrange
+            var persons = PersonFactory.GeneratePersons(count: 2).ToList();
+            var organization = new Organization { Name = "superdev gmbh", Persons = persons };
+            var options = new DumpOptions { MaxLevel = 1 };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(organization, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+
+            dump.Should().NotBeNull();
+            dump.Should().Be("var organization = new Organization\n\r{\n\r  Name = \"superdev gmbh\",\n\r  Persons = new List<Person>\n\r  {\n\r  }\n\r};");
+        }
+
+        [Fact]
         public void ShouldDumpDateTime()
         {
             // Arrange
