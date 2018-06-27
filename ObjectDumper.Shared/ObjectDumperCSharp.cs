@@ -17,16 +17,9 @@ namespace System.Diagnostics
         public static string Dump(object element, DumpOptions dumpOptions = default(DumpOptions))
         {
             var instance = new ObjectDumperCSharp(dumpOptions);
-            if (element == null)
-            {
-                instance.Write("null");
-            }
-            else
-            {
-                instance.Write($"var {GetVariableName(element)} = ");
-                instance.FormatValue(element);
-                instance.Write(";");
-            }
+            instance.Write($"var {GetVariableName(element)} = ");
+            instance.FormatValue(element);
+            instance.Write(";");
 
             return instance.ToString();
         }
@@ -54,7 +47,7 @@ namespace System.Diagnostics
 
             foreach (var property in properties)
             {
-                var value = property.GetValue(o);
+                var value = property.TryGetValue(o);
                 if (value != null)
                 {
                     this.StartLine($"{property.Name} = ");
@@ -72,152 +65,16 @@ namespace System.Diagnostics
             this.StartLine("}");
         }
 
-        /*
-        private string DumpElement(object element)
-        {
-            this.FormatValue(element);
-            return "";
-            if (element == null || element is ValueType || element is string)
-            {
-                this.FormatValue(element);
-            }
-            else
-            {
-                var objectType = element.GetType();
-                if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
-                {
-                    this.Write($"new {objectType.Namespace}.{objectType.Name}()");
-                    this.Write("{");
-                    this.AddAlreadyTouched(element);
-                    this.Level++;
-                }
-
-                var enumerableElement = element as IEnumerable;
-                if (enumerableElement != null)
-                {
-                    foreach (var item in enumerableElement)
-                    {
-                        if (item is IEnumerable && !(item is string))
-                        {
-                            this.Level++;
-                            this.DumpElement(item);
-                            this.Level--;
-                            this.Write("}");
-                        }
-                        else
-                        {
-                            if (!this.AlreadyTouched(item))
-                            {
-                                this.DumpElement(item);
-                            }
-                            else
-                            {
-                                this.Write("{{{0}}} <-- bidirectional reference found", item.GetType().FullName);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var publicFields = element.GetType().GetRuntimeFields().Where(f => !f.IsPrivate);
-                    foreach (var fieldInfo in publicFields)
-                    {
-                        object value;
-                        try
-                        {
-                            value = fieldInfo.GetValue(element);
-                        }
-                        catch (Exception ex)
-                        {
-                            value = $"{{{ex.Message}}}";
-                        }
-
-                        if (fieldInfo.FieldType.GetTypeInfo().IsValueType || fieldInfo.FieldType == typeof(string))
-                        {
-                            this.Write("{0} = ", fieldInfo.Name);
-                            this.FormatValue(value);
-                            this.Write(",\n\r");
-                        }
-                        else
-                        {
-                            var isEnumerable = typeof(IEnumerable).GetTypeInfo()
-                                .IsAssignableFrom(fieldInfo.FieldType.GetTypeInfo());
-                            this.Write("{0} = {1}", fieldInfo.Name, isEnumerable ? "" : "{ }");
-
-                            var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
-                            this.Level++;
-                            if (!alreadyTouched)
-                            {
-                                this.DumpElement(value);
-                            }
-                            else
-                            {
-                                this.Write("{{{0}}} <-- bidirectional reference found", value.GetType().FullName);
-                            }
-
-                            this.Level--;
-                            this.Write("}");
-                        }
-                    }
-
-                    var publicProperties = element.GetType().GetRuntimeProperties()
-                        .Where(p => p.GetMethod != null && p.GetMethod.IsStatic == false);
-                    foreach (var propertyInfo in publicProperties)
-                    {
-                        var type = propertyInfo.PropertyType;
-                        object value;
-                        try
-                        {
-                            value = propertyInfo.GetValue(element, null);
-                        }
-                        catch (Exception ex)
-                        {
-                            value = $"{{{ex.Message}}}";
-                        }
-
-                        if (type.GetTypeInfo().IsValueType || type == typeof(string))
-                        {
-                            this.Write("{0} = ", propertyInfo.Name);
-                            this.FormatValue(value);
-                            this.Write(",\n\r");
-                        }
-                        else
-                        {
-                            var isEnumerable = typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
-                            this.Write("{0} = {1}", propertyInfo.Name, isEnumerable ? "" : "{ }");
-
-                            var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
-                            this.Level++;
-                            if (!alreadyTouched)
-                            {
-                                this.DumpElement(value);
-                            }
-                            else
-                            {
-                                this.Write("{{{0}}} <-- bidirectional reference found", value.GetType().FullName);
-                            }
-
-                            this.Level--;
-                            this.Write("}");
-                        }
-                    }
-                }
-
-                if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
-                {
-                    this.Level--;
-                    this.Write("}");
-                }
-            }
-
-            return this.ToString();
-        }
-        */
-
         private void FormatValue(object o, int? intentLevel = null)
         {
             if (this.IsMaxLevel())
             {
+                return;
+            }
+
+            if (o == null)
+            {
+                this.Write("null", intentLevel);
                 return;
             }
 
@@ -347,6 +204,11 @@ namespace System.Diagnostics
 
         private static string GetVariableName(object element)
         {
+            if (element == null)
+            {
+                return "x";
+            }
+
             var type = element.GetType();
             var variableName = type.Name;
 

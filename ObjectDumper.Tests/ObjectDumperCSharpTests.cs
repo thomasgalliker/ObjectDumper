@@ -137,7 +137,7 @@ namespace System.Diagnostics.Tests
         public void ShouldDumpNullableObject()
         {
             // Arrange
-            var datetime = new DateTime?();
+            DateTime? datetime = null;
 
             // Act
             var dump = ObjectDumperCSharp.Dump(datetime);
@@ -145,7 +145,7 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("null");
+            dump.Should().Be("var x = null;");
         }
 
         [Fact]

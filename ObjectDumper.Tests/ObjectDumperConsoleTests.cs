@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Tests.Testdata;
+﻿using System.Collections;
+using System.Diagnostics.Tests.Testdata;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -118,6 +119,22 @@ namespace System.Diagnostics.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("{System.Diagnostics.Tests.Testdata.Organization}\n\r  Name: \"superdev gmbh\"\n\r  Persons: ...\n\r");
         }
+
+        // TODO: Bug in dumping random structs
+        //[Fact]
+        //public void ShouldDumpValueType()
+        //{
+        //    // Arrange
+        //    var dictionaryEntry = new DictionaryEntry { Key = 1, Value = "Value1" };
+
+        //    // Act
+        //    var dump = ObjectDumperCSharp.Dump(dictionaryEntry);
+
+        //    // Assert
+        //    this.testOutputHelper.WriteLine(dump);
+        //    dump.Should().NotBeNull();
+        //    dump.Should().Contain("<-- bidirectional reference found");
+        //}
 
         [Fact]
         public void ShouldDumpRecursiveTypes()

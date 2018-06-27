@@ -73,15 +73,7 @@ namespace System.Diagnostics
                     var publicFields = element.GetType().GetRuntimeFields().Where(f => !f.IsPrivate);
                     foreach (var fieldInfo in publicFields)
                     {
-                        object value;
-                        try
-                        {
-                            value = fieldInfo.GetValue(element);
-                        }
-                        catch (Exception ex)
-                        {
-                            value = $"{{{ex.Message}}}";
-                        }
+                        var value = fieldInfo.TryGetValue(element);
 
                         if (fieldInfo.FieldType.GetTypeInfo().IsValueType || fieldInfo.FieldType == typeof(string))
                         {
@@ -125,15 +117,7 @@ namespace System.Diagnostics
                     foreach (var propertyInfo in properties)
                     {
                         var type = propertyInfo.PropertyType;
-                        object value;
-                        try
-                        {
-                            value = propertyInfo.GetValue(element, null);
-                        }
-                        catch (Exception ex)
-                        {
-                            value = $"{{{ex.Message}}}";
-                        }
+                        var value = propertyInfo.TryGetValue(element);
 
                         if (type.GetTypeInfo().IsValueType || type == typeof(string))
                         {
