@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)DumperBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DumpOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DumpStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\FieldInfoExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TypeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObjectDumper.cs" />

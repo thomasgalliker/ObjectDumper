@@ -47,7 +47,7 @@ namespace System.Diagnostics
 
             foreach (var property in properties)
             {
-                var value = property.GetValue(o);
+                var value = property.TryGetValue(o);
                 if (value != null)
                 {
                     this.StartLine($"{property.Name} = ");
