@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.Extensions;
 using System.Linq;
 using System.Reflection;
 
@@ -7,27 +8,22 @@ namespace System.Diagnostics
     /// <summary>
     ///     Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
     /// </summary>
-    public class ObjectDumperCSharp : DumperBase
+    internal class ObjectDumperCSharp : DumperBase
     {
-        public ObjectDumperCSharp(int indentSize = 2) : base(indentSize)
+        public ObjectDumperCSharp(DumpOptions dumpOptions) : base(dumpOptions)
         {
         }
 
-        public static string Dump(object element)
+        public static string Dump(object element, DumpOptions dumpOptions = default(DumpOptions))
         {
-            return Dump(element, 2);
-        }
-
-        public static string Dump(object element, int indentSize)
-        {
-            var instance = new ObjectDumperCSharp(indentSize);
+            var instance = new ObjectDumperCSharp(dumpOptions);
             if (element == null)
             {
                 instance.Write("null");
             }
             else
             {
-                instance.Write($"var {instance.GetClassName(element).ToLower().Replace("<", "").Replace(">", "")} = ");
+                instance.Write($"var {GetVariableName(element)} = ");
                 instance.FormatValue(element);
                 instance.Write(";");
             }
@@ -35,16 +31,27 @@ namespace System.Diagnostics
             return instance.ToString();
         }
 
-        private void CreateObject(object o)
+        private void CreateObject(object o, int? intentLevel = null)
         {
-            this.StartLine($"new {this.GetClassName(o)}");
+            this.Write($"new {GetClassName(o)}", intentLevel);
             this.LineBreak();
             this.StartLine("{");
             this.LineBreak();
             this.Level++;
 
-            var properties = o.GetType().GetRuntimeProperties().ToList();
+            var properties = o.GetType().GetRuntimeProperties()
+                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
+                .ToList();
+
+            if (this.DumpOptions.SetPropertiesOnly)
+            {
+                properties = properties
+                    .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
+                    .ToList();
+            }
+
             var last = properties.LastOrDefault();
+
             foreach (var property in properties)
             {
                 var value = property.GetValue(o);
@@ -56,9 +63,11 @@ namespace System.Diagnostics
                     {
                         this.Write(",");
                     }
+
                     this.LineBreak();
                 }
             }
+
             this.Level--;
             this.StartLine("}");
         }
@@ -205,47 +214,89 @@ namespace System.Diagnostics
         }
         */
 
-        private void FormatValue(object o)
+        private void FormatValue(object o, int? intentLevel = null)
         {
+            if (this.IsMaxLevel())
+            {
+                return;
+            }
+
             if (o is bool)
             {
-                this.Write($"{o.ToString().ToLower()}");
+                this.Write($"{o.ToString().ToLower()}", intentLevel);
                 return;
             }
 
             if (o is string)
             {
-                this.Write($"\"{o}\"");
+                this.Write("\"" + $@"{o}" + "\"", intentLevel);
                 return;
             }
 
-            if (o is int)
+            if (o is char)
             {
-                this.Write($"{o}");
+                var c = o.ToString().Replace("\0", "").Trim();
+                this.Write($"\'{c}\'", intentLevel);
+                return;
+            }
+
+            if (o is double)
+            {
+                this.Write($"{o}d", intentLevel);
                 return;
             }
 
             if (o is decimal)
             {
-                this.Write($"{o}m");
+                this.Write($"{o}m", intentLevel);
+                return;
+            }
+
+            if (o is byte || o is sbyte)
+            {
+                this.Write($"{o}", intentLevel);
+                return;
+            }
+
+            if (o is float)
+            {
+                this.Write($"{o}f", intentLevel);
+                return;
+            }
+
+            if (o is int || o is uint)
+            {
+                this.Write($"{o}", intentLevel);
+                return;
+            }
+
+            if (o is long || o is ulong)
+            {
+                this.Write($"{o}l", intentLevel);
+                return;
+            }
+
+            if (o is short || o is ushort)
+            {
+                this.Write($"{o}", intentLevel);
                 return;
             }
 
             if (o is DateTime)
             {
-                this.Write($"DateTime.Parse(\"{o}\")");
+                this.Write($"DateTime.Parse(\"{o}\")", intentLevel);
                 return;
             }
 
             if (o is Enum)
             {
-                this.Write($"{o.GetType().FullName}.{o}");
+                this.Write($"{o.GetType().FullName}.{o}", intentLevel);
                 return;
             }
 
             if (o is IEnumerable)
             {
-                this.Write($"new {this.GetClassName(o)}");
+                this.Write($"new {GetClassName(o)}", intentLevel);
                 this.LineBreak();
                 this.StartLine("{");
                 this.LineBreak();
@@ -254,23 +305,31 @@ namespace System.Diagnostics
                 return;
             }
 
-            this.CreateObject(o);
+            this.CreateObject(o, intentLevel);
         }
 
         private void WriteItems(IEnumerable items)
         {
             this.Level++;
+            if (this.IsMaxLevel())
+            {
+                ////this.StartLine("// Omitted code");
+                ////this.LineBreak();
+                this.Level--;
+                return;
+            }
+
             var e = items.GetEnumerator();
             if (e.MoveNext())
             {
-                this.FormatValue(e.Current);
+                this.FormatValue(e.Current, this.Level);
 
                 while (e.MoveNext())
                 {
                     this.Write(",");
                     this.LineBreak();
 
-                    this.FormatValue(e.Current);
+                    this.FormatValue(e.Current, this.Level);
                 }
 
                 this.LineBreak();
@@ -279,17 +338,32 @@ namespace System.Diagnostics
             this.Level--;
         }
 
-        private string GetClassName(object o)
+        private static string GetClassName(object o)
         {
             var type = o.GetType();
+            var className = type.GetFormattedName();
+            return className;
+        }
 
-            if (type.GetTypeInfo().IsGenericType)
+        private static string GetVariableName(object element)
+        {
+            var type = element.GetType();
+            var variableName = type.Name;
+
+            if (element is IEnumerable)
             {
-                var arg = type.GetTypeInfo().GenericTypeArguments.First().Name;
-                return type.Name.Replace("`1", $"<{arg}>");
+                variableName = GetClassName(element)
+                    .Replace("<", "")
+                    .Replace(">", "")
+                    .Replace(" ", "")
+                    .Replace(",", "");
+            }
+            else if (type.GetTypeInfo().IsGenericType)
+            {
+                variableName = $"{type.Name.Substring(0, type.Name.IndexOf('`'))}";
             }
 
-            return type.Name;
+            return variableName.ToLowerFirst();
         }
     }
 }

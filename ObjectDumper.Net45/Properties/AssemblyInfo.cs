@@ -33,4 +33,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.3")]
 [assembly: AssemblyVersion("1.0.3")]
-[assembly: AssemblyFileVersion("1.0.3-pre3")]
+[assembly: AssemblyFileVersion("1.0.3-pre8")]
+[assembly: InternalsVisibleTo("ObjectDumper.Tests")]
