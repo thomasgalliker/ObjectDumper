@@ -18,6 +18,7 @@
 1.0.3
 - Add support for .Net Standard
 - Add ObjectDumperCSharp which produces C# initializer code from in-memory objects
+- Add DumpOptions several serialization options
 
 1.0.2
 - Bug fix: Filter COM objects
