@@ -17,16 +17,9 @@ namespace System.Diagnostics
         public static string Dump(object element, DumpOptions dumpOptions = default(DumpOptions))
         {
             var instance = new ObjectDumperCSharp(dumpOptions);
-            if (element == null)
-            {
-                instance.Write("null");
-            }
-            else
-            {
-                instance.Write($"var {GetVariableName(element)} = ");
-                instance.FormatValue(element);
-                instance.Write(";");
-            }
+            instance.Write($"var {GetVariableName(element)} = ");
+            instance.FormatValue(element);
+            instance.Write(";");
 
             return instance.ToString();
         }
@@ -221,6 +214,12 @@ namespace System.Diagnostics
                 return;
             }
 
+            if (o == null)
+            {
+                this.Write("null", intentLevel);
+                return;
+            }
+
             if (o is bool)
             {
                 this.Write($"{o.ToString().ToLower()}", intentLevel);
@@ -347,6 +346,11 @@ namespace System.Diagnostics
 
         private static string GetVariableName(object element)
         {
+            if (element == null)
+            {
+                return "x";
+            }
+
             var type = element.GetType();
             var variableName = type.Name;
 
