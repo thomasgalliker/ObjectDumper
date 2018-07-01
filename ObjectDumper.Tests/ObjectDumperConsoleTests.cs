@@ -153,6 +153,41 @@ namespace System.Diagnostics.Tests
             dump.Should().Contain("<-- bidirectional reference found");
         }
 
+
+        [Fact]
+        public void ShouldExcludeProperties()
+        {
+            // Arrange
+            var testObject = new TestObject();
+            var options = new DumpOptions { ExcludeProperties = { "Id", "NonExistent" } };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(testObject, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+
+            dump.Should().NotBeNull();
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.TestObject}\n\r  NullableDateTime: null\n\r");
+        }
+
+        [Fact]
+        public void ShouldOrderProperties()
+        {
+            // Arrange
+            var testObject = new OrderPropertyTestObject();
+            var options = new DumpOptions { PropertyOrderBy = p => p.Name };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(testObject, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+
+            dump.Should().NotBeNull();
+            dump.Should().Be("{System.Diagnostics.Tests.Testdata.OrderPropertyTestObject}\n\r  A: null\n\r  B: null\n\r  C: null\n\r");
+        }
+
         [Fact]
         public void ShouldDumpDateTime()
         {

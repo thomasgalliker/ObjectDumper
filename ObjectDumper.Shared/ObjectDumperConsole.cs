@@ -14,8 +14,13 @@ namespace System.Diagnostics
         {
         }
 
-        public static string Dump(object element, DumpOptions dumpOptions = default(DumpOptions))
+        public static string Dump(object element, DumpOptions dumpOptions = null)
         {
+            if (dumpOptions == null)
+            {
+                dumpOptions = new DumpOptions();
+            }
+
             var instance = new ObjectDumperConsole(dumpOptions);
             return instance.DumpElement(element);
         }
@@ -107,10 +112,23 @@ namespace System.Diagnostics
                         .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
                         .ToList();
 
+                    if (this.DumpOptions.ExcludeProperties != null && this.DumpOptions.ExcludeProperties.Any())
+                    {
+                        properties = properties
+                            .Where(p => !this.DumpOptions.ExcludeProperties.Contains(p.Name))
+                            .ToList();
+                    }
+
                     if (this.DumpOptions.SetPropertiesOnly)
                     {
                         properties = properties
                             .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
+                            .ToList();
+                    }
+
+                    if (this.DumpOptions.PropertyOrderBy != null)
+                    {
+                        properties = properties.OrderBy(this.DumpOptions.PropertyOrderBy.Compile())
                             .ToList();
                     }
 

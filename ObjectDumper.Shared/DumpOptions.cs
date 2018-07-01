@@ -1,48 +1,37 @@
-﻿namespace System.Diagnostics
+﻿using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace System.Diagnostics
 {
-    public struct DumpOptions
+    public class DumpOptions
     {
-        private DumpStyle? dumpStyle;
-        private int? indentSize;
-        private char? indentChar;
-        private string lineBreakChar;
-        private bool? setPropertiesOnly;
-        private int? maxLevel;
-
-        public DumpStyle DumpStyle
+        public DumpOptions()
         {
-            get { return this.dumpStyle ?? DumpStyle.Console; }
-            set { this.dumpStyle = value; }
+            this.DumpStyle = DumpStyle.Console;
+            this.IndentSize = 2;
+            this.IndentChar = ' ';
+            this.LineBreakChar = "\n\r";
+            this.SetPropertiesOnly = false;
+            this.MaxLevel = int.MaxValue;
+            this.ExcludeProperties = new HashSet<string>();
+            this.PropertyOrderBy = null;
         }
 
-        public int IndentSize
-        {
-            get { return this.indentSize ?? 2; }
-            set { this.indentSize = value; }
-        }
+        public DumpStyle DumpStyle { get; set; }
 
-        public char IndentChar
-        {
-            get => this.indentChar ?? ' ';
-            set => this.indentChar = value;
-        }
+        public int IndentSize { get; set; }
 
-        public string LineBreakChar
-        {
-            get => this.lineBreakChar ?? "\n\r";
-            set => this.lineBreakChar = value;
-        }
+        public char IndentChar { get; set; }
 
-        public bool SetPropertiesOnly
-        {
-            get => this.setPropertiesOnly ?? false;
-            set => this.setPropertiesOnly = value;
-        }
+        public string LineBreakChar { get; set; }
 
-        public int MaxLevel
-        {
-            get { return this.maxLevel ?? int.MaxValue; }
-            set { this.maxLevel = value; }
-        }
+        public bool SetPropertiesOnly { get; set; }
+
+        public int MaxLevel { get; set; }
+
+        public ICollection<string> ExcludeProperties { get; set; }
+
+        public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
     }
 }
