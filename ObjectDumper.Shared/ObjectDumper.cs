@@ -18,6 +18,11 @@
         /// <returns></returns>
         public static string Dump(object element, DumpOptions dumpOptions = default(DumpOptions))
         {
+            if (dumpOptions == default(DumpOptions))
+            {
+                dumpOptions = new DumpOptions();
+            }
+
             if (dumpOptions.DumpStyle == DumpStyle.Console)
             {
                 return ObjectDumperConsole.Dump(element);
