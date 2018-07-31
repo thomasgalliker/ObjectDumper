@@ -169,6 +169,36 @@ namespace System.Diagnostics.Tests
         }
 
         [Fact]
+        public void ShouldDumpDateTimeMinValue()
+        {
+            // Arrange
+            var datetime = DateTime.MinValue;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(datetime);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var dateTime = DateTime.MinValue;");
+        }
+
+        [Fact]
+        public void ShouldDumpDateTimeMaxValue()
+        {
+            // Arrange
+            var datetime = DateTime.MaxValue;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(datetime);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var dateTime = DateTime.MaxValue;");
+        }
+
+        [Fact]
         public void ShouldDumpNullableObject()
         {
             // Arrange

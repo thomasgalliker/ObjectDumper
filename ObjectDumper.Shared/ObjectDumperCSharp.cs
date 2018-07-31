@@ -155,9 +155,21 @@ namespace System.Diagnostics
                 return;
             }
 
-            if (o is DateTime)
+            if (o is DateTime dateTime)
             {
-                this.Write($"DateTime.Parse(\"{o}\")", intentLevel);
+                if (dateTime == DateTime.MinValue)
+                {
+                    this.Write($"DateTime.MinValue", intentLevel);
+                }
+                else if (dateTime == DateTime.MaxValue)
+                {
+                    this.Write($"DateTime.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"DateTime.Parse(\"{dateTime}\")", intentLevel);
+                }
+                
                 return;
             }
 
