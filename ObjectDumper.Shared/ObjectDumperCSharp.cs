@@ -145,7 +145,7 @@ namespace System.Diagnostics
 
             if (o is long || o is ulong)
             {
-                this.Write($"{o}l", intentLevel);
+                this.Write($"{o}L", intentLevel);
                 return;
             }
 
