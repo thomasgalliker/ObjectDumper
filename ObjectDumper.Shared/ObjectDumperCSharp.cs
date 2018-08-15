@@ -167,7 +167,7 @@ namespace System.Diagnostics
                 }
                 else
                 {
-                    this.Write($"DateTime.Parse(\"{dateTime}\")", intentLevel);
+                    this.Write($"DateTime.ParseExact(\"{dateTime:O}\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)", intentLevel);
                 }
                 
                 return;

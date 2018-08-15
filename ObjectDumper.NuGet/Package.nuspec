@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ObjectDumper.NET</id>
-    <version>1.0.6</version>
+    <version>1.0.7-pre1</version>
     <title>ObjectDumper.NET</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
@@ -15,6 +15,8 @@
       objectdumper dump dumpobject initializer c# objects debug logging tracing
     </tags>
     <releaseNotes>
+1.0.7
+- Change DateTime formatting to ISO 8601 standard
 1.0.6
 - Replace long suffix 'l' with 'L'
 

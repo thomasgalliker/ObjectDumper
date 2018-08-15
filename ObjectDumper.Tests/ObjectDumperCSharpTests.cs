@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Tests.Testdata;
+using System.Globalization;
 using System.Linq;
 using FluentAssertions;
 
@@ -154,18 +155,60 @@ namespace System.Diagnostics.Tests
         }
 
         [Fact]
-        public void ShouldDumpDateTime()
+        public void ShouldDumpDateTime_DateTimeKind_Unspecified()
         {
             // Arrange
-            var datetime = new DateTime(2000, 01, 01, 23, 59, 59);
+            var dateTime = new DateTime(2000, 01, 01, 23, 59, 59, DateTimeKind.Unspecified);
 
             // Act
-            var dump = ObjectDumperCSharp.Dump(datetime);
+            var dump = ObjectDumperCSharp.Dump(dateTime);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dateTime = DateTime.Parse(\"01.01.2000 23:59:59\");");
+            dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
+
+
+            var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            returnedDateTime.ShouldBeEquivalentTo(dateTime);
+        }
+
+        [Fact]
+        public void ShouldDumpDateTime_DateTimeKind_Utc()
+        {
+            // Arrange
+            var dateTime = new DateTime(2000, 01, 01, 23, 59, 59, DateTimeKind.Utc);
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(dateTime);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000Z\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
+
+
+            var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000Z", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            returnedDateTime.ShouldBeEquivalentTo(dateTime);
+        }
+
+        [Fact]
+        public void ShouldDumpDateTime_DateTimeKind_Local()
+        {
+            // Arrange
+            var dateTime = new DateTime(2000, 01, 01, 23, 59, 59, DateTimeKind.Local);
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(dateTime);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000+01:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
+
+
+            var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000+01:00", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            returnedDateTime.ShouldBeEquivalentTo(dateTime);
         }
 
         [Fact]
