@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Tests.Testdata;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Tests.Testdata;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
@@ -269,6 +270,28 @@ namespace System.Diagnostics.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTimeKind = System.DateTimeKind.Utc;");
+        }
+
+
+
+        [Fact]
+        public void ShouldDumpDictionary()
+        {
+            // Arrange
+            var dictionary = new Dictionary<int, string>
+            {
+                { 1, "Value1" },
+                { 2, "Value2" },
+                { 3, "Value3" }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(dictionary);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var dictionaryInt32String = new Dictionary<Int32, String>\n\r{\n\r  { 1, \"Value1\" },\n\r  { 2, \"Value2\" },\n\r  { 3, \"Value3\" }\n\r};");
         }
     }
 }
