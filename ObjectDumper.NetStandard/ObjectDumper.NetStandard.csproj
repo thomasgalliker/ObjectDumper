@@ -6,6 +6,10 @@
     <RootNamespace>System.Diagnostics</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_0;NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
   <Import Project="..\ObjectDumper.Shared\ObjectDumper.Shared.projitems" Label="Shared" />
 
 </Project>
