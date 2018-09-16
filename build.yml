@@ -72,20 +72,13 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet pack'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
   inputs:
     command: pack
-    configuration: '$(BuildConfiguration)'
     packagesToPack: ObjectDumper/ObjectDumper.csproj
-
     versioningScheme: byEnvVar
-
     versionEnvVar: PackageVersion
-
-    includeSymbols: true
-    verbosityPack: detailed
-
 
 - task: VSTest@2
   displayName: 'Run UnitTests'
