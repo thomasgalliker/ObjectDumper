@@ -72,7 +72,7 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
-- task: VSBuild@2
+- task: VSBuild@1
   displayName: 'Pack nuget'
   inputs:
     solution: '$(Parameters.csproj)'
