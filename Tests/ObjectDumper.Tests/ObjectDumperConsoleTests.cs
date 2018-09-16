@@ -6,6 +6,7 @@ using FluentAssertions;
 using FluentAssertions.Types;
 using Xunit;
 using Xunit.Abstractions;
+using System.Diagnostics;
 
 namespace System.Diagnostics.Tests
 {

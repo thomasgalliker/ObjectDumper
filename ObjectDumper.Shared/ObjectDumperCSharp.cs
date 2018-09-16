@@ -180,8 +180,6 @@ namespace System.Diagnostics
                 return;
             }
 
-            // BUG in NETSTANDARD: GetGenericTypeDefinition throws exception
-#if NETSTANDARD
             var type = o.GetType();
             var baseType = type.GetGenericTypeDefinition();
             if (baseType == typeof(KeyValuePair<,>))
@@ -196,7 +194,6 @@ namespace System.Diagnostics
                 this.Write(" }");
                 return;
             }
-#endif
 
             if (o is IEnumerable)
             {

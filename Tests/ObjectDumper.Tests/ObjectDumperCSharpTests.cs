@@ -125,7 +125,7 @@ namespace System.Diagnostics.Tests
         {
             // Arrange
             var testObject = new TestObject();
-            var options = new DumpOptions { ExcludeProperties = { "Id", "NonExistent" }};
+            var options = new DumpOptions { ExcludeProperties = { "Id", "NonExistent" } };
 
             // Act
             var dump = ObjectDumperCSharp.Dump(testObject, options);
@@ -171,7 +171,7 @@ namespace System.Diagnostics.Tests
 
 
             var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-            returnedDateTime.ShouldBeEquivalentTo(dateTime);
+            returnedDateTime.Should().Be(dateTime);
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace System.Diagnostics.Tests
 
 
             var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000Z", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-            returnedDateTime.ShouldBeEquivalentTo(dateTime);
+            returnedDateTime.Should().Be(dateTime);
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace System.Diagnostics.Tests
 
 
             var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000+01:00", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-            returnedDateTime.ShouldBeEquivalentTo(dateTime);
+            returnedDateTime.Should().Be(dateTime);
         }
 
         [Fact]
