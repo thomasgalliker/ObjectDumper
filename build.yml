@@ -72,13 +72,19 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
-- task: VSBuild@1
-  displayName: 'Pack nuget'
+steps:
+- task: NuGetCommand@2
+  displayName: 'NuGet pack'
   inputs:
-    solution: '$(Parameters.csproj)'
-    msbuildArgs: '/t:pack /p:IncludeSymbols=true /p:PackageVersion=$(PackageVersion)'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+    command: pack
+
+    packagesToPack: ObjectDumper/ObjectDumper.csproj
+
+    versioningScheme: byEnvVar
+
+    versionEnvVar: PackageVersion
+
+    includeSymbols: true
 
 
 - task: VSTest@2
