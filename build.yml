@@ -1,7 +1,4 @@
 name: 2.0.$(date:yy)$(DayOfYear).$(rev:rr)
-
-parameters:
-  solution: '**/*.sln'
   
 queue:
   name: Hosted VS2017
@@ -9,6 +6,9 @@ queue:
   - msbuild
   - visualstudio
   - vstest
+
+parameters:
+  solution: '**/*.sln'
 
 #Your build pipeline references an undefined variable named ‘Parameters.solution’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 #Your build pipeline references the ‘BuildVersionPostfix’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
