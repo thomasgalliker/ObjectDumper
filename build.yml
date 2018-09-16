@@ -76,7 +76,7 @@ steps:
   displayName: 'NuGet pack'
   inputs:
     command: pack
-
+    configuration: '$(BuildConfiguration)'
     packagesToPack: ObjectDumper/ObjectDumper.csproj
 
     versioningScheme: byEnvVar
@@ -84,6 +84,7 @@ steps:
     versionEnvVar: PackageVersion
 
     includeSymbols: true
+    verbosityPack: detailed
 
 
 - task: VSTest@2
