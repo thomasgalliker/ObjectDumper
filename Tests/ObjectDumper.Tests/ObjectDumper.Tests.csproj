@@ -19,9 +19,9 @@
     <EmbeddedResource Include="Resources\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ObjectDumper.NetStandard\ObjectDumper.NetStandard.csproj" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\..\ObjectDumper\ObjectDumper.csproj" />
   </ItemGroup>
 </Project>
