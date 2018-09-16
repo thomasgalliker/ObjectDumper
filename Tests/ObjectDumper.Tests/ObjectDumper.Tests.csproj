@@ -5,6 +5,7 @@
     <AssemblyName>ObjectDumper.Tests</AssemblyName>
     <PackageId>ObjectDumper.Tests</PackageId>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
