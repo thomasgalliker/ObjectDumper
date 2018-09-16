@@ -1,4 +1,4 @@
-name: 1.0.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 2.0.$(date:yy)$(DayOfYear).$(rev:rr)
 queue:
   name: Hosted VS2017
   demands: 
