@@ -22,8 +22,6 @@ steps:
 
     InsertAttributes: true
 
-    Title: 'ObjectDumper.NET'
-
     VersionNumber: '$(Build.BuildNumber)'
 
     FileVersionNumber: '$(Build.BuildNumber)'
