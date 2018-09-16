@@ -18,8 +18,7 @@ steps:
   displayName: 'Set Assembly Manifest Data'
   inputs:
     FileNames: |
-     !AssemblyInfo.cs
-     ObjectDumper.NetStandard.csproj
+     $(Parameters.csproj)
 
     InsertAttributes: true
 
