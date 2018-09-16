@@ -170,7 +170,7 @@ namespace System.Diagnostics
                 {
                     this.Write($"DateTime.ParseExact(\"{dateTime:O}\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)", intentLevel);
                 }
-                
+
                 return;
             }
 
@@ -181,8 +181,8 @@ namespace System.Diagnostics
             }
 
             var type = o.GetType();
-            var baseType = type.GetGenericTypeDefinition();
-            if (baseType == typeof(KeyValuePair<,>))
+            var typeInfo = type.GetTypeInfo();
+            if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
                 var kvpKey = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Key)).GetValue(o, null);
                 var kvpValue = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Value)).GetValue(o, null);

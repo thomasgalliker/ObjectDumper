@@ -50,6 +50,7 @@
     <RootNamespace>System.Diagnostics</RootNamespace>
     <PackageReleaseNotes>2.0.0
 - Migrate to netstandard
+- Bug fixes
 
 1.0.8
 - Bugfix for .Net Standard: CSharp initializer code generation for KeyValuePairs is currently disabled in this release
