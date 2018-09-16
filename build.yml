@@ -69,7 +69,7 @@ steps:
   inputs:
     solution: '$(Parameters.solution)'
 
-    msbuildArgs: '/t:pack /p:IncludeSymbols=true /p:PackageVersion=$(PackageVersion)'
+    msbuildArgs: '/t:pack $(Parameters.csproj) /p:IncludeSymbols=true /p:PackageVersion=$(PackageVersion)'
 
     platform: '$(BuildPlatform)'
 
