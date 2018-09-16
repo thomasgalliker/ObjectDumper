@@ -72,7 +72,6 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
-steps:
 - task: NuGetCommand@2
   displayName: 'NuGet pack'
   inputs:
