@@ -65,14 +65,19 @@ steps:
   displayName: 'Set PackageVersion'
 
 - task: VSBuild@1
-  displayName: 'Build solution **\*.sln'
+  displayName: 'Build solution'
   inputs:
     solution: '$(Parameters.solution)'
-
-    msbuildArgs: '/t:pack $(Parameters.csproj) /p:IncludeSymbols=true /p:PackageVersion=$(PackageVersion)'
-
+    msbuildArgs: ''
     platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
 
+- task: VSBuild@2
+  displayName: 'Pack nuget'
+  inputs:
+    solution: '$(Parameters.csproj)'
+    msbuildArgs: '/t:pack /p:IncludeSymbols=true /p:PackageVersion=$(PackageVersion)'
+    platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
 
