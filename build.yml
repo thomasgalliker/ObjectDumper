@@ -73,19 +73,19 @@ steps:
     configuration: '$(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Run UnitTests'
+  inputs:
+    command: test
+    projects: '**/*.Tests.csproj '
+    arguments: ''
+
+- task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
   inputs:
     command: pack
     packagesToPack: ObjectDumper/ObjectDumper.csproj
     versioningScheme: byEnvVar
     versionEnvVar: PackageVersion
-
-- task: DotNetCoreCLI@2
-  displayName: 'Run UnitTests'
-  inputs:
-    command: test
-    projects: '**/*.Tests.csproj '
-    arguments: ''
 
 - task: PublishSymbols@2
   displayName: 'Publish symbols path'
