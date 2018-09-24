@@ -7,6 +7,7 @@
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <RootNamespace>System.Diagnostics.Tests</RootNamespace>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

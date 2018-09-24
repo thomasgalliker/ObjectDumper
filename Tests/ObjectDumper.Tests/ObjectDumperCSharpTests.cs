@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Tests.Testdata;
+using System.Diagnostics.Tests.Utils;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
@@ -9,6 +10,7 @@ using Xunit.Abstractions;
 
 namespace System.Diagnostics.Tests
 {
+    [Collection(TestCollections.CultureSpecific)]
     public class ObjectDumperCSharpCSharpTests
     {
         private readonly ITestOutputHelper testOutputHelper;
@@ -293,5 +295,9 @@ namespace System.Diagnostics.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var dictionaryInt32String = new Dictionary<Int32, String>\n\r{\n\r  { 1, \"Value1\" },\n\r  { 2, \"Value2\" },\n\r  { 3, \"Value3\" }\n\r};");
         }
+    }
+
+    public class CultureSpecificFixture2
+    {
     }
 }

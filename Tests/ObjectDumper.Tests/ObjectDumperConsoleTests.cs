@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using System.Diagnostics.Tests.Testdata;
+﻿using System.Diagnostics.Tests.Testdata;
+using System.Diagnostics.Tests.Utils;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using FluentAssertions.Types;
 using Xunit;
 using Xunit.Abstractions;
-using System.Diagnostics;
 
 namespace System.Diagnostics.Tests
 {
+    [Collection(TestCollections.CultureSpecific)]
     public class ObjectDumperConsoleTests
     {
         private readonly ITestOutputHelper testOutputHelper;

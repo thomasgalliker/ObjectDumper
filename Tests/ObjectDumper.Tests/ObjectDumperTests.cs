@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.Tests.Testdata;
-using System.Linq;
+using System.Diagnostics.Tests.Utils;
 using FluentAssertions;
 
 using Xunit;
@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 
 namespace System.Diagnostics.Tests
 {
+    [Collection(TestCollections.CultureSpecific)]
     public class ObjectDumperTests
     {
         private readonly ITestOutputHelper testOutputHelper;
