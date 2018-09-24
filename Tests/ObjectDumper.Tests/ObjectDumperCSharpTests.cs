@@ -195,6 +195,12 @@ namespace System.Diagnostics.Tests
             returnedDateTime.Should().Be(dateTime);
         }
 
+        private static string GetUtcOffsetString()
+        {
+            var utcOffset = TimeZoneInfo.Local.BaseUtcOffset;
+            return $"{(utcOffset >= TimeSpan.Zero ? "+" : "-")}{utcOffset:hh\\:mm}";
+        }
+
         [Fact]
         public void ShouldDumpDateTime_DateTimeKind_Local()
         {
@@ -207,10 +213,9 @@ namespace System.Diagnostics.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000+01:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
+            dump.Should().Be($"var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000{GetUtcOffsetString()}\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
 
-            var utcOffset = TimeZoneInfo.Local.BaseUtcOffset;
-            var returnedDateTime = DateTime.ParseExact($"2000-01-01T23:59:59.0000000{(utcOffset >= TimeSpan.Zero ? "+" : "-")}{utcOffset:hh\\:mm}", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            var returnedDateTime = DateTime.ParseExact($"2000-01-01T23:59:59.0000000{GetUtcOffsetString()}", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             returnedDateTime.Should().Be(dateTime);
         }
 
