@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectDumperSample.Netfx", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectDumper", "ObjectDumper\ObjectDumper.csproj", "{CF00093C-CB18-4400-8A83-8090DE38D7C7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5B2E3BCA-E4CD-4F89-9165-C968EABB6825}"
+	ProjectSection(SolutionItems) = preProject
+		build.yml = build.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
