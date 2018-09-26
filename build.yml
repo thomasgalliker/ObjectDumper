@@ -13,6 +13,11 @@ queue:
   - visualstudio
   - vstest
 
+trigger:
+- master
+- develop
+- release/*
+
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
   displayName: 'Set Assembly Manifest Data'
