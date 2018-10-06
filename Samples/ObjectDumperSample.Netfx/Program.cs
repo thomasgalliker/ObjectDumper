@@ -14,8 +14,7 @@ namespace ObjectDumperSample.Netfx
                 new Person { Name = "Thomas", Age = 30, },
             };
 
-            // Act
-            var personsDump = ObjectDumper.Dump(persons);
+            var personsDump = ObjectDumper.Dump(persons, DumpStyle.CSharp);
 
             Console.WriteLine(personsDump);
             Console.ReadLine();
