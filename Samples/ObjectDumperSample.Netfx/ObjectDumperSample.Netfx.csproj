@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ObjectDumper\ObjectDumper.csproj">
-      <Project>{00c0cf40-4dd0-480a-b87f-7f05f38aeff8}</Project>
+      <Project>{cf00093c-cb18-4400-8a83-8090de38d7c7}</Project>
       <Name>ObjectDumper</Name>
     </ProjectReference>
   </ItemGroup>

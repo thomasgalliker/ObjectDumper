@@ -19,16 +19,16 @@ The following sample program shows how ObjectDumper can be used to write C# obje
 ```
 static void Main(string[] args)
 {
-	var persons = new List<Person>
-	{
-		new Person { Name = "John", Age = 20, },
-		new Person { Name = "Thomas", Age = 30, },
-	};
+    var persons = new List<Person>
+    {
+        new Person { Name = "John", Age = 20, },
+        new Person { Name = "Thomas", Age = 30, },
+    };
 
-	var personsDump = ObjectDumper.Dump(persons);
+    var personsDump = ObjectDumper.Dump(persons);
 
-	Console.WriteLine(personsDump);
-	Console.ReadLine();
+    Console.WriteLine(personsDump);
+    Console.ReadLine();
 }
 ```
 The output on the console looks like following:
@@ -48,11 +48,11 @@ static void Main(string[] args)
 {
     var persons = new List<Person>
     {
-	new Person { Name = "John", Age = 20, },
-	new Person { Name = "Thomas", Age = 30, },
+        new Person { Name = "John", Age = 20, },
+        new Person { Name = "Thomas", Age = 30, },
     };
 
-    var personsDump = ObjectDumperCSharp.Dump(persons);
+    var personsDump = ObjectDumper.Dump(persons, DumpStyle.CSharp);
 
     Console.WriteLine(personsDump);
     Console.ReadLine();
@@ -60,23 +60,17 @@ static void Main(string[] args)
 ```
 The output on the console looks like following:
 ```
-var listperson = new List<Person>
+var listPerson = new List<Person>
 {
   new Person
   {
     Name = "John",
-    Age = 20,
-    SetOnly = 99,
-    GetOnly = 11,
-    Private = 0
+    Age = 20
   },
   new Person
   {
     Name = "Thomas",
-    Age = 30,
-    SetOnly = 99,
-    GetOnly = 11,
-    Private = 0
+    Age = 30
   }
 };
 ```

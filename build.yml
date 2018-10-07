@@ -1,0 +1,98 @@
+####################################################################
+# VSTS Build Configuration
+#
+# (c)2018 superdev GmbH
+####################################################################
+
+name: 2.0.$(date:yy)$(DayOfYear).$(rev:rr)
+  
+queue:
+  name: Hosted VS2017
+  demands: 
+  - msbuild
+  - visualstudio
+  - vstest
+
+trigger:
+- master
+- develop
+- release/*
+
+steps:
+- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
+  displayName: 'Set Assembly Manifest Data'
+  inputs:
+    FileNames: |
+     ObjectDumper.csproj
+    InsertAttributes: true
+    Title: 'ObjectDumper'
+    Description: ''
+    Company: 'superdev GmbH'
+    Copyright: '© $(date:yyyy) superdev GmbH'
+    VersionNumber: '$(Build.BuildNumber)'
+    FileVersionNumber: '$(Build.BuildNumber)'
+
+
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 4.4.1'
+  inputs:
+    versionSpec: 4.4.1
+
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: '$(Parameters.solution)'
+
+
+- powershell: |
+   Write-Host "##vso[task.setvariable variable=PackageVersion]$(Build.BuildNumber)"
+   Write-Host "##vso[task.setvariable variable=PackageVersionPre]$(Build.BuildNumber)$(BuildVersionPostfix)"
+  displayName: 'Set PackageVersion'
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '$(Parameters.solution)'
+    msbuildArgs: ''
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run UnitTests'
+  inputs:
+    command: test
+    projects: '**/*.Tests.csproj'
+    arguments: ''
+
+- task: DotNetCoreCLI@2
+  displayName: 'Pack NuGet PreRelease'
+  inputs:
+    command: pack
+    packagesToPack: ObjectDumper/ObjectDumper.csproj
+    versioningScheme: byEnvVar
+    versionEnvVar: PackageVersionPre
+
+- task: DotNetCoreCLI@2
+  displayName: 'Pack NuGet Prod'
+  inputs:
+    command: pack
+    packagesToPack: ObjectDumper/ObjectDumper.csproj
+    versioningScheme: byEnvVar
+    versionEnvVar: PackageVersion
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+
+    Contents: |
+     **\bin\$(BuildConfiguration)\**
+     **\bin\*.nupkg
+
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+
