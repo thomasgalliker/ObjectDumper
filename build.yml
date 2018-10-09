@@ -1,5 +1,5 @@
 ####################################################################
-# VSTS Build Configuration
+# VSTS Build Configuration, Version 1.1
 #
 # (c)2018 superdev GmbH
 ####################################################################
@@ -28,7 +28,7 @@ steps:
     Title: 'ObjectDumper'
     Description: ''
     Company: 'superdev GmbH'
-    Copyright: '© $(date:yyyy) superdev GmbH'
+    Copyright: '(c) $(date:yyyy) superdev GmbH'
     VersionNumber: '$(Build.BuildNumber)'
     FileVersionNumber: '$(Build.BuildNumber)'
 
