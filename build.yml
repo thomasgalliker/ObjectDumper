@@ -4,7 +4,7 @@
 # (c)2018 superdev GmbH
 ####################################################################
 
-name: 2.0.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 2.1.$(date:yy)$(DayOfYear).$(rev:rr)
   
 queue:
   name: Hosted VS2017
