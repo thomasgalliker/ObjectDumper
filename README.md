@@ -13,6 +13,12 @@ Use the following command to install ObjectDumper using NuGet package manager co
 
 You can use this library in any .Net project which is compatible to PCL (e.g. Xamarin Android, iOS, Windows Phone, Windows Store, Universal Apps, etc.)
 
+### The Purpose of ObjectDumper
+Serialization, the process of converting a complex object to a machine-readable or over-the-wire transmittable string, is a technique often used in software engineering. A well-known serializer is Newtonsoft.JSON which serializes .NET objects to the data representation format JSON.
+ObjectDumper.NET provides pretty similar functionality:
+- ObjectDumper.NET serializes in-memory .NET objects to human-readable strings, often used to write complex C# objects to log files. See DumpStyle.Console.
+- ObjectDumper.NET serializes in-memory .NET objects to C# initializer code, which can be used to compile a C# object again. See DumpStyle.CSharp.
+
 ### API Usage
 #### Dumping C# Objects to Console.WriteLine
 The following sample program shows how ObjectDumper can be used to write C# objects to the console output:
