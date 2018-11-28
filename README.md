@@ -16,7 +16,7 @@ You can use this library in any .Net project which is compatible to PCL (e.g. Xa
 ### API Usage
 #### Dumping C# Objects to Console.WriteLine
 The following sample program shows how ObjectDumper can be used to write C# objects to the console output:
-```
+```C#
 static void Main(string[] args)
 {
     var persons = new List<Person>
@@ -32,7 +32,7 @@ static void Main(string[] args)
 }
 ```
 The output on the console looks like following:
-```
+```C#
 {ObjectDumperSample.Netfx.Person}
   Name: "John"
   Age: 20
@@ -43,7 +43,7 @@ The output on the console looks like following:
 
 #### Dumping C# initializer code from in-memory objects to Console.WriteLine
 The following sample program shows how ObjectDumper can be used to write C# initializer code from in-memory to the console output:
-```
+```C#
 static void Main(string[] args)
 {
     var persons = new List<Person>
@@ -59,7 +59,7 @@ static void Main(string[] args)
 }
 ```
 The output on the console looks like following:
-```
+```C#
 var listPerson = new List<Person>
 {
   new Person

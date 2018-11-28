@@ -1,10 +1,10 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.1
+# VSTS Build Configuration, Version 1.2
 #
 # (c)2018 superdev GmbH
 ####################################################################
 
-name: 2.0.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 2.1.$(date:yy)$(DayOfYear).$(rev:rr)
   
 queue:
   name: Hosted VS2017
@@ -14,9 +14,16 @@ queue:
   - vstest
 
 trigger:
-- master
-- develop
-- release/*
+  branches:
+    include:
+    - master
+    - develop
+    - releases/*
+  paths:
+    include:
+    - docs/*
+    exclude:
+    - docs/README.md
 
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
@@ -32,18 +39,15 @@ steps:
     VersionNumber: '$(Build.BuildNumber)'
     FileVersionNumber: '$(Build.BuildNumber)'
 
-
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 4.4.1'
   inputs:
     versionSpec: 4.4.1
 
-
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
   inputs:
     restoreSolution: '$(Parameters.solution)'
-
 
 - powershell: |
    Write-Host "##vso[task.setvariable variable=PackageVersion]$(Build.BuildNumber)"
@@ -92,7 +96,5 @@ steps:
 
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
-
