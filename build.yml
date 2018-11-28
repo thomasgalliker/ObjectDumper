@@ -1,5 +1,5 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.1
+# VSTS Build Configuration, Version 1.2
 #
 # (c)2018 superdev GmbH
 ####################################################################
@@ -14,9 +14,16 @@ queue:
   - vstest
 
 trigger:
-- master
-- develop
-- release/*
+  branches:
+    include:
+    - master
+    - develop
+    - releases/*
+  paths:
+    include:
+    - docs/*
+    exclude:
+    - docs/README.md
 
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
