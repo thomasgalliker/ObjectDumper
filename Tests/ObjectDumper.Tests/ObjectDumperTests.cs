@@ -53,9 +53,9 @@ namespace System.Diagnostics.Tests
         {
             // Arrange
             var person = PersonFactory.GetPersonThomas();
-            var dumpStyle = DumpStyle.CSharp;
             var dumpOptions = new DumpOptions
             {
+                DumpStyle = DumpStyle.CSharp,
                 ExcludeProperties = new[] { "Name", "Char" },
                 IndentChar = ' ',
                 IndentSize = 8,
@@ -66,7 +66,7 @@ namespace System.Diagnostics.Tests
             };
 
             // Act
-            var dump = ObjectDumper.Dump(person, dumpStyle, dumpOptions);
+            var dump = ObjectDumper.Dump(person, dumpOptions);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
