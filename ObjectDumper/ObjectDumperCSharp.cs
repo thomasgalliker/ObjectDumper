@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Extensions;
 using System.Linq;
 using System.Reflection;
+
+using ObjectDumperLib.Extensions;
 
 namespace ObjectDumperLib
 {

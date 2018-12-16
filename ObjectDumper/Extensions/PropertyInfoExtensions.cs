@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace System.Diagnostics.Extensions
+namespace ObjectDumperLib.Extensions
 {
     internal static class PropertyInfoExtensions
     {
