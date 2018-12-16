@@ -15,13 +15,14 @@ You can use this library in any .Net project which is compatible to PCL (e.g. Xa
 
 ### The Purpose of ObjectDumper
 Serialization, the process of converting a complex object to a machine-readable or over-the-wire transmittable string, is a technique often used in software engineering. A well-known serializer is Newtonsoft.JSON which serializes .NET objects to the data representation format JSON.
-ObjectDumper.NET provides pretty similar functionality:
-- ObjectDumper.NET serializes in-memory .NET objects to human-readable strings, often used to write complex C# objects to log files. See DumpStyle.Console.
-- ObjectDumper.NET serializes in-memory .NET objects to C# initializer code, which can be used to compile a C# object again. See DumpStyle.CSharp.
+
+ObjectDumper.NET provides two excellent ways to visualize in-memory .NET objects:
+- **DumpStyle.Console**: serialize objects to human-readable strings, often used to write complex C# objects to log files.
+- **DumpStyle.CSharp**: serialize objects to C# initializer code, which can be used to compile a C# object again.
 
 ### API Usage
 #### Dumping C# Objects to Console.WriteLine
-The following sample program shows how ObjectDumper can be used to write C# objects to the console output:
+The following sample program uses **DumpStyle.Console** to write C# objects to the console output:
 ```C#
 static void Main(string[] args)
 {
@@ -36,9 +37,8 @@ static void Main(string[] args)
     Console.WriteLine(personsDump);
     Console.ReadLine();
 }
-```
-The output on the console looks like following:
-```C#
+
+//CONSOLE OUTPUT:
 {ObjectDumperSample.Netfx.Person}
   Name: "John"
   Age: 20
@@ -48,7 +48,7 @@ The output on the console looks like following:
 ```
 
 #### Dumping C# initializer code from in-memory objects to Console.WriteLine
-The following sample program shows how ObjectDumper can be used to write C# initializer code from in-memory to the console output:
+The following sample program uses **DumpStyle.CSharp** to write C# initializer code from in-memory to the console output:
 ```C#
 static void Main(string[] args)
 {
@@ -63,9 +63,8 @@ static void Main(string[] args)
     Console.WriteLine(personsDump);
     Console.ReadLine();
 }
-```
-The output on the console looks like following:
-```C#
+
+//CONSOLE OUTPUT:
 var listPerson = new List<Person>
 {
   new Person
