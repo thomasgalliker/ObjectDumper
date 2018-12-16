@@ -6,6 +6,8 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
+using ObjectDumperLib;
+
 namespace System.Diagnostics.Tests
 {
     [Collection(TestCollections.CultureSpecific)]

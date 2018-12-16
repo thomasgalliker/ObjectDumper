@@ -32,7 +32,7 @@
     <Company>superdev GmbH</Company>
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RootNamespace>System.Diagnostics</RootNamespace>
+    <RootNamespace>ObjectDumperLib</RootNamespace>
     <PackageReleaseNotes>2.0.0
 - Migrate to netstandard
 - Bug fixes

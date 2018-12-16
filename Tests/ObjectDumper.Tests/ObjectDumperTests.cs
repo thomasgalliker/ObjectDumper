@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.Tests.Testdata;
 using System.Diagnostics.Tests.Utils;
 using FluentAssertions;

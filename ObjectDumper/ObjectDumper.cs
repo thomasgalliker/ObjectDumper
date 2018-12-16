@@ -1,5 +1,8 @@
-namespace System.Diagnostics
-{
+using ObjectDumperLib;
+
+//namespace global
+//{
+
     public static class ObjectDumper
     {
         /// <summary>
@@ -46,4 +49,5 @@ namespace System.Diagnostics
             return ObjectDumperCSharp.Dump(element, dumpOptions);
         }
     }
-}
+
+//}

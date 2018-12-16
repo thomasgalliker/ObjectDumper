@@ -1,8 +1,10 @@
-﻿namespace System.Diagnostics
-{
+﻿//namespace System.Diagnostics
+//{
+
     public enum DumpStyle
     {
         Console,
         CSharp
     }
-}
+
+//}

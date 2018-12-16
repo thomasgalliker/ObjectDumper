@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System.Diagnostics
-{
+//namespace System.Diagnostics
+//
+//{
     public class DumpOptions
     {
         public DumpOptions()
@@ -34,4 +36,5 @@ namespace System.Diagnostics
 
         public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
     }
-}
+
+//}

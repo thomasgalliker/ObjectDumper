@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Tests.Testdata;
 using System.Diagnostics.Tests.Utils;
 using System.Globalization;
@@ -7,6 +8,7 @@ using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
+using ObjectDumperLib;
 
 namespace System.Diagnostics.Tests
 {

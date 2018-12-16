@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace System.Diagnostics
+namespace ObjectDumperLib
 {
     public abstract class DumperBase
     {
