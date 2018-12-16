@@ -1,4 +1,6 @@
-﻿namespace System.Diagnostics.Tests.Testdata
+﻿using System;
+
+namespace ObjectDumperLib_Tests.Testdata
 {
     public class Person
     {

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tests.Testdata;
-using System.Diagnostics.Tests.Utils;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
@@ -9,8 +7,10 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using ObjectDumperLib;
+using ObjectDumperLib_Tests.Testdata;
+using ObjectDumperLib_Tests.Utils;
 
-namespace System.Diagnostics.Tests
+namespace ObjectDumperLib_Tests
 {
     [Collection(TestCollections.CultureSpecific)]
     public class ObjectDumperCSharpCSharpTests
