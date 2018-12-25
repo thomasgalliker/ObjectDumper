@@ -20,17 +20,17 @@ trigger:
     - develop
     - releases/*
 
-variables:
-  solution: 'ObjectDumper.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  buildVersionPostfix: '-pre'
-
   paths:
     include:
     - docs/*
     exclude:
     - docs/README.md
+
+variables:
+  solution: 'ObjectDumper.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  buildVersionPostfix: '-pre'
 
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
