@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ObjectDumperLib_Tests.Testdata
+namespace ObjectDumping.Tests.Testdata
 {
     public static class PersonFactory
     {

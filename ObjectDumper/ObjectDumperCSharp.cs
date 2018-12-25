@@ -3,10 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ObjectDumping.Extensions;
 
-using ObjectDumperLib.Extensions;
-
-namespace ObjectDumperLib
+namespace ObjectDumping
 {
     /// <summary>
     ///     Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
@@ -43,7 +42,6 @@ namespace ObjectDumperLib
             var properties = o.GetType().GetRuntimeProperties()
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
                 .ToList();
-
 
             if (this.DumpOptions.ExcludeProperties != null && this.DumpOptions.ExcludeProperties.Any())
             {

@@ -1,4 +1,4 @@
-﻿namespace ObjectDumperLib_Tests.Testdata
+﻿namespace ObjectDumping.Tests.Testdata
 {
     public class OrderPropertyTestObject
     {

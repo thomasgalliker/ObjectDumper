@@ -1,10 +1,7 @@
-﻿//namespace System.Diagnostics
-//{
+﻿// ReSharper disable once CheckNamespace
 
-    public enum DumpStyle
-    {
-        Console,
-        CSharp
-    }
-
-//}
+public enum DumpStyle
+{
+    Console,
+    CSharp
+}
