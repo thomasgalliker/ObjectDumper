@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Threading;
 #endif
 
-namespace ObjectDumperLib_Tests.Utils
+namespace ObjectDumper_Tests.Utils
 {
     public static class CurrentCultureHelper
     {

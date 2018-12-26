@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
-    <AssemblyName>ObjectDumper.Tests</AssemblyName>
+    <AssemblyName>ObjectDumper_Tests</AssemblyName>
     <PackageId>ObjectDumper.Tests</PackageId>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <RootNamespace>System.Diagnostics.Tests</RootNamespace>
+    <RootNamespace>ObjectDumper_Tests</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 

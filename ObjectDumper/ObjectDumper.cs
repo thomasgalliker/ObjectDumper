@@ -1,7 +1,7 @@
-using ObjectDumperLib;
+using ObjectDumping.Internal;
 
-//namespace global
-//{
+namespace ObjectDumping
+{
 
     public static class ObjectDumper
     {
@@ -50,4 +50,4 @@ using ObjectDumperLib;
         }
     }
 
-//}
+}

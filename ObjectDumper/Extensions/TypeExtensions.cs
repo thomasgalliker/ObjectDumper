@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace ObjectDumperLib.Extensions
+namespace ObjectDumping.Extensions
 {
     internal static class TypeExtensions
     {

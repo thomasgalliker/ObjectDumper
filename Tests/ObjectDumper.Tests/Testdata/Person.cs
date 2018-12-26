@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ObjectDumperLib_Tests.Testdata
+namespace ObjectDumper_Tests.Testdata
 {
     public class Person
     {

@@ -2,7 +2,7 @@
 using System.Globalization;
 using Xunit;
 
-namespace ObjectDumperLib_Tests.Utils
+namespace ObjectDumper_Tests.Utils
 {
     [CollectionDefinition(TestCollections.CultureSpecific)]
     public sealed class CultureSpecificFixture : ICollectionFixture<CultureSpecificFixture>

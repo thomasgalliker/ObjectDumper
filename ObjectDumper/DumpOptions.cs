@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-//namespace System.Diagnostics
-//
-//{
+namespace ObjectDumping
+{
+
     public class DumpOptions
     {
         public DumpOptions()
@@ -37,4 +37,4 @@ using System.Reflection;
         public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
     }
 
-//}
+}

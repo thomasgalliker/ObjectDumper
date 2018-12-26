@@ -1,5 +1,5 @@
-﻿//namespace System.Diagnostics
-//{
+﻿namespace ObjectDumping
+{
 
     public enum DumpStyle
     {
@@ -7,4 +7,4 @@
         CSharp
     }
 
-//}
+}

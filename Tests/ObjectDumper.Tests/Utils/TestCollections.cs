@@ -1,4 +1,4 @@
-﻿namespace ObjectDumperLib_Tests.Utils
+﻿namespace ObjectDumper_Tests.Utils
 {
     public static class TestCollections
     {

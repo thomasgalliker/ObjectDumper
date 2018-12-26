@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ObjectDumper.Tests")]
+[assembly: InternalsVisibleTo("ObjectDumper_Tests")]

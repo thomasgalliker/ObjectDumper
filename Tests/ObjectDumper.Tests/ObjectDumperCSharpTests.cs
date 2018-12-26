@@ -6,11 +6,12 @@ using FluentAssertions;
 
 using Xunit;
 using Xunit.Abstractions;
-using ObjectDumperLib;
-using ObjectDumperLib_Tests.Testdata;
-using ObjectDumperLib_Tests.Utils;
+using ObjectDumping;
+using ObjectDumping.Internal;
+using ObjectDumper_Tests.Testdata;
+using ObjectDumper_Tests.Utils;
 
-namespace ObjectDumperLib_Tests
+namespace ObjectDumper_Tests
 {
     [Collection(TestCollections.CultureSpecific)]
     public class ObjectDumperCSharpCSharpTests

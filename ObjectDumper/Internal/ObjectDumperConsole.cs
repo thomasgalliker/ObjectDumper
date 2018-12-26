@@ -3,9 +3,9 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 
-using ObjectDumperLib.Extensions;
+using ObjectDumping.Extensions;
 
-namespace ObjectDumperLib
+namespace ObjectDumping.Internal
 {
     /// <summary>
     ///     Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
