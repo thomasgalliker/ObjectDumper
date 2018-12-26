@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ObjectDumping.Extensions
+namespace ObjectDumping.Internal
 {
     internal static class StringExtensions
     {

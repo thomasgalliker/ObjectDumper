@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace ObjectDumping.Extensions
+namespace ObjectDumping.Internal
 {
     internal static class FieldInfoExtensions
     {

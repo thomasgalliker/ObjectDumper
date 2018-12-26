@@ -3,8 +3,6 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 
-using ObjectDumping.Extensions;
-
 namespace ObjectDumping.Internal
 {
     /// <summary>
