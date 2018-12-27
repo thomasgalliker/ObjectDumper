@@ -5,7 +5,6 @@ using System.Reflection;
 
 namespace ObjectDumping
 {
-
     public class DumpOptions
     {
         public DumpOptions()
@@ -36,5 +35,4 @@ namespace ObjectDumping
 
         public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
     }
-
 }

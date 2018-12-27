@@ -70,6 +70,7 @@ namespace ObjectDumping.Internal
                                 this.LineBreak();
                             }
                         }
+
                         this.LineBreak();
                     }
                 }

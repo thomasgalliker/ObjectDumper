@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ObjectDumping.Internal
+﻿namespace ObjectDumping.Internal
 {
     internal static class StringExtensions
     {
