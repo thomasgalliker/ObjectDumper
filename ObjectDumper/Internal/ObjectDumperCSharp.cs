@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using ObjectDumping.Extensions;
 
-namespace ObjectDumping
+namespace ObjectDumping.Internal
 {
     /// <summary>
     ///     Source: http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object

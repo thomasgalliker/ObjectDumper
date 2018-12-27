@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace ObjectDumping
+namespace ObjectDumping.Internal
 {
     public abstract class DumperBase
     {
+        private readonly DumpOptions dumpOptions;
         private readonly List<int> hashListOfFoundElements;
         private readonly StringBuilder stringBuilder;
 
         protected DumperBase(DumpOptions dumpOptions)
         {
-            this.DumpOptions = dumpOptions;
+            this.dumpOptions = dumpOptions;
             this.Level = 0;
             this.stringBuilder = new StringBuilder();
             this.hashListOfFoundElements = new List<int>();
@@ -20,10 +21,13 @@ namespace ObjectDumping
 
         public bool IsMaxLevel()
         {
-            return this.Level > this.DumpOptions.MaxLevel;
+            return this.Level > this.dumpOptions.MaxLevel;
         }
 
-        protected DumpOptions DumpOptions { get; }
+        protected DumpOptions DumpOptions
+        {
+            get { return this.dumpOptions; }
+        }
 
         private static string CalculateSpace(char c, int level, int size)
         {
@@ -33,19 +37,19 @@ namespace ObjectDumping
 
         protected void StartLine(string value)
         {
-            var space = CalculateSpace(this.DumpOptions.IndentChar, this.Level, this.DumpOptions.IndentSize);
+            var space = CalculateSpace(this.dumpOptions.IndentChar, this.Level, this.dumpOptions.IndentSize);
             this.stringBuilder.Append(space + value);
         }
 
         protected void Write(string value, int? intentLevel = null)
         {
-            var space = CalculateSpace(this.DumpOptions.IndentChar, intentLevel ?? 0, this.DumpOptions.IndentSize);
+            var space = CalculateSpace(this.dumpOptions.IndentChar, intentLevel ?? 0, this.dumpOptions.IndentSize);
             this.stringBuilder.Append(space + value);
         }
 
         protected void LineBreak()
         {
-            this.stringBuilder.Append(this.DumpOptions.LineBreakChar);
+            this.stringBuilder.Append(this.dumpOptions.LineBreakChar);
         }
 
         protected void AddAlreadyTouched(object element)
