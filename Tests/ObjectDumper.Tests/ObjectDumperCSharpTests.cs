@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.Tests.Testdata;
-using System.Diagnostics.Tests.Utils;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
-
+using ObjectDumping.Internal;
+using ObjectDumping.Tests.Testdata;
+using ObjectDumping.Tests.Utils;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace System.Diagnostics.Tests
+namespace ObjectDumping.Tests
 {
     [Collection(TestCollections.CultureSpecific)]
     public class ObjectDumperCSharpCSharpTests
@@ -139,7 +140,6 @@ namespace System.Diagnostics.Tests
             dump.Should().Be("var testObject = new TestObject\n\r{\n\r  NullableDateTime = null\n\r};");
         }
 
-
         [Fact]
         public void ShouldOrderProperties()
         {
@@ -171,7 +171,6 @@ namespace System.Diagnostics.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
 
-
             var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             returnedDateTime.Should().Be(dateTime);
         }
@@ -189,7 +188,6 @@ namespace System.Diagnostics.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000Z\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
-
 
             var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000Z", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             returnedDateTime.Should().Be(dateTime);
@@ -278,8 +276,6 @@ namespace System.Diagnostics.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTimeKind = System.DateTimeKind.Utc;");
         }
-
-
 
         [Fact]
         public void ShouldDumpDictionary()

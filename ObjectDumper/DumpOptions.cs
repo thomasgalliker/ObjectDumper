@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System.Diagnostics
+namespace ObjectDumping
 {
     public class DumpOptions
     {

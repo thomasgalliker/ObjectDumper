@@ -1,9 +1,11 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+
 #if NET452
 using System.Threading;
 #endif
 
-namespace System.Diagnostics.Tests.Utils
+namespace ObjectDumping.Tests.Utils
 {
     public static class CurrentCultureHelper
     {

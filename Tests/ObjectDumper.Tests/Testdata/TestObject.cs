@@ -1,4 +1,6 @@
-﻿namespace System.Diagnostics.Tests.Testdata
+﻿using System;
+
+namespace ObjectDumping.Tests.Testdata
 {
     public class TestObject
     {
