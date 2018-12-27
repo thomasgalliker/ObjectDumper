@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using FluentAssertions;
-
-using Xunit;
-using Xunit.Abstractions;
-using ObjectDumping;
+using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
 using ObjectDumping.Tests.Utils;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace ObjectDumping.Tests
 {
@@ -141,7 +140,6 @@ namespace ObjectDumping.Tests
             dump.Should().Be("var testObject = new TestObject\n\r{\n\r  NullableDateTime = null\n\r};");
         }
 
-
         [Fact]
         public void ShouldOrderProperties()
         {
@@ -173,7 +171,6 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
 
-
             var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             returnedDateTime.Should().Be(dateTime);
         }
@@ -191,7 +188,6 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTime = DateTime.ParseExact(\"2000-01-01T23:59:59.0000000Z\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
-
 
             var returnedDateTime = DateTime.ParseExact("2000-01-01T23:59:59.0000000Z", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             returnedDateTime.Should().Be(dateTime);
@@ -280,8 +276,6 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTimeKind = System.DateTimeKind.Utc;");
         }
-
-
 
         [Fact]
         public void ShouldDumpDictionary()

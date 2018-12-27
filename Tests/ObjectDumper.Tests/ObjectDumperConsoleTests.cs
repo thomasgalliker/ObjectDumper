@@ -2,12 +2,11 @@
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
-
-using ObjectDumping;
+using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
 using ObjectDumping.Tests.Utils;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace ObjectDumping.Tests
 {
@@ -156,7 +155,6 @@ namespace ObjectDumping.Tests
             dump.Should().Contain("<-- bidirectional reference found");
         }
 
-
         [Fact]
         public void ShouldExcludeProperties()
         {
@@ -206,7 +204,6 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("01.01.2000 23:59:59");
         }
-
 
         [Fact]
         public void ShouldDumpNullableObject()
