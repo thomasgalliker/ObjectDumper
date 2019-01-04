@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace System.Diagnostics.Tests.Testdata
+namespace ObjectDumping.Tests.Testdata
 {
     public class Organization
     {

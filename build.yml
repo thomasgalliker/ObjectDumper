@@ -4,7 +4,7 @@
 # (c)2018 superdev GmbH
 ####################################################################
 
-name: 2.1.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 2.2.$(date:yy)$(DayOfYear).$(rev:rr)
   
 queue:
   name: Hosted VS2017
@@ -19,11 +19,18 @@ trigger:
     - master
     - develop
     - releases/*
+
   paths:
     include:
     - docs/*
     exclude:
     - docs/README.md
+
+variables:
+  solution: 'ObjectDumper.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  buildVersionPostfix: '-pre'
 
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1

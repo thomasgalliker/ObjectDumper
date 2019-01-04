@@ -1,4 +1,4 @@
-﻿namespace System.Diagnostics.Tests.Utils
+﻿namespace ObjectDumping.Tests.Utils
 {
     public static class TestCollections
     {

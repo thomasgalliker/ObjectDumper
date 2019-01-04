@@ -7,7 +7,7 @@
     <Version>1.0.0</Version>
     <Authors>Thomas Galliker</Authors>
     <TargetFrameworks>netstandard1.2;net45</TargetFrameworks>
-    <AssemblyName>ObjectDumper</AssemblyName>
+    <AssemblyName>ObjectDumping</AssemblyName>
     <PackageId>ObjectDumper.NET</PackageId>
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png</PackageIconUrl>
@@ -32,7 +32,7 @@
     <Company>superdev GmbH</Company>
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RootNamespace>System.Diagnostics</RootNamespace>
+    <RootNamespace>ObjectDumping</RootNamespace>
     <PackageReleaseNotes>2.0.0
 - Migrate to netstandard
 - Bug fixes
