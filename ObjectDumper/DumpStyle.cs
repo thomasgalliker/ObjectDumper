@@ -1,8 +1,6 @@
-﻿namespace ObjectDumping
+﻿// ReSharper disable once CheckNamespace
+public enum DumpStyle
 {
-    public enum DumpStyle
-    {
-        Console,
-        CSharp
-    }
+    Console,
+    CSharp
 }
