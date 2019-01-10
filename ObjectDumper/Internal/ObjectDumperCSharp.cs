@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +53,19 @@ namespace ObjectDumping.Internal
             {
                 properties = properties
                     .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
+                    .ToList();
+            }
+
+            if (this.DumpOptions.IgnoreDefaultValues)
+            {
+                properties = properties
+                    .Where(p =>
+                    {
+                        var value = p.GetValue(o);
+                        var defaultValue = p.PropertyType.GetDefault();
+                        var isDefaultValue = Equals(value, defaultValue);
+                        return !isDefaultValue;
+                    })
                     .ToList();
             }
 

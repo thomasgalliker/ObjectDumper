@@ -72,5 +72,25 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var person = new Person\n{\n        Age = 30,\n        Bool = false,\n        Byte = 0,\n        ByteArray = new Byte[]\n        {\n        },\n        DateTime = DateTime.MinValue,\n        Decimal = 0m,\n        Double = 0d,\n        Enum = System.DateTimeKind.Unspecified,\n        Float = 0f,\n        Long = 0L,\n        NullableDateTime = null,\n        SByte = 0,\n        Short = 0,\n        Uint = 0,\n        ULong = 0L,\n        UShort = 0\n};");
         }
+
+        [Fact]
+        public void ShouldDumpObject_WithOptions_IgnoreDefaultValues()
+        {
+            // Arrange
+            var person = PersonFactory.GetPersonThomas();
+            var dumpOptions = new DumpOptions
+            {
+                DumpStyle = DumpStyle.CSharp,
+                IgnoreDefaultValues = true
+            };
+
+            // Act
+            var dump = ObjectDumper.Dump(person, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var person = new Person\n\r{\n\r  Name = \"Thomas\",\n\r  Age = 30,\n\r  GetOnly = 11,\n\r  ByteArray = new Byte[]\n\r  {\n\r    1,\n\r    2,\n\r    3,\n\r    4\n\r  }\n\r};");
+        }
     }
 }
