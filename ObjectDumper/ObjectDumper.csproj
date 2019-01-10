@@ -33,7 +33,11 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>2.0.0
+    <PackageReleaseNotes>2.2.0
+- Add bool property DumpOptions.IgnoreDefaultValues to filter properties which contain default values
+- Refactor namespaces: Move ObjectDumper to root namespace
+      
+2.0.0
 - Migrate to netstandard
 - Bug fixes
 
