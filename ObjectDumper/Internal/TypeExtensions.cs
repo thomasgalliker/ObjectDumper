@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -21,6 +21,17 @@ namespace ObjectDumping.Internal
             }
 
             return $"{typeName.Substring(0, typeName.IndexOf('`'))}<{string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName)))}>";
+        }
+
+        public static object GetDefault(this Type t)
+        {
+            var defaultValue = typeof(TypeExtensions).GetRuntimeMethod("GetDefaultGeneric", new Type[] { }).MakeGenericMethod(t).Invoke(null, null);
+            return defaultValue;
+        }
+
+        public static T GetDefaultGeneric<T>()
+        {
+            return default(T);
         }
     }
 }

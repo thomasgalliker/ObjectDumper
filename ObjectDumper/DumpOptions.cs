@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -16,6 +16,7 @@ public class DumpOptions
         this.MaxLevel = int.MaxValue;
         this.ExcludeProperties = new HashSet<string>();
         this.PropertyOrderBy = null;
+        this.IgnoreDefaultValues = false;
     }
 
     public DumpStyle DumpStyle { get; set; }
@@ -33,4 +34,6 @@ public class DumpOptions
     public ICollection<string> ExcludeProperties { get; set; }
 
     public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
+
+    public bool IgnoreDefaultValues { get; set; }
 }
