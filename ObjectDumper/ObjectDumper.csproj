@@ -36,9 +36,10 @@
     <PackageReleaseNotes>2.2.0
 - Add bool property DumpOptions.IgnoreDefaultValues to filter properties which contain default values
 - Refactor namespaces: Move ObjectDumper to root namespace
+- Add support for netstandard2.0
       
 2.0.0
-- Migrate to netstandard
+- Migrate to netstandard1.2
 - Bug fixes
 
 1.0.8
