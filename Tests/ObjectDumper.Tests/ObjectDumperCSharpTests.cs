@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -296,9 +296,28 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var dictionaryInt32String = new Dictionary<Int32, String>\n\r{\n\r  { 1, \"Value1\" },\n\r  { 2, \"Value2\" },\n\r  { 3, \"Value3\" }\n\r};");
         }
-    }
 
-    public class CultureSpecificFixture2
-    {
+        [Fact]
+        public void ShouldEscapeStrings()
+        {
+            // Arrange
+            var expectedPerson = new Person { Name = "Boris \"The Blade\", \\GANGSTA\\ aka 'The Bullet Dodger' \a \b \f \n\rOn a new\twith tab \v \0" };
+            var dumpOptions = new DumpOptions { SetPropertiesOnly = true, IgnoreDefaultValues = true, MaxLevel = 1, ExcludeProperties = { "ByteArray" } };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(expectedPerson, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+
+            // Compare generated object with input
+            var person = new Person
+            {
+                Name = "Boris \"The Blade\", \\GANGSTA\\ aka \'The Bullet Dodger\' \a \b \f \n\rOn a new\twith tab \v \0"
+            };
+
+            person.Should().BeEquivalentTo(expectedPerson);
+        }
     }
 }
