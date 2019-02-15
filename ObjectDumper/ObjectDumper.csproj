@@ -33,7 +33,10 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>2.2.0
+    <PackageReleaseNotes>2.3.0
+- Fix escape sequences in string values
+
+2.2.0
 - Add bool property DumpOptions.IgnoreDefaultValues to filter properties which contain default values
 - Refactor namespaces: Move ObjectDumper to root namespace
 - Add support for netstandard2.0
