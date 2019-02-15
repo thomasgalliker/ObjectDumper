@@ -4,7 +4,7 @@
 # (c)2018 superdev GmbH
 ####################################################################
 
-name: 2.2.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 2.3.$(date:yy)$(DayOfYear).$(rev:rr)
   
 queue:
   name: Hosted VS2017
@@ -21,10 +21,8 @@ trigger:
     - releases/*
 
   paths:
-    include:
-    - docs/*
     exclude:
-    - docs/README.md
+    - README.md
 
 variables:
   solution: 'ObjectDumper.sln'

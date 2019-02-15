@@ -115,7 +115,8 @@ namespace ObjectDumping.Internal
 
             if (o is string)
             {
-                this.Write("\"" + $@"{o}" + "\"", intentLevel);
+                var str = $@"{o}".Escape();
+                this.Write($"\"{str}\"", intentLevel);
                 return;
             }
 
