@@ -36,10 +36,16 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
-        public void ShouldDumpObject_WithNullProperty()
+        public void ShouldDumpObject_WithNullFieldsAndProperties()
         {
             // Arrange
-            var myObject = new My.TestObject2 { Body = null, Name = null };
+            var myObject = new My.TestObject2
+            {
+                body = null,
+                Body = null,
+                name = null,
+                Name = null,
+            };
 
             // Act
             var dump = ObjectDumperConsole.Dump(myObject);
@@ -47,7 +53,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{My.TestObject2}\n\r  Body: null\n\r  Name: null\n\r");
+            dump.Should().Be("{My.TestObject2}\n\r  body: null\n\r  name: null\n\r  Body: null\n\r  Name: null\n\r");
         }
 
         [Fact]
