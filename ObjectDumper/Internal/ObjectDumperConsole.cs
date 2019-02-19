@@ -90,22 +90,25 @@ namespace ObjectDumping.Internal
                         {
                             var isEnumerable = typeof(IEnumerable).GetTypeInfo()
                                 .IsAssignableFrom(fieldInfo.FieldType.GetTypeInfo());
-                            this.StartLine($"{fieldInfo.Name}: {(isEnumerable ? "..." : "{ }")}");
+                            this.StartLine($"{fieldInfo.Name}: {(isEnumerable ? "..." : (value != null ? "{ }" : "null"))}");
                             this.LineBreak();
 
-                            var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
-                            this.Level++;
-                            if (!alreadyTouched)
+                            if (value != null)
                             {
-                                this.DumpElement(value);
-                            }
-                            else
-                            {
-                                this.Write($"{GetClassName(element)} <-- bidirectional reference found");
-                                this.LineBreak();
-                            }
+                                var alreadyTouched = !isEnumerable && this.AlreadyTouched(value);
+                                this.Level++;
+                                if (!alreadyTouched)
+                                {
+                                    this.DumpElement(value);
+                                }
+                                else
+                                {
+                                    this.Write($"{GetClassName(element)} <-- bidirectional reference found");
+                                    this.LineBreak();
+                                }
 
-                            this.Level--;
+                                this.Level--;
+                            }
                         }
                     }
 
