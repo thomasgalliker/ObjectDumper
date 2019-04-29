@@ -278,6 +278,21 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpGuid()
+        {
+            // Arrange
+            var guid = new Guid("024CC229-DEA0-4D7A-9FC8-722E3A0C69A3");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(guid);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var guid = new Guid(\"024cc229-dea0-4d7a-9fc8-722e3a0c69a3\");");
+        }
+
+        [Fact]
         public void ShouldDumpDictionary()
         {
             // Arrange

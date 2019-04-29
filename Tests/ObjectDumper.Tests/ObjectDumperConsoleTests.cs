@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -240,6 +241,79 @@ namespace ObjectDumping.Tests
 
             dump.Should().NotBeNull();
             dump.Should().Be("null");
+        }
+
+        [Fact]
+        public void ShouldDumpEnum()
+        {
+            // Arrange
+            var dateTimeKind = DateTimeKind.Utc;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(dateTimeKind);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("Utc");
+        }
+
+        [Fact]
+        public void ShouldDumpGuid()
+        {
+            // Arrange
+            var guid = new Guid("024CC229-DEA0-4D7A-9FC8-722E3A0C69A3");
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(guid);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("024cc229-dea0-4d7a-9fc8-722e3a0c69a3");
+        }
+
+        [Fact]
+        public void ShouldDumpDictionary()
+        {
+            // Arrange
+            var dictionary = new Dictionary<int, string>
+            {
+                { 1, "Value1" },
+                { 2, "Value2" },
+                { 3, "Value3" }
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(dictionary);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("[1, Value1]\r\n[2, Value2]\r\n[3, Value3]\r\n");
+        }
+
+        [Fact]
+        public void ShouldEscapeStrings()
+        {
+            // Arrange
+            var expectedPerson = new Person { Name = "Boris \"The Blade\", \\GANGSTA\\ aka 'The Bullet Dodger' \a \b \f \r\nOn a new\twith tab \v \0" };
+            var dumpOptions = new DumpOptions { SetPropertiesOnly = true, IgnoreDefaultValues = true, MaxLevel = 1, ExcludeProperties = { "ByteArray" } };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(expectedPerson, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+
+            // Compare generated object with input
+            var person = new Person
+            {
+                Name = "Boris \"The Blade\", \\GANGSTA\\ aka \'The Bullet Dodger\' \a \b \f \r\nOn a new\twith tab \v \0"
+            };
+
+            person.Should().BeEquivalentTo(expectedPerson);
         }
     }
 }
