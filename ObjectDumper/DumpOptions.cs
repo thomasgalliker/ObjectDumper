@@ -11,7 +11,7 @@ public class DumpOptions
         this.DumpStyle = DumpStyle.Console;
         this.IndentSize = 2;
         this.IndentChar = ' ';
-        this.LineBreakChar = "\n\r";
+        this.LineBreakChar = Environment.NewLine;
         this.SetPropertiesOnly = false;
         this.MaxLevel = int.MaxValue;
         this.ExcludeProperties = new HashSet<string>();

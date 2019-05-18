@@ -193,6 +193,12 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            if (o is Guid guid)
+            {
+                this.Write($"new Guid(\"{guid:D}\")", intentLevel);
+                return;
+            }
+
             var type = o.GetType();
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))

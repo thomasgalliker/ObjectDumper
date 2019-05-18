@@ -33,7 +33,11 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>2.3.0
+    <PackageReleaseNotes>2.4.0
+- Handle Guid formatting
+- Set LineBreakChar default to Environment.NewLine
+
+2.3.0
 - Fix escape sequences in string values
 
 2.2.0
