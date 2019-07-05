@@ -34,14 +34,14 @@ namespace ObjectDumping.Internal
 
             if (element == null || element is ValueType || element is string)
             {
-                this.StartLine(this.FormatValue(element));
+                this.Write(this.FormatValue(element));
             }
             else
             {
                 var objectType = element.GetType();
                 if (!typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
                 {
-                    this.StartLine(GetClassName(element));
+                    this.Write(GetClassName(element));
                     this.LineBreak();
                     this.AddAlreadyTouched(element);
                     this.Level++;
@@ -83,14 +83,14 @@ namespace ObjectDumping.Internal
 
                         if (fieldInfo.FieldType.GetTypeInfo().IsValueType || fieldInfo.FieldType == typeof(string))
                         {
-                            this.StartLine($"{fieldInfo.Name}: {this.FormatValue(value)}");
+                            this.Write($"{fieldInfo.Name}: {this.FormatValue(value)}");
                             this.LineBreak();
                         }
                         else
                         {
                             var isEnumerable = typeof(IEnumerable).GetTypeInfo()
                                 .IsAssignableFrom(fieldInfo.FieldType.GetTypeInfo());
-                            this.StartLine($"{fieldInfo.Name}: {(isEnumerable ? "..." : (value != null ? "{ }" : "null"))}");
+                            this.Write($"{fieldInfo.Name}: {(isEnumerable ? "..." : (value != null ? "{ }" : "null"))}");
                             this.LineBreak();
 
                             if (value != null)
@@ -156,13 +156,13 @@ namespace ObjectDumping.Internal
 
                         if (type.GetTypeInfo().IsValueType || type == typeof(string))
                         {
-                            this.StartLine($"{propertyInfo.Name}: {this.FormatValue(value)}");
+                            this.Write($"{propertyInfo.Name}: {this.FormatValue(value)}");
                             this.LineBreak();
                         }
                         else
                         {
                             var isEnumerable = typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
-                            this.StartLine($"{propertyInfo.Name}: {(isEnumerable ? "..." : (value != null ? "{ }" : "null"))}");
+                            this.Write($"{propertyInfo.Name}: {(isEnumerable ? "..." : (value != null ? "{ }" : "null"))}");
                             this.LineBreak();
 
                             if (value != null)

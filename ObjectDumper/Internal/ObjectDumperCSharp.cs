@@ -30,11 +30,11 @@ namespace ObjectDumping.Internal
             return instance.ToString();
         }
 
-        private void CreateObject(object o, int? intentLevel = null)
+        private void CreateObject(object o, int intentLevel = 0)
         {
             this.Write($"new {GetClassName(o)}", intentLevel);
             this.LineBreak();
-            this.StartLine("{");
+            this.Write("{");
             this.LineBreak();
             this.Level++;
 
@@ -80,7 +80,7 @@ namespace ObjectDumping.Internal
             foreach (var property in properties)
             {
                 var value = property.TryGetValue(o);
-                this.StartLine($"{property.Name} = ");
+                this.Write($"{property.Name} = ");
                 this.FormatValue(value);
                 if (!Equals(property, last))
                 {
@@ -91,10 +91,10 @@ namespace ObjectDumping.Internal
             }
 
             this.Level--;
-            this.StartLine("}");
+            this.Write("}");
         }
 
-        private void FormatValue(object o, int? intentLevel = null)
+        private void FormatValue(object o, int intentLevel = 0)
         {
             if (this.IsMaxLevel())
             {
@@ -218,10 +218,10 @@ namespace ObjectDumping.Internal
             {
                 this.Write($"new {GetClassName(o)}", intentLevel);
                 this.LineBreak();
-                this.StartLine("{");
+                this.Write("{");
                 this.LineBreak();
                 this.WriteItems((IEnumerable)o);
-                this.StartLine("}");
+                this.Write("}");
                 return;
             }
 
