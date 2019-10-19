@@ -1,24 +1,21 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.2
+# VSTS Build Configuration, Version 1.3
 #
 # (c)2019 superdev GmbH
 ####################################################################
 
 name: 2.4.$(date:yy)$(DayOfYear).$(rev:rr)
-  
-queue:
-  name: Hosted VS2017
-  demands: 
-  - msbuild
-  - visualstudio
-  - vstest
+
+pool:
+  vmImage: 'windows-2019'
 
 trigger:
   branches:
     include:
     - master
     - develop
-    - releases/*
+    - release/*
+    - feature/*
 
   paths:
     exclude:
@@ -31,16 +28,16 @@ variables:
   buildVersionPostfix: '-pre'
 
 steps:
-- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
+- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-NetCore.Assembly-Info-NetCore@2
   displayName: 'Set Assembly Manifest Data'
   inputs:
     FileNames: |
      ObjectDumper.csproj
     InsertAttributes: true
-    Title: 'ObjectDumper'
+    Product: 'ObjectDumper'
     Description: ''
     Company: 'superdev GmbH'
-    Copyright: '(c) $(date:yyyy) superdev GmbH'
+    Copyright: '(c) $(date:YYYY) superdev GmbH'
     VersionNumber: '$(Build.BuildNumber)'
     FileVersionNumber: '$(Build.BuildNumber)'
 
