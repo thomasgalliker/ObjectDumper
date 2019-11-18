@@ -187,6 +187,24 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            if (o is DateTimeOffset dateTimeOffset)
+            {
+                if (dateTimeOffset == DateTimeOffset.MinValue)
+                {
+                    this.Write($"DateTimeOffset.MinValue", intentLevel);
+                }
+                else if (dateTimeOffset == DateTimeOffset.MaxValue)
+                {
+                    this.Write($"DateTimeOffset.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"DateTimeOffset.ParseExact(\"{dateTimeOffset:O}\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)", intentLevel);
+                }
+
+                return;
+            }
+
             if (o is Enum)
             {
                 this.Write($"{o.GetType().FullName}.{o}", intentLevel);
