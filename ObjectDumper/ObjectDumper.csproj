@@ -35,6 +35,7 @@
     <RootNamespace>ObjectDumping</RootNamespace>
     <PackageReleaseNotes>2.4.0
 - Handle Guid formatting
+- Handle DateTimeOffset formatting 
 - Set LineBreakChar default to Environment.NewLine
 
 2.3.0
