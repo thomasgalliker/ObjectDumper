@@ -6,6 +6,23 @@ namespace ObjectDumping.Internal
 {
     internal static class TypeExtensions
     {
+
+        internal static string GetFormattedNameVB(this Type type, bool useFullName = false)
+        { 
+        
+            var typeName = useFullName ? type.FullName : type.Name;
+
+            var typeInfo = type.GetTypeInfo();
+            if (!typeInfo.IsGenericType)
+            {
+                return typeName;
+            }
+
+            return $"{typeName.Substring(0, typeName.IndexOf('`'))}(Of {string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName)))})";
+        
+        }
+
+
         /// <summary>
         ///     Source:
         ///     https://github.com/thomasgalliker/CrossPlatformLibrary/blob/0ea2e849dfccee3f68e719c19daef2eaabec190e/CrossPlatformLibrary/Extensions/TypeExtensions.cs
