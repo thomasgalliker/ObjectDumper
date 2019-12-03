@@ -18,7 +18,7 @@ namespace ObjectDumping.Internal
                 return typeName;
             }
 
-            return $"{typeName.Substring(0, typeName.IndexOf('`'))}(Of {string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName)))})";
+            return $"{typeName?.Substring(0, typeName.IndexOf('`'))}(Of {string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName)))})";
         
         }
 
