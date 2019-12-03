@@ -33,8 +33,8 @@ namespace ObjectDumping.Internal
         private void CreateObject(object o, int intentLevel = 0)
         {
             this.Write($"new {GetClassName(o)}", intentLevel);
-            this.LineBreak();
-            //this.Write("{");
+            //this.LineBreak();
+            this.Write(" With {");
             this.LineBreak();
             this.Level++;
 
@@ -80,7 +80,7 @@ namespace ObjectDumping.Internal
             foreach (var property in properties)
             {
                 var value = property.TryGetValue(o);
-                this.Write($"{property.Name} = ");
+                this.Write($".{property.Name} = ");
                 this.FormatValue(value);
                 if (!Equals(property, last))
                 {
@@ -91,7 +91,7 @@ namespace ObjectDumping.Internal
             }
 
             this.Level--;
-            //this.Write("}");
+            this.Write("}");
         }
 
         private void FormatValue(object o, int intentLevel = 0)
@@ -224,22 +224,22 @@ namespace ObjectDumping.Internal
                 var kvpKey = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Key)).GetValue(o, null);
                 var kvpValue = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Value)).GetValue(o, null);
 
-                this.Write(" ", intentLevel);
+                this.Write("{ ", intentLevel);
                 this.FormatValue(kvpKey);
                 this.Write(", ");
                 this.FormatValue(kvpValue);
-                this.Write(" ");
+                this.Write(" }");
                 return;
             }
 
             if (o is IEnumerable)
             {
                 this.Write($"new {GetClassName(o)}", intentLevel);
-                this.LineBreak();
-                this.Write("");
+                //this.LineBreak();
+                this.Write(" From {");
                 this.LineBreak();
                 this.WriteItems((IEnumerable)o);
-                this.Write("");
+                this.Write("}");
                 return;
             }
 
@@ -296,17 +296,20 @@ namespace ObjectDumping.Internal
             if (element is IEnumerable)
             {
                 variableName = GetClassName(element)
-                    .Replace("<", "")
-                    .Replace(">", "")
-                    .Replace(" ", "")
-                    .Replace(",", "");
+                .Replace("(Of ", "")
+                .Replace(")", "")
+                .Replace(" ", "")
+                .Replace(",", "")
+                .Replace("(", "");
+
+
             }
             else if (type.GetTypeInfo().IsGenericType)
             {
                 variableName = $"{type.Name.Substring(0, type.Name.IndexOf('`'))}";
             }
 
-            return variableName.ToLowerFirst();
+            return $"[{variableName.ToLowerFirst()}]";
         }
     }
 }

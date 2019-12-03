@@ -15,7 +15,7 @@ namespace ObjectDumping.Internal
             var typeInfo = type.GetTypeInfo();
             if (!typeInfo.IsGenericType)
             {
-                return typeName;
+                return typeName.Replace("[]","()");
             }
 
             return $"{typeName?.Substring(0, typeName.IndexOf('`'))}(Of {string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName)))})";
