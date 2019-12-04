@@ -70,7 +70,60 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("Dim [listPerson] = new List<Person>\r\n{\r\n  new Person\r\n  {\r\n    Name = \"Person 1\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  },\r\n  new Person\r\n  {\r\n    Name = \"Person 2\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  }\r\n}");
+            dump.Should().Be(@"Dim [listPerson] = new List(Of Person) From {
+  new Person With {
+    .Name = ""Person 1"",
+    .Char = '',
+    .Age = 3,
+    .GetOnly = 11,
+    .Bool = false,
+    .Byte = 0,
+    .ByteArray = new Byte() From {
+      1,
+      2,
+      3,
+      4
+    },
+    .SByte = 0,
+    .Float = 0f,
+    .Uint = 0,
+    .Long = 0L,
+    .ULong = 0L,
+    .Short = 0,
+    .UShort = 0,
+    .Decimal = 0m,
+    .Double = 0d,
+    .DateTime = DateTime.MinValue,
+    .NullableDateTime = Nothing,
+    .Enum = System.DateTimeKind.Unspecified
+  },
+  new Person With {
+    .Name = ""Person 2"",
+    .Char = '',
+    .Age = 3,
+    .GetOnly = 11,
+    .Bool = false,
+    .Byte = 0,
+    .ByteArray = new Byte() From {
+      1,
+      2,
+      3,
+      4
+    },
+    .SByte = 0,
+    .Float = 0f,
+    .Uint = 0,
+    .Long = 0L,
+    .ULong = 0L,
+    .Short = 0,
+    .UShort = 0,
+    .Decimal = 0m,
+    .Double = 0d,
+    .DateTime = DateTime.MinValue,
+    .NullableDateTime = Nothing,
+    .Enum = System.DateTimeKind.Unspecified
+  }
+}");
         }
 
         [Fact]
@@ -373,7 +426,7 @@ namespace ObjectDumping.Tests
 
             var dump = ObjectDumperVisualBasic.Dump(testVal);
             dump.Should().NotBeNull();
-            dump.Should().Be("Dim [byte] = new Byte() From {\r\n  1,\r\n  2,\r\n  3,\r\n  3,\r\n  3\r\n}");
+            dump.Should().Be("Dim [byte] = new Byte() {\r\n  1,\r\n  2,\r\n  3,\r\n  3,\r\n  3\r\n}");
         }
 
         [Fact]

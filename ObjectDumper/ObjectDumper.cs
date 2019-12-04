@@ -39,11 +39,13 @@ public static class ObjectDumper
             dumpOptions = new DumpOptions();
         }
 
-        if (dumpOptions.DumpStyle == DumpStyle.Console)
-        {
-            return ObjectDumperConsole.Dump(element, dumpOptions);
+        switch (dumpOptions.DumpStyle) {
+            case DumpStyle.Console:
+                return ObjectDumperConsole.Dump(element, dumpOptions);
+            case DumpStyle.VisualBasic:
+                return ObjectDumperVisualBasic.Dump(element, dumpOptions);
+            default:
+                return ObjectDumperCSharp.Dump(element, dumpOptions);
         }
-
-        return ObjectDumperCSharp.Dump(element, dumpOptions);
     }
 }

@@ -123,7 +123,7 @@ namespace ObjectDumping.Internal
             if (o is char)
             {
                 var c = o.ToString().Replace("\0", "").Trim();
-                this.Write($"\'{c}\'", intentLevel);
+                this.Write($"\"{c}c\"", intentLevel);
                 return;
             }
 
@@ -135,7 +135,7 @@ namespace ObjectDumping.Internal
 
             if (o is decimal)
             {
-                this.Write($"{o}m", intentLevel);
+                this.Write($"{o}D", intentLevel);
                 return;
             }
 
@@ -234,9 +234,11 @@ namespace ObjectDumping.Internal
 
             if (o is IEnumerable)
             {
+
+                //fixme array here? from/not from
                 this.Write($"new {GetClassName(o)}", intentLevel);
                 //this.LineBreak();
-                this.Write(" From {");
+                this.Write(" {"); //fixme
                 this.LineBreak();
                 this.WriteItems((IEnumerable)o);
                 this.Write("}");
