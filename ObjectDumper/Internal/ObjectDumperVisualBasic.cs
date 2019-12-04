@@ -238,7 +238,9 @@ namespace ObjectDumping.Internal
                 //fixme array here? from/not from
                 this.Write($"new {GetClassName(o)}", intentLevel);
                 //this.LineBreak();
-                this.Write(" {"); //fixme
+                this.Write(o is Array ? " {" : " From {");
+
+                //this.Write(" {"); //fixme
                 this.LineBreak();
                 this.WriteItems((IEnumerable)o);
                 this.Write("}");
@@ -289,7 +291,7 @@ namespace ObjectDumping.Internal
         {
             if (element == null)
             {
-                return "x";
+                return "[x]";
             }
 
             var type = element.GetType();

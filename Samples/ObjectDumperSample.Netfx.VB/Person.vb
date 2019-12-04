@@ -1,12 +1,14 @@
 ﻿Namespace ObjectDumperSample.Netfx.VB
+
+
     Public Class Person
 
         Public Sub New()
 
             Me.GetOnly = 11
             Me.SetOnly = 99
-            Me.ByteArray = New Byte[] { 1, 2, 3, 4 }
- End Sub
+            Me.ByteArray = New Byte() {1, 2, 3, 4}
+        End Sub
 
         Public Name As String
 
@@ -22,7 +24,7 @@
 
         Public Property [Bool] As Boolean
 
-        Public Property [Byte] e As Byte
+        Public Property [Byte] As Byte
 
         Public Property ByteArray As Byte()
 
