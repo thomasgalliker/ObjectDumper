@@ -334,5 +334,50 @@ namespace ObjectDumping.Tests
 
             person.Should().BeEquivalentTo(expectedPerson);
         }
+
+        [Fact]
+        public void ShouldDumpDateTimeOffset()
+        {
+            // Arrange            
+            var offset = new DateTimeOffset(2000, 01, 01, 23, 59, 59, TimeSpan.Zero);
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(offset);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be($"var dateTimeOffset = DateTimeOffset.ParseExact(\"2000-01-01T23:59:59.0000000+00:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);");
+        }
+
+        [Fact]
+        public void ShouldDumpDateTimeOffsetMinValue()
+        {
+            // Arrange            
+            var offset = DateTimeOffset.MinValue;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(offset);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be($"var dateTimeOffset = DateTimeOffset.MinValue;");
+        }
+
+        [Fact]
+        public void ShouldDumpDateTimeOffsetMaxValue()
+        {
+            // Arrange            
+            var offset = DateTimeOffset.MaxValue;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(offset);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be($"var dateTimeOffset = DateTimeOffset.MaxValue;");
+        }
     }
 }
