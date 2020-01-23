@@ -36,6 +36,7 @@
     <PackageReleaseNotes>2.4.0
 - Handle Guid formatting
 - Handle DateTimeOffset formatting 
+- Handle TimeSpan formatting
 - Set LineBreakChar default to Environment.NewLine
 
 2.3.0
@@ -79,7 +80,7 @@
       
 1.0.0
 - Initial release</PackageReleaseNotes>
-    <Copyright>Copyright 2018</Copyright>
+    <Copyright>Copyright 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
