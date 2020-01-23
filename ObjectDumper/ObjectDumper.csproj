@@ -33,7 +33,10 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>2.4.0
+    <PackageReleaseNotes>2.5.0
+- Handle CultureInfo formatting
+
+2.4.0
 - Handle Guid formatting
 - Handle DateTimeOffset formatting 
 - Handle TimeSpan formatting
