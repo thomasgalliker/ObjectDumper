@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -227,6 +228,11 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            if (o is CultureInfo cultureInfo)
+            {
+                this.Write($"new CultureInfo(\"{cultureInfo}\")", intentLevel);
+                return;
+            }
             if (o is Enum)
             {
                 this.Write($"{o.GetType().FullName}.{o}", intentLevel);

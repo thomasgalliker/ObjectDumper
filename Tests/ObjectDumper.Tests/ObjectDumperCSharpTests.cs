@@ -469,5 +469,20 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be($"var dateTimeOffset = DateTimeOffset.MaxValue;");
         }
+
+        [Fact]
+        public void ShouldDumpCultureInfo()
+        {
+            // Arrange            
+            var cultureInfo = new CultureInfo("de-CH");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(cultureInfo);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
+        }
     }
 }

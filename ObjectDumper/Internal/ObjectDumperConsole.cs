@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -212,6 +213,11 @@ namespace ObjectDumping.Internal
             }
 
             if (o is ValueType)
+            {
+                return o.ToString();
+            }
+            
+            if (o is CultureInfo)
             {
                 return o.ToString();
             }
