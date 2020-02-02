@@ -193,6 +193,96 @@ namespace ObjectDumping.Tests
             returnedDateTime.Should().Be(dateTime);
         }
 
+        [Fact]
+        public void ShouldDumpTimeSpan()
+        {
+            // Arrange
+            var timeSpan = new TimeSpan(1, 2, 3, 4, 5);
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(timeSpan);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var timeSpan = TimeSpan.ParseExact(\"1.02:03:04.0050000\", \"c\", CultureInfo.InvariantCulture, TimeSpanStyles.None);");
+
+            var returnedTimeSpan = TimeSpan.ParseExact("1.02:03:04.0050000", "c", CultureInfo.InvariantCulture, TimeSpanStyles.None);
+            returnedTimeSpan.Should().Be(timeSpan);
+        }
+
+        [Fact]
+        public void ShouldDumpTimeSpan_Zero()
+        {
+            // Arrange
+            var timeSpan = TimeSpan.Zero;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(timeSpan);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var timeSpan = TimeSpan.Zero;");
+
+            var returnedTimeSpan = TimeSpan.Zero;
+            returnedTimeSpan.Should().Be(timeSpan);
+        }
+
+        [Fact]
+        public void ShouldDumpTimeSpan_MinValue()
+        {
+            // Arrange
+            var timeSpan = TimeSpan.MinValue;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(timeSpan);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var timeSpan = TimeSpan.MinValue;");
+
+            var returnedTimeSpan = TimeSpan.MinValue;
+            returnedTimeSpan.Should().Be(timeSpan);
+        }
+
+        [Fact]
+        public void ShouldDumpTimeSpan_MaxValue()
+        {
+            // Arrange
+            var timeSpan = TimeSpan.MaxValue;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(timeSpan);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var timeSpan = TimeSpan.MaxValue;");
+
+            var returnedTimeSpan = TimeSpan.MaxValue;
+            returnedTimeSpan.Should().Be(timeSpan);
+        }
+
+        [Fact]
+        public void ShouldDumpTimeSpan_Negative()
+        {
+            // Arrange
+            var timeSpan = (new TimeSpan(1, 2, 3, 4, 5)).Negate();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(timeSpan);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var timeSpan = TimeSpan.ParseExact(\"-1.02:03:04.0050000\", \"c\", CultureInfo.InvariantCulture, TimeSpanStyles.None);");
+
+            var returnedTimeSpan = TimeSpan.ParseExact("-1.02:03:04.0050000", "c", CultureInfo.InvariantCulture, TimeSpanStyles.None);
+            returnedTimeSpan.Should().Be(timeSpan);
+        }
+
         private static string GetUtcOffsetString()
         {
             var utcOffset = TimeZoneInfo.Local.BaseUtcOffset;
@@ -378,6 +468,21 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be($"var dateTimeOffset = DateTimeOffset.MaxValue;");
+        }
+
+        [Fact]
+        public void ShouldDumpCultureInfo()
+        {
+            // Arrange            
+            var cultureInfo = new CultureInfo("de-CH");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(cultureInfo);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
         }
     }
 }

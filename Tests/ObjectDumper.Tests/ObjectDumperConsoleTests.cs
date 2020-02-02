@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -314,6 +315,22 @@ namespace ObjectDumping.Tests
             };
 
             person.Should().BeEquivalentTo(expectedPerson);
+        }
+
+        [Fact]
+        public void ShouldDumpCultureInfo()
+        {
+            // Arrange            
+            var cultureInfo = new CultureInfo("de-CH");
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(cultureInfo, new DumpOptions { MaxLevel = 1 });
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Contain("Name: \"de-CH\"");
+            dump.Should().Contain("EnglishName: \"German (Switzerland)\"");
         }
     }
 }

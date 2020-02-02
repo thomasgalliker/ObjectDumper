@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -205,6 +206,33 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            if (o is TimeSpan timeSpan)
+            {
+                if (timeSpan == TimeSpan.Zero)
+                {
+                    this.Write($"TimeSpan.Zero", intentLevel);
+                }
+                else if (timeSpan == TimeSpan.MinValue)
+                {
+                    this.Write($"TimeSpan.MinValue", intentLevel);
+                }
+                else if (timeSpan == TimeSpan.MaxValue)
+                {
+                    this.Write($"TimeSpan.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"TimeSpan.ParseExact(\"{timeSpan:c}\", \"c\", CultureInfo.InvariantCulture, TimeSpanStyles.None)", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is CultureInfo cultureInfo)
+            {
+                this.Write($"new CultureInfo(\"{cultureInfo}\")", intentLevel);
+                return;
+            }
             if (o is Enum)
             {
                 this.Write($"{o.GetType().FullName}.{o}", intentLevel);
