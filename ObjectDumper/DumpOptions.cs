@@ -17,6 +17,7 @@ public class DumpOptions
         this.ExcludeProperties = new HashSet<string>();
         this.PropertyOrderBy = null;
         this.IgnoreDefaultValues = false;
+        this.CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>();
     }
 
     public DumpStyle DumpStyle { get; set; }
@@ -32,6 +33,8 @@ public class DumpOptions
     public int MaxLevel { get; set; }
 
     public ICollection<string> ExcludeProperties { get; set; }
+
+    public IDictionary<Type, Func<Type, string>> CustomTypeFormatter { get; set; }
 
     public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
 

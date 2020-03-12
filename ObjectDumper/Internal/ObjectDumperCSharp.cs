@@ -245,6 +245,16 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            if (o is Type typ)
+            {
+                Func<Type, string> formatter;
+                if (this.DumpOptions.CustomTypeFormatter.TryGetValue(typ, out formatter) || this.DumpOptions.CustomTypeFormatter.TryGetValue(typeof(Type), out formatter))
+                {
+                    this.Write(formatter(typ));
+                    return;
+                }
+            }
+
             var type = o.GetType();
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
