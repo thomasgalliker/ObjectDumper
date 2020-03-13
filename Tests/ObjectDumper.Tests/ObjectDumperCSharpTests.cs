@@ -484,5 +484,30 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
         }
+
+        [Fact]
+        public void ShouldDumpTypes()
+        {
+            // Arrange            
+            var typeMap = new TypeMap
+            {
+                Map = new Dictionary<Type, Type> { { typeof(KeyTypeOne), typeof(HandlerTypeOne) }, { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) } }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(typeMap, 
+                new DumpOptions()
+                {
+                    CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>()
+                    {
+                        {typeof(Type), o=> $"typeof({o.Name})"}
+                    }
+                });
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var typeMap = new TypeMap\r\n{\r\n  Map = new Dictionary<Type, Type>\r\n  {\r\n    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },\r\n    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }\r\n  }\r\n};");
+        }
     }
 }
