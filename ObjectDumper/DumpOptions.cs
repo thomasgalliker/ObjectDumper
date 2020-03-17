@@ -19,6 +19,7 @@ public class DumpOptions
         this.IgnoreDefaultValues = false;
         this.CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>();
         this.CustomInstanceFormatters = new CustomInstanceFormatters();
+        this.TrimInitialVariableName = false;
     }
 
     public DumpStyle DumpStyle { get; set; }
@@ -40,6 +41,9 @@ public class DumpOptions
     public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
 
     public bool IgnoreDefaultValues { get; set; }
+
+    public bool TrimInitialVariableName { get; set; }
+    public bool TrimTrailingColonName { get; set; }
 
     public CustomInstanceFormatters CustomInstanceFormatters { get; }
 }

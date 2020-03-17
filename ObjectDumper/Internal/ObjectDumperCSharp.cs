@@ -24,9 +24,15 @@ namespace ObjectDumping.Internal
             }
 
             var instance = new ObjectDumperCSharp(dumpOptions);
-            instance.Write($"var {GetVariableName(element)} = ");
+            if (!dumpOptions.TrimInitialVariableName)
+            {
+                instance.Write($"var {GetVariableName(element)} = ");
+            }
             instance.FormatValue(element);
-            instance.Write(";");
+            if (!dumpOptions.TrimTrailingColonName)
+            {
+                instance.Write(";");
+            }
 
             return instance.ToString();
         }

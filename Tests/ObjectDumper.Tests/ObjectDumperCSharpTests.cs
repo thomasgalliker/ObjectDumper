@@ -529,5 +529,29 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var objectWithComplexConstructor = ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4);");
         }
+
+        [Fact]
+        public void ShouldDumpTrimmedCustomConstructor()
+        {
+
+            var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
+
+            var dumpOptions = new DumpOptions()
+            {
+                TrimInitialVariableName = true,
+                TrimTrailingColonName = true
+
+            };
+
+            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a => $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(myObj, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4)");
+        }
     }
 }
