@@ -245,6 +245,17 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            if (this.DumpOptions.CustomInstanceFormatters.HasFormatterFor(o))
+            {
+                Func<object, string> func;
+                if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(o, out func))
+                {
+                    this.Write(func(o));
+                    return;
+                }
+            }
+           
+
             if (o is Type typ)
             {
                 Func<Type, string> formatter;

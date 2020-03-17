@@ -509,5 +509,25 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var typeMap = new TypeMap\r\n{\r\n  Map = new Dictionary<Type, Type>\r\n  {\r\n    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },\r\n    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }\r\n  }\r\n};");
         }
+
+
+        [Fact]
+        public void ShouldDumpCustomConstructor()
+        {
+
+            var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
+
+            var dumpOptions = new DumpOptions();
+
+            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a=> $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(myObj, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var objectWithComplexConstructor = ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4);");
+        }
     }
 }
