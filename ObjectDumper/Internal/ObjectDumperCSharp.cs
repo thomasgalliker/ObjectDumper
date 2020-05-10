@@ -28,6 +28,7 @@ namespace ObjectDumping.Internal
             {
                 instance.Write($"var {GetVariableName(element)} = ");
             }
+
             instance.FormatValue(element);
             if (!dumpOptions.TrimTrailingColonName)
             {
@@ -239,6 +240,7 @@ namespace ObjectDumping.Internal
                 this.Write($"new CultureInfo(\"{cultureInfo}\")", intentLevel);
                 return;
             }
+
             if (o is Enum)
             {
                 this.Write($"{o.GetType().FullName}.{o}", intentLevel);
@@ -251,28 +253,23 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            if (this.DumpOptions.CustomInstanceFormatters.HasFormatterFor(o))
-            {
-                Func<object, string> func;
-                if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(o, out func))
-                {
-                    this.Write(func(o));
-                    return;
-                }
-            }
-           
-
-            if (o is Type typ)
-            {
-                Func<Type, string> formatter;
-                if (this.DumpOptions.CustomTypeFormatter.TryGetValue(typ, out formatter) || this.DumpOptions.CustomTypeFormatter.TryGetValue(typeof(Type), out formatter))
-                {
-                    this.Write(formatter(typ));
-                    return;
-                }
-            }
-
             var type = o.GetType();
+            if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(type, out var func))
+            {
+                this.Write(func(o));
+                return;
+            }
+
+            if (o is Type systemType)
+            {
+                if (this.DumpOptions.CustomTypeFormatter.TryGetValue(systemType, out var formatter) ||
+                    this.DumpOptions.CustomTypeFormatter.TryGetValue(typeof(Type), out formatter))
+                {
+                    this.Write(formatter(systemType));
+                    return;
+                }
+            }
+
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {

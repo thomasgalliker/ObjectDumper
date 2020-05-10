@@ -68,25 +68,11 @@ public class CustomInstanceFormatters
         return this.customFormatters.ContainsKey(obj.GetType());
     }
 
-    public bool TryGetFormatter<T>(out Func<T, string> formatter)
+    public bool TryGetFormatter(Type type, out Func<object, string> formatter)
     {
-        if (this.HasFormatterFor<T>())
+        if (this.customFormatters.TryGetValue(type, out var customInstanceFormatter))
         {
-            formatter = o =>
-                this.customFormatters[typeof(T)].Formatter(o);
-
-            return true;
-        }
-
-        formatter = null;
-        return false;
-    }
-
-    public bool TryGetFormatter(object obj, out Func<object, string> formatter)
-    {
-        if (this.HasFormatterFor(obj))
-        {
-            formatter = this.customFormatters[obj.GetType()].Formatter;
+            formatter = customInstanceFormatter.Formatter;
             return true;
         }
 
@@ -99,12 +85,12 @@ public class CustomInstanceFormatters
         this.customFormatters.Clear();
     }
 
-    void RemoveFormatter<T>()
+    public void RemoveFormatter<T>()
     {
         this.RemoveFormatter(typeof(T));
     }
 
-    void RemoveFormatter(Type type)
+    public void RemoveFormatter(Type type)
     {
         this.customFormatters.Remove(type);
     }
