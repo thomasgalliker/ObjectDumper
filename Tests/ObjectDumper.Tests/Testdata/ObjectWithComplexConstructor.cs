@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ObjectDumping.Tests.Testdata
+﻿namespace ObjectDumping.Tests.Testdata
 {
-
     public class ObjectWithComplexConstructorFactory
     {
         public class ObjectWithComplexConstructor
@@ -17,18 +12,15 @@ namespace ObjectDumping.Tests.Testdata
 
             internal ObjectWithComplexConstructor(string foo, int bar, float baz)
             {
-                Foo = foo;
-                Bar = bar;
-                Baz = baz;
+                this.Foo = foo;
+                this.Bar = bar;
+                this.Baz = baz;
             }
-
         }
-
 
         public static ObjectWithComplexConstructor BuildIt(string foo, int bar, float baz)
         {
-            return new ObjectWithComplexConstructor(foo, bar , baz);
+            return new ObjectWithComplexConstructor(foo, bar, baz);
         }
-
     }
 }

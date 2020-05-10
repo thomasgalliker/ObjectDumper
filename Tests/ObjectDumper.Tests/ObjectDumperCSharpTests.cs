@@ -495,12 +495,12 @@ namespace ObjectDumping.Tests
             };
 
             // Act
-            var dump = ObjectDumperCSharp.Dump(typeMap, 
+            var dump = ObjectDumperCSharp.Dump(typeMap,
                 new DumpOptions()
                 {
                     CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>()
                     {
-                        {typeof(Type), o=> $"typeof({o.Name})"}
+                        { typeof(Type), o => $"typeof({o.Name})" }
                     }
                 });
 
@@ -510,16 +510,14 @@ namespace ObjectDumping.Tests
             dump.Should().Be("var typeMap = new TypeMap\r\n{\r\n  Map = new Dictionary<Type, Type>\r\n  {\r\n    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },\r\n    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }\r\n  }\r\n};");
         }
 
-
         [Fact]
         public void ShouldDumpCustomConstructor()
         {
-
+            // Arrange 
             var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
 
             var dumpOptions = new DumpOptions();
-
-            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a=> $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
+            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a => $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
 
             // Act
             var dump = ObjectDumperCSharp.Dump(myObj, dumpOptions);
@@ -533,14 +531,13 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpTrimmedCustomConstructor()
         {
-
+            // Arrange 
             var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
 
-            var dumpOptions = new DumpOptions()
+            var dumpOptions = new DumpOptions
             {
                 TrimInitialVariableName = true,
                 TrimTrailingColonName = true
-
             };
 
             dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a => $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");

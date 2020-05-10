@@ -43,6 +43,7 @@ public class DumpOptions
     public bool IgnoreDefaultValues { get; set; }
 
     public bool TrimInitialVariableName { get; set; }
+
     public bool TrimTrailingColonName { get; set; }
 
     public CustomInstanceFormatters CustomInstanceFormatters { get; }
@@ -100,7 +101,7 @@ public class CustomInstanceFormatters
 
     void RemoveFormatter<T>()
     {
-        RemoveFormatter(typeof(T));
+        this.RemoveFormatter(typeof(T));
     }
 
     void RemoveFormatter(Type type)
