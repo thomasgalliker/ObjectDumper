@@ -27,4 +27,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ObjectDumper\ObjectDumper.csproj" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
+    <PackageReference Include="QuickFix.Net">
+      <Version>1.8.0</Version>
+    </PackageReference>
+  </ItemGroup>
 </Project>
