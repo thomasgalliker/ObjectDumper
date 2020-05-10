@@ -8,6 +8,10 @@ using ObjectDumping.Tests.Testdata;
 using ObjectDumping.Tests.Utils;
 using Xunit;
 using Xunit.Abstractions;
+#if NET452
+using QuickFix.Fields;
+using QuickFix.FIX44;
+#endif
 
 namespace ObjectDumping.Tests
 {
@@ -484,5 +488,26 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
         }
+
+#if NET452
+    
+        [Fact]
+        public void ShouldDumpQuickfixExecutionReport()
+        {
+            // Arrange            
+            var executionReport = new ExecutionReport
+            {
+                ClOrdID = new ClOrdID("SomeString")
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(executionReport);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
+        }
+#endif
     }
 }
