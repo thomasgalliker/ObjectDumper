@@ -318,20 +318,29 @@ namespace ObjectDumping.Internal
                 return "x";
             }
 
-            var type = element.GetType();
-            var variableName = type.Name;
+            var className = GetClassName(element);
+            string variableName;
 
-            if (element is IEnumerable)
+            var splitGenerics = className.Split('<');
+
+            if (splitGenerics.Length > 2 || className.Contains(','))
             {
-                variableName = GetClassName(element)
-                    .Replace("<", "")
-                    .Replace(">", "")
-                    .Replace(" ", "")
-                    .Replace(",", "");
+                // Complex generics and multi-dimensional arrays
+                // are using simple variable names
+                variableName = splitGenerics[0];
             }
-            else if (type.GetTypeInfo().IsGenericType)
+            else
             {
-                variableName = $"{type.Name.Substring(0, type.Name.IndexOf('`'))}";
+                // Simple generics, nullable types and one-dimensional arrays
+                // are using more sophisticated variable names
+                variableName = className
+                    .Replace("Nullable<", "OfNullable")
+                    .Replace("<", "Of")
+                    .Replace(">", "s")
+                    .Replace(" ", "")
+                    .Replace("[", "Array")
+                    .Replace("]", "")
+                    ;
             }
 
             return variableName.ToLowerFirst();
