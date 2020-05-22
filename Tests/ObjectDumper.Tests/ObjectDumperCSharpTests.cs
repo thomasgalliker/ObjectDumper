@@ -538,5 +538,76 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
         }
+
+        [Fact]
+        public void ShouldDumpTypes_UsingCustomTypeFormatter()
+        {
+            // Arrange            
+            var typeMap = new TypeMap
+            {
+                Map = new Dictionary<Type, Type>
+                {
+                    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },
+                    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }
+                }
+            };
+
+            var dumpOptions = new DumpOptions
+            {
+                CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>()
+                {
+                    { typeof(Type), o => $"typeof({o.Name})" }
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(typeMap, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var typeMap = new TypeMap\r\n{\r\n  Map = new Dictionary<Type, Type>\r\n  {\r\n    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },\r\n    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }\r\n  }\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpCustomConstructor()
+        {
+            // Arrange 
+            var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
+
+            var dumpOptions = new DumpOptions();
+            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a => $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(myObj, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var objectWithComplexConstructor = ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4);");
+        }
+
+        [Fact]
+        public void ShouldDumpTrimmedCustomConstructor()
+        {
+            // Arrange 
+            var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
+
+            var dumpOptions = new DumpOptions
+            {
+                TrimInitialVariableName = true,
+                TrimTrailingColonName = true
+            };
+
+            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a => $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(myObj, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4)");
+        }
     }
 }

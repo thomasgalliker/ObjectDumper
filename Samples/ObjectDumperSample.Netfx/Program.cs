@@ -11,8 +11,8 @@ namespace ObjectDumperSample.Netfx
         {
             var persons = new List<Person>
             {
-                new Person { Name = "John", Age = 20, },
-                new Person { Name = "Thomas", Age = 30, },
+                new Person { Name = "John", Age = 20 },
+                new Person { Name = "Thomas", Age = 30 },
             };
 
             var personsDump = ObjectDumper.Dump(persons, DumpStyle.CSharp);

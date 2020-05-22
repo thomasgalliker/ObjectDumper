@@ -24,9 +24,16 @@ namespace ObjectDumping.Internal
             }
 
             var instance = new ObjectDumperCSharp(dumpOptions);
-            instance.Write($"var {GetVariableName(element)} = ");
+            if (!dumpOptions.TrimInitialVariableName)
+            {
+                instance.Write($"var {GetVariableName(element)} = ");
+            }
+
             instance.FormatValue(element);
-            instance.Write(";");
+            if (!dumpOptions.TrimTrailingColonName)
+            {
+                instance.Write(";");
+            }
 
             return instance.ToString();
         }
@@ -233,6 +240,7 @@ namespace ObjectDumping.Internal
                 this.Write($"new CultureInfo(\"{cultureInfo}\")", intentLevel);
                 return;
             }
+
             if (o is Enum)
             {
                 this.Write($"{o.GetType().FullName}.{o}", intentLevel);
@@ -246,6 +254,22 @@ namespace ObjectDumping.Internal
             }
 
             var type = o.GetType();
+            if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(type, out var func))
+            {
+                this.Write(func(o));
+                return;
+            }
+
+            if (o is Type systemType)
+            {
+                if (this.DumpOptions.CustomTypeFormatter.TryGetValue(systemType, out var formatter) ||
+                    this.DumpOptions.CustomTypeFormatter.TryGetValue(typeof(Type), out formatter))
+                {
+                    this.Write(formatter(systemType));
+                    return;
+                }
+            }
+
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
