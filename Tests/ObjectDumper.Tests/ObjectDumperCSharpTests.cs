@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using FluentAssertions;
 using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
@@ -141,6 +142,22 @@ namespace ObjectDumping.Tests
 
             dump.Should().NotBeNull();
             dump.Should().Be("var organization = new Organization\r\n{\r\n  Name = \"superdev gmbh\",\r\n  Persons = new List<Person>\r\n  {\r\n  }\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_RecursivePerson()
+        {
+            // Arrange
+            var person = new RecursivePerson();
+            person.Parent = person;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(person);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var recursivePerson = new RecursivePerson\r\n{\r\n};");
         }
 
         [Fact]
@@ -537,6 +554,21 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
+        }
+
+        [Fact]
+        public void ShouldDumpRuntimeType()
+        {
+            // Arrange            
+            var type = typeof(Person);
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(type);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var runtimeType = typeof(ObjectDumping.Tests.Testdata.Person);");
         }
 
         [Fact]

@@ -40,6 +40,8 @@ namespace ObjectDumping.Internal
 
         private void CreateObject(object o, int intentLevel = 0)
         {
+            this.AddAlreadyTouched(o);
+
             this.Write($"new {GetClassName(o)}", intentLevel);
             this.LineBreak();
             this.Write("{");
@@ -88,6 +90,12 @@ namespace ObjectDumping.Internal
             foreach (var property in properties)
             {
                 var value = property.TryGetValue(o);
+
+                if (this.AlreadyTouched(value))
+                {
+                    continue;
+                }
+
                 this.Write($"{property.Name} = ");
                 this.FormatValue(value);
                 if (!Equals(property, last))
@@ -268,8 +276,10 @@ namespace ObjectDumping.Internal
                     this.Write(formatter(systemType));
                     return;
                 }
-            }
 
+                this.Write($"typeof({systemType.FullName})", intentLevel);
+                return;
+            }
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
@@ -284,13 +294,13 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            if (o is IEnumerable)
+            if (o is IEnumerable enumerable)
             {
                 this.Write($"new {GetClassName(o)}", intentLevel);
                 this.LineBreak();
                 this.Write("{");
                 this.LineBreak();
-                this.WriteItems((IEnumerable)o);
+                this.WriteItems(enumerable);
                 this.Write("}");
                 return;
             }
