@@ -486,23 +486,28 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
-        public void ShouldDumpTypes()
+        public void ShouldDumpTypes_UsingCustomTypeFormatter()
         {
             // Arrange            
             var typeMap = new TypeMap
             {
-                Map = new Dictionary<Type, Type> { { typeof(KeyTypeOne), typeof(HandlerTypeOne) }, { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) } }
+                Map = new Dictionary<Type, Type>
+                {
+                    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },
+                    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }
+                }
+            };
+
+            var dumpOptions = new DumpOptions
+            {
+                CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>()
+                {
+                    { typeof(Type), o => $"typeof({o.Name})" }
+                }
             };
 
             // Act
-            var dump = ObjectDumperCSharp.Dump(typeMap,
-                new DumpOptions()
-                {
-                    CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>()
-                    {
-                        { typeof(Type), o => $"typeof({o.Name})" }
-                    }
-                });
+            var dump = ObjectDumperCSharp.Dump(typeMap, dumpOptions);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
