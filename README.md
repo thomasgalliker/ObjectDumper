@@ -65,7 +65,7 @@ static void Main(string[] args)
 }
 
 //CONSOLE OUTPUT:
-var listPerson = new List<Person>
+var listOfPersons = new List<Person>
 {
   new Person
   {

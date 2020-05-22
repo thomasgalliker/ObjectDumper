@@ -35,6 +35,8 @@
     <RootNamespace>ObjectDumping</RootNamespace>
     <PackageReleaseNotes>2.5.0
 - Handle CultureInfo formatting
+- Extend GetFormattedName to handle nested generics and multi-dimensional arrays
+- Optimize variable naming for generic types
 
 2.4.0
 - Handle Guid formatting
