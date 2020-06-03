@@ -65,7 +65,7 @@ static void Main(string[] args)
 }
 
 //CONSOLE OUTPUT:
-var listPerson = new List<Person>
+var listOfPersons = new List<Person>
 {
   new Person
   {
@@ -81,4 +81,4 @@ var listPerson = new List<Person>
 ```
 
 ### License
-This project is Copyright &copy; 2019 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2020 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.

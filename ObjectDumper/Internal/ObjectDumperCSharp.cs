@@ -24,15 +24,24 @@ namespace ObjectDumping.Internal
             }
 
             var instance = new ObjectDumperCSharp(dumpOptions);
-            instance.Write($"var {GetVariableName(element)} = ");
+            if (!dumpOptions.TrimInitialVariableName)
+            {
+                instance.Write($"var {GetVariableName(element)} = ");
+            }
+
             instance.FormatValue(element);
-            instance.Write(";");
+            if (!dumpOptions.TrimTrailingColonName)
+            {
+                instance.Write(";");
+            }
 
             return instance.ToString();
         }
 
         private void CreateObject(object o, int intentLevel = 0)
         {
+            this.AddAlreadyTouched(o);
+
             this.Write($"new {GetClassName(o)}", intentLevel);
             this.LineBreak();
             this.Write("{");
@@ -81,6 +90,12 @@ namespace ObjectDumping.Internal
             foreach (var property in properties)
             {
                 var value = property.TryGetValue(o);
+
+                if (this.AlreadyTouched(value))
+                {
+                    continue;
+                }
+
                 this.Write($"{property.Name} = ");
                 this.FormatValue(value);
                 if (!Equals(property, last))
@@ -233,6 +248,7 @@ namespace ObjectDumping.Internal
                 this.Write($"new CultureInfo(\"{cultureInfo}\")", intentLevel);
                 return;
             }
+
             if (o is Enum)
             {
                 this.Write($"{o.GetType().FullName}.{o}", intentLevel);
@@ -246,6 +262,24 @@ namespace ObjectDumping.Internal
             }
 
             var type = o.GetType();
+            if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(type, out var func))
+            {
+                this.Write(func(o));
+                return;
+            }
+
+            if (o is Type systemType)
+            {
+                if (this.DumpOptions.CustomTypeFormatter.TryGetValue(systemType, out var formatter) ||
+                    this.DumpOptions.CustomTypeFormatter.TryGetValue(typeof(Type), out formatter))
+                {
+                    this.Write(formatter(systemType));
+                    return;
+                }
+
+                this.Write($"typeof({systemType.FullName})", intentLevel);
+                return;
+            }
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
@@ -260,13 +294,13 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            if (o is IEnumerable)
+            if (o is IEnumerable enumerable)
             {
                 this.Write($"new {GetClassName(o)}", intentLevel);
                 this.LineBreak();
                 this.Write("{");
                 this.LineBreak();
-                this.WriteItems((IEnumerable)o);
+                this.WriteItems(enumerable);
                 this.Write("}");
                 return;
             }
@@ -318,20 +352,29 @@ namespace ObjectDumping.Internal
                 return "x";
             }
 
-            var type = element.GetType();
-            var variableName = type.Name;
+            var className = GetClassName(element);
+            string variableName;
 
-            if (element is IEnumerable)
+            var splitGenerics = className.Split('<');
+
+            if (splitGenerics.Length > 2 || className.Contains(','))
             {
-                variableName = GetClassName(element)
-                    .Replace("<", "")
-                    .Replace(">", "")
-                    .Replace(" ", "")
-                    .Replace(",", "");
+                // Complex generics and multi-dimensional arrays
+                // are using simple variable names
+                variableName = splitGenerics[0];
             }
-            else if (type.GetTypeInfo().IsGenericType)
+            else
             {
-                variableName = $"{type.Name.Substring(0, type.Name.IndexOf('`'))}";
+                // Simple generics, nullable types and one-dimensional arrays
+                // are using more sophisticated variable names
+                variableName = className
+                    .Replace("Nullable<", "OfNullable")
+                    .Replace("<", "Of")
+                    .Replace(">", "s")
+                    .Replace(" ", "")
+                    .Replace("[", "Array")
+                    .Replace("]", "")
+                    ;
             }
 
             return variableName.ToLowerFirst();

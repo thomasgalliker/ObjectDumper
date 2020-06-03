@@ -162,7 +162,23 @@ namespace ObjectDumping.Tests
         //}
 
         [Fact]
-        public void ShouldDumpRecursiveTypes()
+        public void ShouldDumpRecursiveTypes_RecursivePerson()
+        {
+            // Arrange
+            var person = new RecursivePerson();
+            person.Parent = person;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(person);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("{ObjectDumping.Tests.Testdata.RecursivePerson}\r\n  Parent: { }\r\n    {ObjectDumping.Tests.Testdata.RecursivePerson} <-- bidirectional reference found\r\n");
+        }
+        
+        [Fact]
+        public void ShouldDumpRecursiveTypes_RuntimeProperties()
         {
             // Arrange
             var person = PersonFactory.GeneratePersons(count: 1).First();

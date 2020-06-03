@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using FluentAssertions;
 using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
@@ -70,7 +71,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var listPerson = new List<Person>\r\n{\r\n  new Person\r\n  {\r\n    Name = \"Person 1\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  },\r\n  new Person\r\n  {\r\n    Name = \"Person 2\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  }\r\n};");
+            dump.Should().Be("var listOfPersons = new List<Person>\r\n{\r\n  new Person\r\n  {\r\n    Name = \"Person 1\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  },\r\n  new Person\r\n  {\r\n    Name = \"Person 2\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  }\r\n};");
         }
 
         [Fact]
@@ -90,7 +91,7 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
-        public void ShouldDumpMultipleGenericTypes()
+        public void ShouldDumpGenericClass_WithMultipleGenericTypeArguments()
         {
             // Arrange
             var person = PersonFactory.GeneratePersons(count: 1).First();
@@ -103,6 +104,26 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var genericClass = new GenericClass<String, Single, Person>\r\n{\r\n  Prop1 = \"Test\",\r\n  Prop2 = 123.45f,\r\n  Prop3 = new Person\r\n  {\r\n    Name = \"Person 1\",\r\n    Char = '',\r\n    Age = 2,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  }\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpGenericClass_WithNestedGenericTypeArguments()
+        {
+            // Arrange
+            var complexDictionary = new Dictionary<string[,], List<int?[,][]>[,,]>[1]
+            {
+                new Dictionary<string[,], List<int?[,][]>[,,]>
+                {
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(complexDictionary);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var dictionary = new Dictionary<String[,], List<Nullable<Int32>[,][]>[,,]>[]\r\n{\r\n  new Dictionary<String[,], List<Nullable<Int32>[,][]>[,,]>\r\n  {\r\n  }\r\n};");
         }
 
         [Fact]
@@ -121,6 +142,22 @@ namespace ObjectDumping.Tests
 
             dump.Should().NotBeNull();
             dump.Should().Be("var organization = new Organization\r\n{\r\n  Name = \"superdev gmbh\",\r\n  Persons = new List<Person>\r\n  {\r\n  }\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_RecursivePerson()
+        {
+            // Arrange
+            var person = new RecursivePerson();
+            person.Parent = person;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(person);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var recursivePerson = new RecursivePerson\r\n{\r\n};");
         }
 
         [Fact]
@@ -399,7 +436,41 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dictionaryInt32String = new Dictionary<Int32, String>\r\n{\r\n  { 1, \"Value1\" },\r\n  { 2, \"Value2\" },\r\n  { 3, \"Value3\" }\r\n};");
+            dump.Should().Be("var dictionary = new Dictionary<Int32, String>\r\n{\r\n  { 1, \"Value1\" },\r\n  { 2, \"Value2\" },\r\n  { 3, \"Value3\" }\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpArray_OneDimensional()
+        {
+            // Arrange
+            var array = new string[] { "aaa", "bbb" };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var stringArray = new String[]\r\n{\r\n  \"aaa\",\r\n  \"bbb\"\r\n};");
+        }
+
+        [Fact(Skip = "to be implemented")]
+        public void ShouldDumpArray_TwoDimensional()
+        {
+            // Arrange
+            var array = new int[3, 2]{
+                {1, 2},
+                {3, 4},
+                {5, 6}
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var array = new int[3, 2]{\r\n                {1, 2},\r\n                {3, 4},\r\n                {5, 6}\r\n            };");
         }
 
         [Fact]
@@ -483,6 +554,92 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var cultureInfo = new CultureInfo(\"de-CH\");");
+        }
+
+        [Fact]
+        public void ShouldDumpRuntimeType()
+        {
+            // Arrange            
+            var type = typeof(Person);
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(type);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var runtimeType = typeof(ObjectDumping.Tests.Testdata.Person);");
+        }
+
+        [Fact]
+        public void ShouldDumpTypes_UsingCustomTypeFormatter()
+        {
+            // Arrange            
+            var typeMap = new TypeMap
+            {
+                Map = new Dictionary<Type, Type>
+                {
+                    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },
+                    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }
+                }
+            };
+
+            var dumpOptions = new DumpOptions
+            {
+                CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>()
+                {
+                    { typeof(Type), o => $"typeof({o.Name})" }
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(typeMap, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var typeMap = new TypeMap\r\n{\r\n  Map = new Dictionary<Type, Type>\r\n  {\r\n    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },\r\n    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }\r\n  }\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpCustomConstructor()
+        {
+            // Arrange 
+            var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
+
+            var dumpOptions = new DumpOptions();
+            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a => $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(myObj, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var objectWithComplexConstructor = ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4);");
+        }
+
+        [Fact]
+        public void ShouldDumpTrimmedCustomConstructor()
+        {
+            // Arrange 
+            var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
+
+            var dumpOptions = new DumpOptions
+            {
+                TrimInitialVariableName = true,
+                TrimTrailingColonName = true
+            };
+
+            dumpOptions.CustomInstanceFormatters.AddFormatter<ObjectWithComplexConstructorFactory.ObjectWithComplexConstructor>(a => $"ObjectWithComplexConstructorFactory.BuildIt(\"{a.Foo}\", {a.Bar}, {a.Baz})");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(myObj, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4)");
         }
     }
 }

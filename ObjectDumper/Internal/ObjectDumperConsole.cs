@@ -48,10 +48,9 @@ namespace ObjectDumping.Internal
                     this.Level++;
                 }
 
-                var enumerableElement = element as IEnumerable;
-                if (enumerableElement != null)
+                if (element is IEnumerable enumerable)
                 {
-                    foreach (var item in enumerableElement)
+                    foreach (var item in enumerable)
                     {
                         if (item is IEnumerable && !(item is string))
                         {
