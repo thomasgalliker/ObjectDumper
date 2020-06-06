@@ -96,18 +96,71 @@ namespace ObjectDumping.Internal
                     continue;
                 }
 
-                this.Write($"{property.Name} = ");
-                this.FormatValue(value);
-                if (!Equals(property, last))
+                var indexParameters = property.GetIndexParameters();
+                if (indexParameters.Length > 0)
                 {
-                    this.Write(",");
+                    if (!this.DumpOptions.IgnoreIndexers)
+                    {
+                        DumpIntegerArrayIndexer(o, property, indexParameters);
+                    }
                 }
+                else
+                {
+                    this.Write($"{property.Name} = ");
+                    this.FormatValue(value);
+                    if (!Equals(property, last))
+                    {
+                        this.Write(",");
+                    }
 
-                this.LineBreak();
+                    this.LineBreak();
+                }
             }
 
             this.Level--;
             this.Write("}");
+        }
+
+        private void DumpIntegerArrayIndexer(object o, PropertyInfo property, ParameterInfo[] indexParameters)
+        {
+            if (indexParameters.Length == 1 && indexParameters[0].ParameterType == typeof(int))
+            {
+                // get an integer count value
+                // issues, what if it's not an integer index (Dictionary?), what if it's multi-dimensional?
+                // just need to be able to iterate through each value in the indexed property
+                // Source: https://stackoverflow.com/questions/4268244/iterating-through-an-indexed-property-reflection
+
+                var arrayValues = new List<object>();
+                var index = 0;
+                while (true)
+                {
+                    try
+                    {
+                        arrayValues.Add(property.GetValue(o, new object[] { index }));
+                        index++;
+                    }
+                    catch (TargetInvocationException) { break; }
+                }
+
+                var lastArrayValue = arrayValues.LastOrDefault();
+
+                for (var arrayIndex = 0; arrayIndex < arrayValues.Count; arrayIndex++)
+                {
+                    var arrayValue = arrayValues[arrayIndex];
+                    this.Write($"[{arrayIndex}] = ");
+                    FormatValue(arrayValue);
+                    if (!Equals(arrayValue, lastArrayValue))
+                    {
+                        this.Write($",{this.DumpOptions.LineBreakChar}");
+                    }
+                    else
+                    {
+                        this.Write($",");
+                    }
+                }
+
+                this.LineBreak();
+            }
         }
 
         private void FormatValue(object o, int intentLevel = 0)
