@@ -2,5 +2,6 @@
 public enum DumpStyle
 {
     Console,
-    CSharp
+    CSharp,
+    VisualBasic
 }
