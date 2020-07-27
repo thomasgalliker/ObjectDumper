@@ -75,6 +75,88 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpException()
+        {
+            // Arrange
+            var ex = new KeyNotFoundException("message text");
+            var options = new DumpOptions { IgnoreDefaultValues = true };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(ex, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(@"var keyNotFoundException = new KeyNotFoundException
+{
+  Message = ""message text"",
+  Data = new ListDictionaryInternal
+  {
+  },
+  HResult = -2146232969
+};");
+        }
+
+        [Fact]
+        public void ShouldDumpExceptionAfterThrow()
+        {
+            // Arrange
+            Exception ex;
+            try
+            {
+                throw new KeyNotFoundException("message text");
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+            var options = new DumpOptions { IgnoreDefaultValues = true, ExcludeProperties = { "CustomAttributes", "Module", "StackTrace" } };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(ex, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(@"var keyNotFoundException = new KeyNotFoundException
+{
+  Message = ""message text"",
+  Data = new ListDictionaryInternal
+  {
+  },
+  TargetSite = new RuntimeMethodInfo
+  {
+    Name = ""ShouldDumpExceptionAfterThrow"",
+    DeclaringType = typeof(ObjectDumping.Tests.ObjectDumperCSharpCSharpTests),
+    ReflectedType = typeof(ObjectDumping.Tests.ObjectDumperCSharpCSharpTests),
+    MemberType = System.Reflection.MemberTypes.Method,
+    MetadataToken = 100663330,
+    IsSecurityCritical = true,
+    MethodHandle = new RuntimeMethodHandle
+    {
+      Value = new IntPtr
+      {
+      }
+    },
+    Attributes = System.Reflection.MethodAttributes.PrivateScope, Public, HideBySig,
+    CallingConvention = System.Reflection.CallingConventions.Standard, HasThis,
+    ReturnType = typeof(System.Void),
+    ReturnTypeCustomAttributes = new RuntimeParameterInfo
+    {
+      ParameterType = typeof(System.Void),
+      HasDefaultValue = true,
+      MetadataToken = 134217728,
+      Position = -1,
+    },
+    IsPublic = true,
+    IsHideBySig = true
+  },
+  Source = ""ObjectDumper.Tests"",
+  HResult = -2146232969
+};");
+        }
+
+        [Fact]
         public void ShouldDumpNestedObjects()
         {
             // Arrange

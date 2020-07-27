@@ -95,6 +95,77 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpException()
+        {
+            // Arrange
+            var ex = new KeyNotFoundException("message text");
+            var options = new DumpOptions { IgnoreDefaultValues = true };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(ex, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(@"{System.Collections.Generic.KeyNotFoundException}
+  _message: ""message text""
+  _HResult: -2146232969
+  Message: ""message text""
+  Data: ...
+  HResult: -2146232969
+");
+        }
+
+        [Fact]
+        public void ShouldDumpExceptionAfterThrow()
+        {
+            // Arrange
+            Exception ex;
+            try
+            {
+                throw new KeyNotFoundException("message text");
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+            var options = new DumpOptions { IgnoreDefaultValues = true, ExcludeProperties = { "CustomAttributes", "Module", "StackTrace" } };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(ex, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(@"{System.Collections.Generic.KeyNotFoundException}
+  _message: ""message text""
+  _HResult: -2146232969
+  Message: ""message text""
+  Data: ...
+  TargetSite: {System.Reflection.RuntimeMethodInfo}
+    Name: ""ShouldDumpExceptionAfterThrow""
+    DeclaringType: ObjectDumping.Tests.ObjectDumperCSharpCSharpTests
+    ReflectedType: ObjectDumping.Tests.ObjectDumperCSharpCSharpTests
+    MemberType: Method
+    MetadataToken: 100663310
+    IsSecurityCritical: true
+    MethodHandle: {System.RuntimeMethodHandle}
+    Attributes: PrivateScope, Public, HideBySig
+    CallingConvention: Standard, HasThis
+    ReturnType: System.Void
+    ReturnTypeCustomAttributes: {RuntimeParameterInfo}
+      ParameterType: typeof(System.Void)
+      HasDefaultValue: true
+      MetadataToken: 134217728
+      Position: -1
+    IsPublic: true
+    IsHideBySig: true
+  Source: ""ObjectDumper.Tests""
+  HResult: -2146232969
+");
+        }
+
+        [Fact]
         public void ShouldDumpNestedObjects()
         {
             // Arrange
