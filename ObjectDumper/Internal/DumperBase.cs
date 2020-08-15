@@ -111,5 +111,12 @@ namespace ObjectDumping.Internal
         {
             return this.stringBuilder.ToString();
         }
+
+        public string GetClassName(object o)
+        {
+            var type = o.GetType();
+            var className = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+            return className;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using FluentAssertions;
 using ObjectDumping.Tests.Testdata;
 using ObjectDumping.Tests.Utils;
@@ -20,7 +21,7 @@ namespace ObjectDumping.Tests
         public void ShouldDumpObject_WithDefaultDumpOptions()
         {
             // Arrange
-            var person = PersonFactory.GetPersonThomas();
+            var person = PersonFactory.GeneratePersons(count: 1).Single();
 
             // Act
             var dump = ObjectDumper.Dump(person);
@@ -28,7 +29,28 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.Person}\r\n  Name: \"Thomas\"\r\n  Char: \r\n  Age: 30\r\n  GetOnly: 11\r\n  Bool: False\r\n  Byte: 0\r\n  ByteArray: ...\r\n    1\r\n    2\r\n    3\r\n    4\r\n  SByte: 0\r\n  Float: 0\r\n  Uint: 0\r\n  Long: 0\r\n  ULong: 0\r\n  Short: 0\r\n  UShort: 0\r\n  Decimal: 0\r\n  Double: 0\r\n  DateTime: 01.01.0001 00:00:00\r\n  NullableDateTime: null\r\n  Enum: Unspecified\r\n");
+            dump.Should().Be(
+                "{Person}\r\n" +
+                "  Name: \"Person 1\"\r\n" +
+                "  Char: ''\r\n" +
+                "  Age: 2\r\n" +
+                "  GetOnly: 11\r\n" +
+                "  Bool: false\r\n" +
+                "  Byte: 0\r\n" +
+                "  ByteArray: ...\r\n" +
+                "    1\r\n    2\r\n    3\r\n    4\r\n" +
+                "  SByte: 0\r\n" +
+                "  Float: 0\r\n" +
+                "  Uint: 0\r\n" +
+                "  Long: 0\r\n" +
+                "  ULong: 0\r\n" +
+                "  Short: 0\r\n" +
+                "  UShort: 0\r\n" +
+                "  Decimal: 0\r\n" +
+                "  Double: 0\r\n" +
+                "  DateTime: DateTime.MinValue\r\n" +
+                "  NullableDateTime: null\r\n" +
+                "  Enum: DateTimeKind.Unspecified");
         }
 
         [Fact]
