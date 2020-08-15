@@ -641,5 +641,74 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("ObjectWithComplexConstructorFactory.BuildIt(\"string\", 1, 32.4)");
         }
+
+        [Fact]
+        public void ShouldDumpObjectWithIndexer_IntegerArray_IgnoredByDefaultDumpOptions()
+        {
+            // Arrange            
+            var tempRecord = new TempRecord
+            {
+                [0] = 58.3f,
+                [1] = 60.1f,
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(tempRecord);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var tempRecord = new TempRecord\r\n{\r\n  AProp = 0,\r\n  ZProp = null\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpObjectWithIndexer_IntegerArray()
+        {
+            // Arrange            
+            var tempRecord = new TempRecord
+            {
+                AProp = 99,
+                [0] = 58.3f,
+                [1] = 60.1f,
+                ZProp = "ZZ"
+            };
+
+            var dumpOptions = new DumpOptions
+            {
+                IgnoreIndexers = false
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(tempRecord, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var tempRecord = new TempRecord\r\n{\r\n  AProp = 99,\r\n  [0] = 58.3f,\r\n  [1] = 60.1f,\r\n  ZProp = \"ZZ\"\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpObjectWithIndexer_NonIntegerArray_Ignored()
+        {
+            // Arrange            
+            var viewModelValidation = new ViewModelValidation
+            {
+                ["property1"] = new List<string> { "error1" },
+                ["property2"] = new List<string> { "error2" },
+            };
+
+            var dumpOptions = new DumpOptions
+            {
+                IgnoreIndexers = false
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(viewModelValidation, dumpOptions);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var viewModelValidation = new ViewModelValidation\r\n{\r\n};");
+        }
     }
 }

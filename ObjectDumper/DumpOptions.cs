@@ -17,6 +17,7 @@ public class DumpOptions
         this.ExcludeProperties = new HashSet<string>();
         this.PropertyOrderBy = null;
         this.IgnoreDefaultValues = false;
+        this.IgnoreIndexers = true;
         this.CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>();
         this.CustomInstanceFormatters = new CustomInstanceFormatters();
         this.TrimInitialVariableName = false;
@@ -40,7 +41,17 @@ public class DumpOptions
 
     public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
 
+    /// <summary>
+    /// Ignores default values if set to <c>true</c>.
+    /// Default: <c>false</c>
+    /// </summary>
     public bool IgnoreDefaultValues { get; set; }
+
+    /// <summary>
+    /// Ignores index properties if set to <c>true</c>.
+    /// Default: <c>true</c>
+    /// </summary>
+    public bool IgnoreIndexers { get; set; }
 
     public bool TrimInitialVariableName { get; set; }
 
