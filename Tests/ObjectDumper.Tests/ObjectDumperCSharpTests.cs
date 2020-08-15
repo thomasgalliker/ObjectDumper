@@ -578,7 +578,8 @@ namespace ObjectDumping.Tests
         public void ShouldDumpArray_TwoDimensional()
         {
             // Arrange
-            var array = new int[3, 2]{
+            var array = new int[3, 2]
+            {
                 {1, 2},
                 {3, 4},
                 {5, 6}
@@ -590,7 +591,13 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var array = new int[3, 2]{\r\n                {1, 2},\r\n                {3, 4},\r\n                {5, 6}\r\n            };");
+            dump.Should().Be(
+                "var array = new int[3, 2]\r\n" +
+                "{\r\n" +
+                "  {1, 2},\r\n" +
+                "  {3, 4},\r\n" +
+                "  {5, 6}\r\n" +
+                "};");
         }
 
         [Fact]

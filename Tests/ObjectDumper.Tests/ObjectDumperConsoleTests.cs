@@ -247,10 +247,10 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
-        public void ShouldDumpMultipleGenericTypes()
+        public void ShouldDumpGenericClass_WithMultipleGenericTypeArguments()
         {
             // Arrange
-            var person = PersonFactory.GeneratePersons(count: 1).Single();
+            var person = PersonFactory.GeneratePersons(count: 1).First();
             var genericClass = new GenericClass<string, float, Person> { Prop1 = "Test", Prop2 = 123.45f, Prop3 = person };
 
             // Act
@@ -259,6 +259,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
+
             dump.Should().Be(
                 "{GenericClass<String, Single, Person>}\r\n" +
                 "  Prop1: \"Test\"\r\n" +
@@ -287,6 +288,40 @@ namespace ObjectDumping.Tests
                 "    DateTime: DateTime.MinValue\r\n" +
                 "    NullableDateTime: null\r\n" +
                 "    Enum: DateTimeKind.Unspecified");
+        }
+
+        [Fact(Skip = "Test failed; to be fixed")]
+        public void ShouldDumpGenericClass_WithNestedGenericTypeArguments()
+        {
+            // Arrange
+            var array2D = new string[3, 2]
+            {
+                { "one", "two" },
+                { "three", "four" },
+                { "five", "six" }
+            };
+
+            var array3D = new int[,,]
+            {
+                { { 1, 2, 3 }, { 4, 5, 6 } },
+                { { 7, 8, 9 }, { 10, 11, 12 } }
+            };
+
+            var complexDictionary = new Dictionary<string[,], List<int[,,]>>[1]
+            {
+                new Dictionary<string[,], List<int[,,]>>
+                {
+                    { array2D, new List<int[,,]>{ array3D } }
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(complexDictionary);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("???");
         }
 
         [Fact]
@@ -342,7 +377,7 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("{RecursivePerson}\r\n");
         }
-        
+
         [Fact]
         public void ShouldDumpRecursiveTypes_RuntimeProperties()
         {
@@ -488,6 +523,26 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("\"aaa\"\r\n\"bbb\"");
+        }
+
+        [Fact(Skip = "to be implemented")]
+        public void ShouldDumpArray_TwoDimensional()
+        {
+            // Arrange
+            var array = new int[3, 2]
+            {
+                {1, 2},
+                {3, 4},
+                {5, 6}
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("???");
         }
 
         [Fact]

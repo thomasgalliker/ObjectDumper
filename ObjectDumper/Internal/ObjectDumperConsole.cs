@@ -338,7 +338,10 @@ namespace ObjectDumping.Internal
                 //this.LineBreak();
             }
 
-            this.Level--;
+            if(Level > 0)
+            {
+                this.Level--;
+            }
         }
     }
 }
