@@ -26,7 +26,7 @@ namespace ObjectDumping.Internal
             var instance = new ObjectDumperCSharp(dumpOptions);
             if (!dumpOptions.TrimInitialVariableName)
             {
-                instance.Write($"var {GetVariableName(element)} = ");
+                instance.Write($"var {instance.GetVariableName(element)} = ");
             }
 
             instance.FormatValue(element);
@@ -366,8 +366,6 @@ namespace ObjectDumping.Internal
             this.Level++;
             if (this.IsMaxLevel())
             {
-                ////this.StartLine("// Omitted code");
-                ////this.LineBreak();
                 this.Level--;
                 return;
             }
@@ -391,14 +389,7 @@ namespace ObjectDumping.Internal
             this.Level--;
         }
 
-        private static string GetClassName(object o)
-        {
-            var type = o.GetType();
-            var className = type.GetFormattedName();
-            return className;
-        }
-
-        private static string GetVariableName(object element)
+        private string GetVariableName(object element)
         {
             if (element == null)
             {

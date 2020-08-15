@@ -26,7 +26,7 @@ namespace ObjectDumping.Tests
         public void ShouldDumpObject()
         {
             // Arrange
-            var person = PersonFactory.GetPersonThomas();
+            var person = PersonFactory.GeneratePersons(count: 1).Single();
 
             // Act
             var dump = ObjectDumperCSharp.Dump(person);
@@ -34,7 +34,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\r\n{\r\n  Name = \"Thomas\",\r\n  Char = '',\r\n  Age = 30,\r\n  GetOnly = 11,\r\n  Bool = false,\r\n  Byte = 0,\r\n  ByteArray = new Byte[]\r\n  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0,\r\n  Long = 0L,\r\n  ULong = 0L,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = System.DateTimeKind.Unspecified\r\n};");
+            dump.Should().Be("var person = new Person\r\n{\r\n  Name = \"Person 1\",\r\n  Char = '',\r\n  Age = 2,\r\n  GetOnly = 11,\r\n  Bool = false,\r\n  Byte = 0,\r\n  ByteArray = new Byte[]\r\n  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0,\r\n  Long = 0L,\r\n  ULong = 0L,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = System.DateTimeKind.Unspecified\r\n};");
         }
 
         [Fact]
@@ -71,7 +71,49 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var listOfPersons = new List<Person>\r\n{\r\n  new Person\r\n  {\r\n    Name = \"Person 1\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  },\r\n  new Person\r\n  {\r\n    Name = \"Person 2\",\r\n    Char = '',\r\n    Age = 3,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  }\r\n};");
+            dump.Should().Be(
+                "var listOfPersons = new List<Person>\r\n" +
+                "{\r\n" +
+                "  new Person\r\n" +
+                "  {\r\n" +
+                "    Name = \"Person 1\",\r\n" +
+                "    Char = '',\r\n" +
+                "    Age = 3,\r\n" +
+                "    GetOnly = 11,\r\n" +
+                "    Bool = false,\r\n" +
+                "    Byte = 0,\r\n" +
+                "    ByteArray = new Byte[]\r\n" +
+                "    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n" +
+                "  },\r\n" +
+                "  new Person\r\n" +
+                "  {\r\n" +
+                "    Name = \"Person 2\",\r\n" +
+                "    Char = '',\r\n" +
+                "    Age = 3,\r\n" +
+                "    GetOnly = 11,\r\n" +
+                "    Bool = false,\r\n" +
+                "    Byte = 0,\r\n" +
+                "    ByteArray = new Byte[]\r\n" +
+                "    {\r\n" +
+                "      1,\r\n" +
+                "      2,\r\n" +
+                "      3,\r\n" +
+                "      4\r\n" +
+                "    },\r\n" +
+                "    SByte = 0,\r\n" +
+                "    Float = 0f,\r\n" +
+                "    Uint = 0,\r\n" +
+                "    Long = 0L,\r\n" +
+                "    ULong = 0L,\r\n" +
+                "    Short = 0,\r\n" +
+                "    UShort = 0,\r\n" +
+                "    Decimal = 0m,\r\n" +
+                "    Double = 0d,\r\n" +
+                "    DateTime = DateTime.MinValue,\r\n" +
+                "    NullableDateTime = null,\r\n" +
+                "    Enum = System.DateTimeKind.Unspecified\r\n" +
+                "  }\r\n" +
+                "};");
         }
 
         [Fact]
@@ -87,7 +129,71 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var organization = new Organization\r\n{\r\n  Name = \"superdev gmbh\",\r\n  Persons = new List<Person>\r\n  {\r\n    new Person\r\n    {\r\n      Name = \"Person 1\",\r\n      Char = '',\r\n      Age = 3,\r\n      GetOnly = 11,\r\n      Bool = false,\r\n      Byte = 0,\r\n      ByteArray = new Byte[]\r\n      {\r\n        1,\r\n        2,\r\n        3,\r\n        4\r\n      },\r\n      SByte = 0,\r\n      Float = 0f,\r\n      Uint = 0,\r\n      Long = 0L,\r\n      ULong = 0L,\r\n      Short = 0,\r\n      UShort = 0,\r\n      Decimal = 0m,\r\n      Double = 0d,\r\n      DateTime = DateTime.MinValue,\r\n      NullableDateTime = null,\r\n      Enum = System.DateTimeKind.Unspecified\r\n    },\r\n    new Person\r\n    {\r\n      Name = \"Person 2\",\r\n      Char = '',\r\n      Age = 3,\r\n      GetOnly = 11,\r\n      Bool = false,\r\n      Byte = 0,\r\n      ByteArray = new Byte[]\r\n      {\r\n        1,\r\n        2,\r\n        3,\r\n        4\r\n      },\r\n      SByte = 0,\r\n      Float = 0f,\r\n      Uint = 0,\r\n      Long = 0L,\r\n      ULong = 0L,\r\n      Short = 0,\r\n      UShort = 0,\r\n      Decimal = 0m,\r\n      Double = 0d,\r\n      DateTime = DateTime.MinValue,\r\n      NullableDateTime = null,\r\n      Enum = System.DateTimeKind.Unspecified\r\n    }\r\n  }\r\n};");
+            dump.Should().Be(
+                "var organization = new Organization\r\n" +
+                "{\r\n" +
+                "  Name = \"superdev gmbh\",\r\n" +
+                "  Persons = new List<Person>\r\n" +
+                "  {\r\n" +
+                "    new Person\r\n" +
+                "    {\r\n" +
+                "      Name = \"Person 1\",\r\n" +
+                "      Char = '',\r\n" +
+                "      Age = 3,\r\n" +
+                "      GetOnly = 11,\r\n" +
+                "      Bool = false,\r\n" +
+                "      Byte = 0,\r\n" +
+                "      ByteArray = new Byte[]\r\n" +
+                "      {\r\n" +
+                "        1,\r\n" +
+                "        2,\r\n" +
+                "        3,\r\n" +
+                "        4\r\n" +
+                "      },\r\n" +
+                "      SByte = 0,\r\n" +
+                "      Float = 0f,\r\n" +
+                "      Uint = 0,\r\n" +
+                "      Long = 0L,\r\n" +
+                "      ULong = 0L,\r\n" +
+                "      Short = 0,\r\n" +
+                "      UShort = 0,\r\n" +
+                "      Decimal = 0m,\r\n" +
+                "      Double = 0d,\r\n" +
+                "      DateTime = DateTime.MinValue,\r\n" +
+                "      NullableDateTime = null,\r\n" +
+                "      Enum = System.DateTimeKind.Unspecified\r\n" +
+                "    },\r\n" +
+                "    new Person\r\n" +
+                "    {\r\n" +
+                "      Name = \"Person 2\",\r\n" +
+                "      Char = '',\r\n" +
+                "      Age = 3,\r\n" +
+                "      GetOnly = 11,\r\n" +
+                "      Bool = false,\r\n" +
+                "      Byte = 0,\r\n" +
+                "      ByteArray = new Byte[]\r\n" +
+                "      {\r\n" +
+                "        1,\r\n" +
+                "        2,\r\n" +
+                "        3,\r\n" +
+                "        4\r\n" +
+                "      },\r\n" +
+                "      SByte = 0,\r\n" +
+                "      Float = 0f,\r\n" +
+                "      Uint = 0,\r\n" +
+                "      Long = 0L,\r\n" +
+                "      ULong = 0L,\r\n" +
+                "      Short = 0,\r\n" +
+                "      UShort = 0,\r\n" +
+                "      Decimal = 0m,\r\n" +
+                "      Double = 0d,\r\n" +
+                "      DateTime = DateTime.MinValue,\r\n" +
+                "      NullableDateTime = null,\r\n" +
+                "      Enum = System.DateTimeKind.Unspecified\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  IsAfterCollection = true\r\n" +
+                "};");
         }
 
         [Fact]
@@ -141,7 +247,15 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("var organization = new Organization\r\n{\r\n  Name = \"superdev gmbh\",\r\n  Persons = new List<Person>\r\n  {\r\n  }\r\n};");
+            dump.Should().Be(
+                "var organization = new Organization\r\n" +
+                "{\r\n" +
+                "  Name = \"superdev gmbh\",\r\n" +
+                "  Persons = new List<Person>\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  IsAfterCollection = true\r\n" +
+                "};");
         }
 
         [Fact]
@@ -436,7 +550,13 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dictionary = new Dictionary<Int32, String>\r\n{\r\n  { 1, \"Value1\" },\r\n  { 2, \"Value2\" },\r\n  { 3, \"Value3\" }\r\n};");
+            dump.Should().Be(
+                "var dictionary = new Dictionary<Int32, String>\r\n" +
+                "{\r\n" +
+                "  { 1, \"Value1\" },\r\n" +
+                "  { 2, \"Value2\" },\r\n" +
+                "  { 3, \"Value3\" }\r\n" +
+                "};");
         }
 
         [Fact]
@@ -458,7 +578,8 @@ namespace ObjectDumping.Tests
         public void ShouldDumpArray_TwoDimensional()
         {
             // Arrange
-            var array = new int[3, 2]{
+            var array = new int[3, 2]
+            {
                 {1, 2},
                 {3, 4},
                 {5, 6}
@@ -470,7 +591,13 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var array = new int[3, 2]{\r\n                {1, 2},\r\n                {3, 4},\r\n                {5, 6}\r\n            };");
+            dump.Should().Be(
+                "var array = new int[3, 2]\r\n" +
+                "{\r\n" +
+                "  {1, 2},\r\n" +
+                "  {3, 4},\r\n" +
+                "  {5, 6}\r\n" +
+                "};");
         }
 
         [Fact]

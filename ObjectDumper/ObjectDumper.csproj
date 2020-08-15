@@ -33,7 +33,10 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>2.5.0
+    <PackageReleaseNotes>3.0.0
+- New formatting logic for DumpStyle.Console (default)
+
+2.5.0
 - Handle CultureInfo formatting
 - Extend GetFormattedName to handle nested generics and multi-dimensional arrays
 - Optimize variable naming for generic types
