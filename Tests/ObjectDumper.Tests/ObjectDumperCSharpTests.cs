@@ -837,5 +837,29 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be("var viewModelValidation = new ViewModelValidation\r\n{\r\n};");
         }
+
+        [Fact]
+        public void ShouldDumpStruct()
+        {
+            // Arrange            
+            var x509ChainStatusStruct = new X509ChainStatus
+            {
+                Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,
+                StatusInformation = "Test status"
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(x509ChainStatusStruct);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var x509ChainStatus = new X509ChainStatus\r\n" +
+                "{\r\n" +
+                "  Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,\r\n" +
+                "  StatusInformation = \"Test status\"\r\n" +
+                "};");
+        }
     }
 }
