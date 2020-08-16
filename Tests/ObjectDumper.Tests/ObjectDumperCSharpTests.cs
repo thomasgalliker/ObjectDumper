@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 namespace ObjectDumping.Tests
 {
     [Collection(TestCollections.CultureSpecific)]
-    public class ObjectDumperCSharpCSharpTests
+    public class ObjectDumperCSharpTests
     {
         private readonly ITestOutputHelper testOutputHelper;
 
