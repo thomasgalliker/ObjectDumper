@@ -147,7 +147,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        private void FormatValue(object o, int intentLevel = 0)
+        protected override void FormatValue(object o, int intentLevel = 0)
         {
             if (this.IsMaxLevel())
             {
@@ -282,6 +282,7 @@ namespace ObjectDumping.Internal
                 this.Write($"{systemType.FullName}", intentLevel);
                 return;
             }
+
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
@@ -295,6 +296,14 @@ namespace ObjectDumping.Internal
                 this.Write(" }");
                 return;
             }
+
+#if NETSTANDARD_2
+            if (IsValueTuple(type))
+            {
+                WriteValueTuple(o, type);
+                return;
+            }
+#endif
 
             if (o is IEnumerable enumerable)
             {

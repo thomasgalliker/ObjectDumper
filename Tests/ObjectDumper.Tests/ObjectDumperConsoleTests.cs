@@ -369,7 +369,7 @@ namespace ObjectDumping.Tests
         //    var dictionaryEntry = new DictionaryEntry { Key = 1, Value = "Value1" };
 
         //    // Act
-        //    var dump = ObjectDumperCSharp.Dump(dictionaryEntry);
+        //    var dump = ObjectDumperConsole.Dump(dictionaryEntry);
 
         //    // Assert
         //    this.testOutputHelper.WriteLine(dump);
@@ -552,7 +552,7 @@ namespace ObjectDumping.Tests
             };
 
             // Act
-            var dump = ObjectDumperCSharp.Dump(array);
+            var dump = ObjectDumperConsole.Dump(array);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -618,5 +618,58 @@ namespace ObjectDumping.Tests
                 "  Status: X509ChainStatusFlags.NoError\r\n" +
                 "  StatusInformation: \"Test status\"");
         }
+
+
+#if NETCORE
+        [Fact]
+        public void ShouldDumpValueTuple()
+        {
+            // Arrange 
+            var valueTuple = (1, "Bill", "Gates");
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(valueTuple);
+
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("(1, \"Bill\", \"Gates\")");
+        }
+
+        [Fact]
+        public void ShouldDumpValueTuple_WithDefaultValue()
+        {
+            // Arrange 
+            (int Id, string FirstName, string LastName) valueTuple = default;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(valueTuple);
+
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("(0, null, null)");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_ValueTuples()
+        {
+            // Arrange 
+            var persons = PersonFactory.GeneratePersons(count: 2).ToList();
+            var valueTuples = persons.Select(s => (s.Name, s.Age)).ToList();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(valueTuples);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "(\"Person 1\", 3)\r\n" +
+                "(\"Person 2\", 3)");
+        }
+#endif
     }
 }
