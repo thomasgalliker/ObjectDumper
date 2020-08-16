@@ -117,6 +117,24 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpEnumerable_EmptyCollection()
+        {
+            // Arrange
+            var persons = new List<Person>();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(persons);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var listOfPersons = new List<Person>\r\n" +
+                "{\r\n" +
+                "};");
+        }
+
+        [Fact]
         public void ShouldDumpNestedObjects()
         {
             // Arrange
@@ -836,6 +854,30 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var viewModelValidation = new ViewModelValidation\r\n{\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpStruct()
+        {
+            // Arrange            
+            var x509ChainStatusStruct = new System.Security.Cryptography.X509Certificates.X509ChainStatus
+            {
+                Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,
+                StatusInformation = "Test status"
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(x509ChainStatusStruct);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var x509ChainStatus = new X509ChainStatus\r\n" +
+                "{\r\n" +
+                "  Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,\r\n" +
+                "  StatusInformation = \"Test status\"\r\n" +
+                "};");
         }
     }
 }

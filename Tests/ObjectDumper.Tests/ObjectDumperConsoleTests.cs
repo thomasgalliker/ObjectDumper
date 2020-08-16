@@ -178,6 +178,21 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpEnumerable_EmptyCollection()
+        {
+            // Arrange
+            var persons = new List<Person>();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(persons);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("");
+        }
+
+        [Fact]
         public void ShouldDumpNestedObjects()
         {
             // Arrange
@@ -580,6 +595,28 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().Be("de-CH");
+        }
+
+        [Fact]
+        public void ShouldDumpStruct()
+        {
+            // Arrange            
+            var x509ChainStatusStruct = new System.Security.Cryptography.X509Certificates.X509ChainStatus
+            {
+                Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,
+                StatusInformation = "Test status"
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(x509ChainStatusStruct);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{X509ChainStatus}\r\n" +
+                "  Status: X509ChainStatusFlags.NoError\r\n" +
+                "  StatusInformation: \"Test status\"");
         }
     }
 }
