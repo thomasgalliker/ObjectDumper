@@ -171,7 +171,17 @@ namespace ObjectDumping.Tests
             {
                 ex = e;
             }
-            var options = new DumpOptions { IgnoreDefaultValues = true, ExcludeProperties = { "CustomAttributes", "Module", "StackTrace" } };
+            var options = new DumpOptions
+            {
+                IgnoreDefaultValues = true,
+                ExcludeProperties =
+                {
+                    "CustomAttributes",
+                    "Module",
+                    "StackTrace",
+                    "MetadataToken"
+                }
+            };
 
             // Act
             var dump = ObjectDumperCSharp.Dump(ex, options);
@@ -191,7 +201,6 @@ namespace ObjectDumping.Tests
                "    DeclaringType = typeof(ObjectDumperCSharpTests),\r\n" +
                "    ReflectedType = typeof(ObjectDumperCSharpTests),\r\n" +
                "    MemberType = MemberTypes.Method,\r\n" +
-               "    MetadataToken = 100663341,\r\n" +
                "    IsSecurityCritical = true,\r\n" +
                "    MethodHandle = new RuntimeMethodHandle\r\n" +
                "    {\r\n" +
@@ -206,7 +215,6 @@ namespace ObjectDumping.Tests
                "    {\r\n" +
                "      ParameterType = typeof(Void),\r\n" +
                "      HasDefaultValue = true,\r\n" +
-               "      MetadataToken = 134217728,\r\n" +
                "      Position = -1\r\n" +
                "    },\r\n" +
                "    IsHideBySig = true,\r\n" +

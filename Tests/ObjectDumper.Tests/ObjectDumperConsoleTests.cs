@@ -228,7 +228,13 @@ namespace ObjectDumping.Tests
             var options = new DumpOptions
             {
                 IgnoreDefaultValues = true,
-                ExcludeProperties = { "CustomAttributes", "Module", "StackTrace" }
+                ExcludeProperties =
+                {
+                    "CustomAttributes",
+                    "Module",
+                    "StackTrace",
+                    "MetadataToken"
+                }
             };
 
             // Act
@@ -243,21 +249,19 @@ namespace ObjectDumping.Tests
              "{KeyNotFoundException}\r\n" +
              "  TargetSite: {RuntimeMethodInfo}\r\n" +
              "    Name: \"ShouldDumpExceptionAfterThrow\"\r\n" +
-             "    DeclaringType: ObjectDumping.Tests.ObjectDumperConsoleTests\r\n" +
-             "    ReflectedType: ObjectDumping.Tests.ObjectDumperConsoleTests\r\n" +
+             "    DeclaringType: ObjectDumperConsoleTests\r\n" +
+             "    ReflectedType: ObjectDumperConsoleTests\r\n" +
              "    MemberType: MemberTypes.Method\r\n" +
-             "    MetadataToken: 100663311\r\n" +
              "    IsSecurityCritical: true\r\n" +
              "    MethodHandle: {RuntimeMethodHandle}\r\n" +
              "      Value: {IntPtr}\r\n" +
              "\r\n" +
              "    Attributes: PrivateScope | Public | HideBySig\r\n" +
              "    CallingConvention: Standard | HasThis\r\n" +
-             "    ReturnType: System.Void\r\n" +
+             "    ReturnType: Void\r\n" +
              "    ReturnTypeCustomAttributes: {RuntimeParameterInfo}\r\n" +
-             "      ParameterType: System.Void\r\n" +
+             "      ParameterType: Void\r\n" +
              "      HasDefaultValue: true\r\n" +
-             "      MetadataToken: 134217728\r\n" +
              "      Position: -1\r\n" +
              "    IsHideBySig: true\r\n" +
              "    IsPublic: true\r\n" +
