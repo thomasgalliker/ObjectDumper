@@ -34,7 +34,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\r\n{\r\n  Name = \"Person 1\",\r\n  Char = '',\r\n  Age = 2,\r\n  GetOnly = 11,\r\n  Bool = false,\r\n  Byte = 0,\r\n  ByteArray = new Byte[]\r\n  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0,\r\n  Long = 0L,\r\n  ULong = 0L,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = System.DateTimeKind.Unspecified\r\n};");
+            dump.Should().Be("var person = new Person\r\n{\r\n  Name = \"Person 1\",\r\n  Char = '',\r\n  Age = 2,\r\n  GetOnly = 11,\r\n  Bool = false,\r\n  Byte = 0,\r\n  ByteArray = new Byte[]\r\n  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0,\r\n  Long = 0L,\r\n  ULong = 0L,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = DateTimeKind.Unspecified\r\n};");
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new Byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0,\n	Long = 0L,\n	ULong = 0L,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = System.DateTimeKind.Unspecified\n};");
+            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new Byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0,\n	Long = 0L,\n	ULong = 0L,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = DateTimeKind.Unspecified\n};");
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace ObjectDumping.Tests
                 "    Bool = false,\r\n" +
                 "    Byte = 0,\r\n" +
                 "    ByteArray = new Byte[]\r\n" +
-                "    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n" +
+                "    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n" +
                 "  },\r\n" +
                 "  new Person\r\n" +
                 "  {\r\n" +
@@ -111,7 +111,7 @@ namespace ObjectDumping.Tests
                 "    Double = 0d,\r\n" +
                 "    DateTime = DateTime.MinValue,\r\n" +
                 "    NullableDateTime = null,\r\n" +
-                "    Enum = System.DateTimeKind.Unspecified\r\n" +
+                "    Enum = DateTimeKind.Unspecified\r\n" +
                 "  }\r\n" +
                 "};");
         }
@@ -179,7 +179,7 @@ namespace ObjectDumping.Tests
                 "      Double = 0d,\r\n" +
                 "      DateTime = DateTime.MinValue,\r\n" +
                 "      NullableDateTime = null,\r\n" +
-                "      Enum = System.DateTimeKind.Unspecified\r\n" +
+                "      Enum = DateTimeKind.Unspecified\r\n" +
                 "    },\r\n" +
                 "    new Person\r\n" +
                 "    {\r\n" +
@@ -207,7 +207,7 @@ namespace ObjectDumping.Tests
                 "      Double = 0d,\r\n" +
                 "      DateTime = DateTime.MinValue,\r\n" +
                 "      NullableDateTime = null,\r\n" +
-                "      Enum = System.DateTimeKind.Unspecified\r\n" +
+                "      Enum = DateTimeKind.Unspecified\r\n" +
                 "    }\r\n" +
                 "  },\r\n" +
                 "  IsAfterCollection = true\r\n" +
@@ -227,7 +227,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var genericClass = new GenericClass<String, Single, Person>\r\n{\r\n  Prop1 = \"Test\",\r\n  Prop2 = 123.45f,\r\n  Prop3 = new Person\r\n  {\r\n    Name = \"Person 1\",\r\n    Char = '',\r\n    Age = 2,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = System.DateTimeKind.Unspecified\r\n  }\r\n};");
+            dump.Should().Be("var genericClass = new GenericClass<String, Single, Person>\r\n{\r\n  Prop1 = \"Test\",\r\n  Prop2 = 123.45f,\r\n  Prop3 = new Person\r\n  {\r\n    Name = \"Person 1\",\r\n    Char = '',\r\n    Age = 2,\r\n    GetOnly = 11,\r\n    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new Byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n  }\r\n};");
         }
 
         [Fact]
@@ -533,7 +533,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dateTimeKind = System.DateTimeKind.Utc;");
+            dump.Should().Be("var dateTimeKind = DateTimeKind.Utc;");
         }
 
         [Fact]
@@ -713,7 +713,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var runtimeType = typeof(ObjectDumping.Tests.Testdata.Person);");
+            dump.Should().Be("var runtimeType = typeof(Person);");
         }
 
         [Fact]
@@ -875,7 +875,7 @@ namespace ObjectDumping.Tests
             dump.Should().Be(
                 "var x509ChainStatus = new X509ChainStatus\r\n" +
                 "{\r\n" +
-                "  Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,\r\n" +
+                "  Status = X509ChainStatusFlags.NoError,\r\n" +
                 "  StatusInformation = \"Test status\"\r\n" +
                 "};");
         }
