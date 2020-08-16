@@ -879,5 +879,60 @@ namespace ObjectDumping.Tests
                 "  StatusInformation = \"Test status\"\r\n" +
                 "};");
         }
+
+#if NETCORE
+        [Fact]
+        public void ShouldDumpValueTuple()
+        {
+            // Arrange 
+            var valueTuple = (1, "Bill", "Gates");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(valueTuple);
+
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var valueTuple = (1, \"Bill\", \"Gates\");");
+        }
+
+        [Fact]
+        public void ShouldDumpValueTuple_WithDefaultValue()
+        {
+            // Arrange 
+            (int Id, string FirstName, string LastName) valueTuple = default;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(valueTuple);
+
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var valueTuple = (0, null, null);");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_ValueTuples()
+        {
+            // Arrange 
+            var persons = PersonFactory.GeneratePersons(count: 2).ToList();
+            var valueTuples = persons.Select(s => (s.Name, s.Age)).ToList();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(valueTuples);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var list = new List<ValueTuple<String, Int32>>\r\n" +
+                "{\r\n" +
+                "  (\"Person 1\", 3),\r\n" +
+                "  (\"Person 2\", 3)\r\n" +
+                "};");
+        }
+#endif
     }
 }

@@ -1,30 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
-    <AssemblyName>ObjectDumper.Tests</AssemblyName>
-    <PackageId>ObjectDumper.Tests</PackageId>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <RootNamespace>ObjectDumping.Tests</RootNamespace>
-    <NeutralLanguage>en</NeutralLanguage>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1;net452</TargetFrameworks>
+		<AssemblyName>ObjectDumper.Tests</AssemblyName>
+		<PackageId>ObjectDumper.Tests</PackageId>
+		<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<RootNamespace>ObjectDumping.Tests</RootNamespace>
+		<NeutralLanguage>en</NeutralLanguage>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.4.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-  </ItemGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+		<DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+	</PropertyGroup>
 
-  <!-- Include files in the Resources directory to be used across the test suite -->
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\**\*.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\ObjectDumper\ObjectDumper.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="5.4.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+		<PackageReference Include="xunit" Version="2.4.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+	</ItemGroup>
+
+	<!-- Include files in the Resources directory to be used across the test suite -->
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\**\*.*" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\ObjectDumper\ObjectDumper.csproj" />
+	</ItemGroup>
 </Project>
