@@ -6,13 +6,9 @@ namespace ObjectDumping.Internal
 {
     internal static class TypeExtensions
     {
-        /// <summary>
-        ///     Source:
-        ///     https://github.com/thomasgalliker/CrossPlatformLibrary/blob/0ea2e849dfccee3f68e719c19daef2eaabec190e/CrossPlatformLibrary/Extensions/TypeExtensions.cs
-        /// </summary>
-        internal static string GetFormattedName(this Type type, bool useFullName = false)
+        internal static string GetFormattedName(this Type type, bool useFullName = false, bool useValueTupleFormatting = true)
         {
-            var typeName = useFullName ? type.FullName : type.Name;
+            var typeName = GetTypeName(type, useFullName, useValueTupleFormatting);
 
             var typeInfo = type.GetTypeInfo();
 
@@ -23,6 +19,13 @@ namespace ObjectDumping.Internal
                 return typeName;
             }
 
+#if NETSTANDARD_2
+            if (useValueTupleFormatting && type.IsValueTuple())
+            {
+                return typeName.RemoveGenericBackTick();
+            }
+#endif
+
             string genericTypeParametersString;
             if (typeInfo.IsGenericTypeDefinition)
             {
@@ -32,16 +35,41 @@ namespace ObjectDumping.Internal
             else
             {
                 // Used for regular generic types
-                genericTypeParametersString = $"{string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName)))}";
+                genericTypeParametersString = $"{string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName, useValueTupleFormatting)))}";
             }
 
+            typeName = typeName.RemoveGenericBackTick();
+
+            return $"{typeName}<{genericTypeParametersString}>{arrayBrackets}";
+        }
+
+        private static string RemoveGenericBackTick(this string typeName)
+        {
             int iBacktick = typeName.IndexOf('`');
             if (iBacktick > 0)
             {
                 typeName = typeName.Remove(iBacktick);
             }
 
-            return $"{typeName}<{genericTypeParametersString}>{arrayBrackets}";
+            return typeName;
+        }
+
+        private static string GetTypeName(Type type, bool useFullName, bool useValueTupleFormatting)
+        {
+            string typeName;
+
+#if NETSTANDARD_2
+            if (useValueTupleFormatting && type.IsValueTuple())
+            {
+                typeName = $"({string.Join(", ", type.GenericTypeArguments.Select(t => GetTypeName(t, useFullName, useValueTupleFormatting)))})";
+            }
+            else
+#endif
+            {
+                typeName = useFullName ? type.FullName : type.Name;
+            }
+
+            return typeName;
         }
 
         private static void TryGetInnerElementType(ref TypeInfo type, out string arrayBrackets)
@@ -66,5 +94,16 @@ namespace ObjectDumping.Internal
         {
             return default(T);
         }
+
+#if NETSTANDARD_2
+        public static bool IsValueTuple(this Type type)
+        {
+            return
+                type.IsValueType &&
+                //type.IsGenericType &&
+                type.FullName is string fullName &&
+                (fullName.StartsWith("System.ValueTuple") || fullName.StartsWith("System.ValueTuple`"));
+        }
+#endif
     }
 }

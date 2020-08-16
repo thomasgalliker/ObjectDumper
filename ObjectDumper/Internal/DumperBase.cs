@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ObjectDumping.Internal
@@ -19,6 +20,8 @@ namespace ObjectDumping.Internal
             this.hashListOfFoundElements = new List<int>();
             this.isNewLine = true;
         }
+
+        protected abstract void FormatValue(object o, int intentLevel);
 
         public int Level
         {
@@ -124,13 +127,6 @@ namespace ObjectDumping.Internal
         public override string ToString()
         {
             return this.stringBuilder.ToString();
-        }
-
-        public string GetClassName(object o)
-        {
-            var type = o.GetType();
-            var className = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
-            return className;
         }
     }
 }
