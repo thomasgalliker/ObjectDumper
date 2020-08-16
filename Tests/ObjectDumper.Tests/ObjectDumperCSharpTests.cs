@@ -17,7 +17,7 @@ namespace ObjectDumping.Tests
     {
         private readonly ITestOutputHelper testOutputHelper;
 
-        public ObjectDumperCSharpCSharpTests(ITestOutputHelper testOutputHelper)
+        public ObjectDumperCSharpTests(ITestOutputHelper testOutputHelper)
         {
             this.testOutputHelper = testOutputHelper;
         }
