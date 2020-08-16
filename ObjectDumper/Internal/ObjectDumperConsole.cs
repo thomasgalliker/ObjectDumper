@@ -31,11 +31,13 @@ namespace ObjectDumping.Internal
         {
             this.AddAlreadyTouched(o);
 
-            this.Write($"{{{GetClassName(o)}}}", intentLevel);
+            var type = o.GetType();
+
+            this.Write($"{{{type.GetFormattedName(this.DumpOptions.UseTypeFullName)}}}", intentLevel);
             this.LineBreak();
             this.Level++;
 
-            var properties = o.GetType().GetRuntimeProperties()
+            var properties = type.GetRuntimeProperties()
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
                 .ToList();
 
@@ -251,9 +253,11 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            var type = o.GetType();
+
             if (o is Enum)
             {
-                this.Write($"{GetClassName(o)}.{o}", intentLevel);
+                this.Write($"{type.GetFormattedName(this.DumpOptions.UseTypeFullName)}.{o}", intentLevel);
                 return;
             }
 
@@ -263,7 +267,6 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            var type = o.GetType();
             if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(type, out var func))
             {
                 this.Write(func(o));
@@ -298,7 +301,7 @@ namespace ObjectDumping.Internal
             }
 
 #if NETSTANDARD_2
-            if (IsValueTuple(type))
+            if (type.IsValueTuple())
             {
                 WriteValueTuple(o, type);
                 return;
@@ -320,6 +323,26 @@ namespace ObjectDumping.Internal
             this.CreateObject(o, intentLevel);
         }
 
+#if NETSTANDARD_2
+        protected void WriteValueTuple(object o, Type type)
+        {
+            var fields = type.GetFields().ToList();
+            var last = fields.LastOrDefault();
+
+            this.Write("(");
+            foreach (var field in fields)
+            {
+                var fieldValue = field.GetValue(o);
+                this.FormatValue(fieldValue, 0);
+                if (!Equals(field, last))
+                {
+                    this.Write(", ");
+                }
+            }
+            this.Write(")");
+        }
+#endif
+
         private void WriteItems(IEnumerable items)
         {
             if (this.IsMaxLevel())
@@ -331,7 +354,7 @@ namespace ObjectDumping.Internal
             var e = items.GetEnumerator();
             if (e.MoveNext())
             {
-                if(this.Level > 0)
+                if (this.Level > 0)
                 {
                     this.LineBreak();
                 }
@@ -347,7 +370,7 @@ namespace ObjectDumping.Internal
                 //this.LineBreak();
             }
 
-            if(Level > 0)
+            if (Level > 0)
             {
                 this.Level--;
             }

@@ -128,44 +128,5 @@ namespace ObjectDumping.Internal
         {
             return this.stringBuilder.ToString();
         }
-
-        public string GetClassName(object o)
-        {
-            var type = o.GetType();
-            var className = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
-            return className;
-        }
-
-#if NETSTANDARD_2
-        public static bool IsValueTuple(Type type)
-        {
-            return
-                type.IsValueType &&
-                type.IsGenericType &&
-                type.FullName is string fullName &&
-                (fullName.StartsWith("System.ValueTuple") || fullName.StartsWith("System.ValueTuple`"));
-        }
-
-        protected void WriteValueTuple(object o, Type type)
-        {
-            var fields = type.GetFields().ToList();
-            if (fields.Any())
-            {
-                var last = fields.LastOrDefault();
-
-                this.Write("(");
-                foreach (var field in fields)
-                {
-                    var fieldValue = field.GetValue(o);
-                    FormatValue(fieldValue, 0);
-                    if (!Equals(field, last))
-                    {
-                        this.Write(", ");
-                    }
-                }
-                this.Write(")");
-            }
-        }
-#endif
     }
 }

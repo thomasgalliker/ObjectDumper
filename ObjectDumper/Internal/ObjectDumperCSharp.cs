@@ -42,7 +42,9 @@ namespace ObjectDumping.Internal
         {
             this.AddAlreadyTouched(o);
 
-            this.Write($"new {GetClassName(o)}", intentLevel);
+            var type = o.GetType();
+
+            this.Write($"new {type.GetFormattedName(this.DumpOptions.UseTypeFullName)}", intentLevel);
             this.LineBreak();
             this.Write("{");
             this.LineBreak();
@@ -348,7 +350,7 @@ namespace ObjectDumping.Internal
             }
 
 #if NETSTANDARD_2
-            if (IsValueTuple(type))
+            if (type.IsValueTuple())
             {
                 WriteValueTuple(o, type);
                 return;
@@ -357,7 +359,7 @@ namespace ObjectDumping.Internal
 
             if (o is IEnumerable enumerable)
             {
-                this.Write($"new {GetClassName(o)}", intentLevel);
+                this.Write($"new {type.GetFormattedName(this.DumpOptions.UseTypeFullName)}", intentLevel);
                 this.LineBreak();
                 this.Write("{");
                 this.LineBreak();
@@ -368,6 +370,33 @@ namespace ObjectDumping.Internal
 
             this.CreateObject(o, intentLevel);
         }
+
+#if NETSTANDARD_2
+        private void WriteValueTuple(object o, Type type)
+        {
+            var fields = type.GetFields().ToList();
+            if (fields.Any())
+            {
+                var last = fields.LastOrDefault();
+
+                this.Write("(");
+                foreach (var field in fields)
+                {
+                    var fieldValue = field.GetValue(o);
+                    this.FormatValue(fieldValue, 0);
+                    if (!Equals(field, last))
+                    {
+                        this.Write(", ");
+                    }
+                }
+                this.Write(")");
+            }
+            else
+            {
+                this.Write("ValueTuple.Create()");
+            }
+        }
+#endif
 
         private void WriteItems(IEnumerable items)
         {
@@ -404,7 +433,9 @@ namespace ObjectDumping.Internal
                 return "x";
             }
 
-            var className = GetClassName(element);
+            var type = element.GetType();
+
+            var className = type.GetFormattedName(useFullName: false, useValueTupleFormatting: false);
             string variableName;
 
             var splitGenerics = className.Split('<');
@@ -421,6 +452,7 @@ namespace ObjectDumping.Internal
                 // are using more sophisticated variable names
                 variableName = className
                     .Replace("Nullable<", "OfNullable")
+                    .Replace("<", "Of")
                     .Replace("<", "Of")
                     .Replace(">", "s")
                     .Replace(" ", "")

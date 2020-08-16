@@ -882,7 +882,22 @@ namespace ObjectDumping.Tests
 
 #if NETCORE
         [Fact]
-        public void ShouldDumpValueTuple()
+        public void ShouldDumpValueTuple_Arity0()
+        {
+            // Arrange 
+            var valueTuple = ValueTuple.Create();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(valueTuple);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var valueTuple = ValueTuple.Create();");
+        }
+
+        [Fact]
+        public void ShouldDumpValueTuple_Arity3()
         {
             // Arrange 
             var valueTuple = (1, "Bill", "Gates");
@@ -925,7 +940,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be(
-                "var list = new List<ValueTuple<String, Int32>>\r\n" +
+                "var list = new List<(String, Int32)>\r\n" +
                 "{\r\n" +
                 "  (\"Person 1\", 3),\r\n" +
                 "  (\"Person 2\", 3)\r\n" +
