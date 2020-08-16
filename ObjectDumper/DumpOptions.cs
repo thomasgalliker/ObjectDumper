@@ -21,6 +21,7 @@ public class DumpOptions
         this.CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>();
         this.CustomInstanceFormatters = new CustomInstanceFormatters();
         this.TrimInitialVariableName = false;
+        this.UseTypeFullName = false;
     }
 
     public DumpStyle DumpStyle { get; set; }
@@ -58,6 +59,8 @@ public class DumpOptions
     public bool TrimTrailingColonName { get; set; }
 
     public CustomInstanceFormatters CustomInstanceFormatters { get; }
+
+    public bool UseTypeFullName { get;  set; }
 }
 
 public class CustomInstanceFormatters

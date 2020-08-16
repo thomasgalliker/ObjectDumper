@@ -12,5 +12,7 @@ namespace ObjectDumping.Tests.Testdata
         public string Name { get; set; }
 
         public ICollection<Person> Persons { get; set; }
+
+        public bool IsAfterCollection { get; set; } = true;
     }
 }

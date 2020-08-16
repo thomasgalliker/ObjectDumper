@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ObjectDumping.Internal
@@ -8,6 +10,7 @@ namespace ObjectDumping.Internal
         private readonly List<int> hashListOfFoundElements;
         private readonly StringBuilder stringBuilder;
         private bool isNewLine;
+        private int level;
 
         protected DumperBase(DumpOptions dumpOptions)
         {
@@ -18,7 +21,21 @@ namespace ObjectDumping.Internal
             this.isNewLine = true;
         }
 
-        public int Level { get; set; }
+        protected abstract void FormatValue(object o, int intentLevel);
+
+        public int Level
+        {
+            get => level;
+            set
+            {
+                if(value < 0)
+                {
+                    throw new ArgumentException("Level must not be a negative number", nameof(Level));
+                }
+
+                level = value;
+            }
+        }
 
         public bool IsMaxLevel()
         {

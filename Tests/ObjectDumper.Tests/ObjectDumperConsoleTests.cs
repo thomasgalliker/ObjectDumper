@@ -26,7 +26,7 @@ namespace ObjectDumping.Tests
         public void ShouldDumpObject()
         {
             // Arrange
-            var person = PersonFactory.GetPersonThomas();
+            var person = PersonFactory.GeneratePersons(count: 1).Single();
 
             // Act
             var dump = ObjectDumperConsole.Dump(person);
@@ -34,10 +34,31 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.Person}\r\n  Name: \"Thomas\"\r\n  Char: \r\n  Age: 30\r\n  GetOnly: 11\r\n  Bool: False\r\n  Byte: 0\r\n  ByteArray: ...\r\n    1\r\n    2\r\n    3\r\n    4\r\n  SByte: 0\r\n  Float: 0\r\n  Uint: 0\r\n  Long: 0\r\n  ULong: 0\r\n  Short: 0\r\n  UShort: 0\r\n  Decimal: 0\r\n  Double: 0\r\n  DateTime: 01.01.0001 00:00:00\r\n  NullableDateTime: null\r\n  Enum: Unspecified\r\n");
+            dump.Should().Be(
+                "{Person}\r\n" +
+                "  Name: \"Person 1\"\r\n" +
+                "  Char: ''\r\n" +
+                "  Age: 2\r\n" +
+                "  GetOnly: 11\r\n" +
+                "  Bool: false\r\n" +
+                "  Byte: 0\r\n" +
+                "  ByteArray: ...\r\n" +
+                "    1\r\n    2\r\n    3\r\n    4\r\n" +
+                "  SByte: 0\r\n" +
+                "  Float: 0\r\n" +
+                "  Uint: 0\r\n" +
+                "  Long: 0\r\n" +
+                "  ULong: 0\r\n" +
+                "  Short: 0\r\n" +
+                "  UShort: 0\r\n" +
+                "  Decimal: 0\r\n" +
+                "  Double: 0\r\n" +
+                "  DateTime: DateTime.MinValue\r\n" +
+                "  NullableDateTime: null\r\n" +
+                "  Enum: DateTimeKind.Unspecified");
         }
 
-        [Fact]
+        [Fact(Skip = "Dumping fields is no longer supported; at least for now")]
         public void ShouldDumpObject_WithNullFieldsAndProperties()
         {
             // Arrange
@@ -62,7 +83,8 @@ namespace ObjectDumping.Tests
         public void ShouldDumpObject_WithDumpOptions()
         {
             // Arrange
-            var person = PersonFactory.GetPersonThomas();
+            var person = PersonFactory.GeneratePersons(count: 1).Single();
+
             var options = new DumpOptions
             {
                 IndentChar = '\t',
@@ -76,7 +98,26 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.Person}\r\n	Name: \"Thomas\"\r\n	Char: \r\n	Age: 30\r\n	Bool: False\r\n	Byte: 0\r\n	ByteArray: ...\r\n		1\r\n		2\r\n		3\r\n		4\r\n	SByte: 0\r\n	Float: 0\r\n	Uint: 0\r\n	Long: 0\r\n	ULong: 0\r\n	Short: 0\r\n	UShort: 0\r\n	Decimal: 0\r\n	Double: 0\r\n	DateTime: 01.01.0001 00:00:00\r\n	NullableDateTime: null\r\n	Enum: Unspecified\r\n");
+            dump.Should().Be("{Person}\r\n" +
+                "	Name: \"Person 1\"\r\n" +
+                "	Char: ''\r\n" +
+                "	Age: 2\r\n" +
+                "	Bool: false\r\n" +
+                "	Byte: 0\r\n	ByteArray: ...\r\n" +
+                "		1\r\n" +
+                "		2\r\n" +
+                "		3\r\n" +
+                "		4\r\n" +
+                "	SByte: 0\r\n" +
+                "	Float: 0\r\n" +
+                "	Uint: 0\r\n" +
+                "	Long: 0\r\n	ULong: 0\r\n" +
+                "	Short: 0\r\n" +
+                "	UShort: 0\r\n" +
+                "	Decimal: 0\r\n" +
+                "	Double: 0\r\n	DateTime: DateTime.MinValue\r\n" +
+                "	NullableDateTime: null\r\n" +
+                "	Enum: DateTimeKind.Unspecified");
         }
 
         [Fact]
@@ -91,7 +132,64 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.Person}\r\n  Name: \"Person 1\"\r\n  Char: \r\n  Age: 3\r\n  GetOnly: 11\r\n  Bool: False\r\n  Byte: 0\r\n  ByteArray: ...\r\n    1\r\n    2\r\n    3\r\n    4\r\n  SByte: 0\r\n  Float: 0\r\n  Uint: 0\r\n  Long: 0\r\n  ULong: 0\r\n  Short: 0\r\n  UShort: 0\r\n  Decimal: 0\r\n  Double: 0\r\n  DateTime: 01.01.0001 00:00:00\r\n  NullableDateTime: null\r\n  Enum: Unspecified\r\n\r\n{ObjectDumping.Tests.Testdata.Person}\r\n  Name: \"Person 2\"\r\n  Char: \r\n  Age: 3\r\n  GetOnly: 11\r\n  Bool: False\r\n  Byte: 0\r\n  ByteArray: ...\r\n    1\r\n    2\r\n    3\r\n    4\r\n  SByte: 0\r\n  Float: 0\r\n  Uint: 0\r\n  Long: 0\r\n  ULong: 0\r\n  Short: 0\r\n  UShort: 0\r\n  Decimal: 0\r\n  Double: 0\r\n  DateTime: 01.01.0001 00:00:00\r\n  NullableDateTime: null\r\n  Enum: Unspecified\r\n\r\n");
+            dump.Should().Be(
+                "{Person}\r\n" +
+                "  Name: \"Person 1\"\r\n" +
+                "  Char: ''\r\n" +
+                "  Age: 3\r\n" +
+                "  GetOnly: 11\r\n" +
+                "  Bool: false\r\n" +
+                "  Byte: 0\r\n" +
+                "  ByteArray: ...\r\n" +
+                "    1\r\n    2\r\n    3\r\n    4\r\n" +
+                "  SByte: 0\r\n" +
+                "  Float: 0\r\n" +
+                "  Uint: 0\r\n" +
+                "  Long: 0\r\n" +
+                "  ULong: 0\r\n" +
+                "  Short: 0\r\n" +
+                "  UShort: 0\r\n" +
+                "  Decimal: 0\r\n" +
+                "  Double: 0\r\n" +
+                "  DateTime: DateTime.MinValue\r\n" +
+                "  NullableDateTime: null\r\n" +
+                "  Enum: DateTimeKind.Unspecified\r\n" +
+                "{Person}\r\n" +
+                "  Name: \"Person 2\"\r\n" +
+                "  Char: ''\r\n" +
+                "  Age: 3\r\n" +
+                "  GetOnly: 11\r\n" +
+                "  Bool: false\r\n" +
+                "  Byte: 0\r\n" +
+                "  ByteArray: ...\r\n" +
+                "    1\r\n    2\r\n    3\r\n    4\r\n" +
+                "  SByte: 0\r\n" +
+                "  Float: 0\r\n" +
+                "  Uint: 0\r\n" +
+                "  Long: 0\r\n" +
+                "  ULong: 0\r\n" +
+                "  Short: 0\r\n" +
+                "  UShort: 0\r\n" +
+                "  Decimal: 0\r\n" +
+                "  Double: 0\r\n" +
+                "  DateTime: DateTime.MinValue\r\n" +
+                "  NullableDateTime: null\r\n" +
+                "  Enum: DateTimeKind.Unspecified");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_EmptyCollection()
+        {
+            // Arrange
+            var persons = new List<Person>();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(persons);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("");
         }
 
         [Fact]
@@ -179,11 +277,63 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.Organization}\r\n  Name: \"superdev gmbh\"\r\n  Persons: ...\r\n    {ObjectDumping.Tests.Testdata.Person}\r\n      Name: \"Person 1\"\r\n      Char: \r\n      Age: 3\r\n      GetOnly: 11\r\n      Bool: False\r\n      Byte: 0\r\n      ByteArray: ...\r\n        1\r\n        2\r\n        3\r\n        4\r\n      SByte: 0\r\n      Float: 0\r\n      Uint: 0\r\n      Long: 0\r\n      ULong: 0\r\n      Short: 0\r\n      UShort: 0\r\n      Decimal: 0\r\n      Double: 0\r\n      DateTime: 01.01.0001 00:00:00\r\n      NullableDateTime: null\r\n      Enum: Unspecified\r\n\r\n    {ObjectDumping.Tests.Testdata.Person}\r\n      Name: \"Person 2\"\r\n      Char: \r\n      Age: 3\r\n      GetOnly: 11\r\n      Bool: False\r\n      Byte: 0\r\n      ByteArray: ...\r\n        1\r\n        2\r\n        3\r\n        4\r\n      SByte: 0\r\n      Float: 0\r\n      Uint: 0\r\n      Long: 0\r\n      ULong: 0\r\n      Short: 0\r\n      UShort: 0\r\n      Decimal: 0\r\n      Double: 0\r\n      DateTime: 01.01.0001 00:00:00\r\n      NullableDateTime: null\r\n      Enum: Unspecified\r\n\r\n");
+            dump.Should().Be(
+                "{Organization}\r\n" +
+                "  Name: \"superdev gmbh\"\r\n" +
+                "  Persons: ...\r\n" +
+                "    {Person}\r\n" +
+                "      Name: \"Person 1\"\r\n" +
+                "      Char: ''\r\n" +
+                "      Age: 3\r\n" +
+                "      GetOnly: 11\r\n" +
+                "      Bool: false\r\n" +
+                "      Byte: 0\r\n" +
+                "      ByteArray: ...\r\n" +
+                "        1\r\n" +
+                "        2\r\n" +
+                "        3\r\n" +
+                "        4\r\n" +
+                "      SByte: 0\r\n" +
+                "      Float: 0\r\n" +
+                "      Uint: 0\r\n" +
+                "      Long: 0\r\n" +
+                "      ULong: 0\r\n" +
+                "      Short: 0\r\n" +
+                "      UShort: 0\r\n" +
+                "      Decimal: 0\r\n" +
+                "      Double: 0\r\n" +
+                "      DateTime: DateTime.MinValue\r\n" +
+                "      NullableDateTime: null\r\n" +
+                "      Enum: DateTimeKind.Unspecified\r\n" +
+                "    {Person}\r\n" +
+                "      Name: \"Person 2\"\r\n" +
+                "      Char: ''\r\n" +
+                "      Age: 3\r\n" +
+                "      GetOnly: 11\r\n" +
+                "      Bool: false\r\n" +
+                "      Byte: 0\r\n" +
+                "      ByteArray: ...\r\n" +
+                "        1\r\n" +
+                "        2\r\n" +
+                "        3\r\n" +
+                "        4\r\n" +
+                "      SByte: 0\r\n" +
+                "      Float: 0\r\n" +
+                "      Uint: 0\r\n" +
+                "      Long: 0\r\n" +
+                "      ULong: 0\r\n" +
+                "      Short: 0\r\n" +
+                "      UShort: 0\r\n" +
+                "      Decimal: 0\r\n" +
+                "      Double: 0\r\n" +
+                "      DateTime: DateTime.MinValue\r\n" +
+                "      NullableDateTime: null\r\n" +
+                "      Enum: DateTimeKind.Unspecified\r\n" +
+                "  IsAfterCollection: true");
         }
 
         [Fact]
-        public void ShouldDumpMultipleGenericTypes()
+        public void ShouldDumpGenericClass_WithMultipleGenericTypeArguments()
         {
             // Arrange
             var person = PersonFactory.GeneratePersons(count: 1).First();
@@ -195,7 +345,69 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.GenericClass<System.String, System.Single, ObjectDumping.Tests.Testdata.Person>}\r\n  Prop1: \"Test\"\r\n  Prop2: 123.45\r\n  Prop3: { }\r\n    {ObjectDumping.Tests.Testdata.Person}\r\n      Name: \"Person 1\"\r\n      Char: \r\n      Age: 2\r\n      GetOnly: 11\r\n      Bool: False\r\n      Byte: 0\r\n      ByteArray: ...\r\n        1\r\n        2\r\n        3\r\n        4\r\n      SByte: 0\r\n      Float: 0\r\n      Uint: 0\r\n      Long: 0\r\n      ULong: 0\r\n      Short: 0\r\n      UShort: 0\r\n      Decimal: 0\r\n      Double: 0\r\n      DateTime: 01.01.0001 00:00:00\r\n      NullableDateTime: null\r\n      Enum: Unspecified\r\n");
+
+            dump.Should().Be(
+                "{GenericClass<String, Single, Person>}\r\n" +
+                "  Prop1: \"Test\"\r\n" +
+                "  Prop2: 123.45\r\n" +
+                "  Prop3: {Person}\r\n" +
+                "    Name: \"Person 1\"\r\n" +
+                "    Char: ''\r\n" +
+                "    Age: 2\r\n" +
+                "    GetOnly: 11\r\n" +
+                "    Bool: false\r\n" +
+                "    Byte: 0\r\n" +
+                "    ByteArray: ...\r\n" +
+                "      1\r\n" +
+                "      2\r\n" +
+                "      3\r\n" +
+                "      4\r\n" +
+                "    SByte: 0\r\n" +
+                "    Float: 0\r\n" +
+                "    Uint: 0\r\n" +
+                "    Long: 0\r\n" +
+                "    ULong: 0\r\n" +
+                "    Short: 0\r\n" +
+                "    UShort: 0\r\n" +
+                "    Decimal: 0\r\n" +
+                "    Double: 0\r\n" +
+                "    DateTime: DateTime.MinValue\r\n" +
+                "    NullableDateTime: null\r\n" +
+                "    Enum: DateTimeKind.Unspecified");
+        }
+
+        [Fact(Skip = "Test failed; to be fixed")]
+        public void ShouldDumpGenericClass_WithNestedGenericTypeArguments()
+        {
+            // Arrange
+            var array2D = new string[3, 2]
+            {
+                { "one", "two" },
+                { "three", "four" },
+                { "five", "six" }
+            };
+
+            var array3D = new int[,,]
+            {
+                { { 1, 2, 3 }, { 4, 5, 6 } },
+                { { 7, 8, 9 }, { 10, 11, 12 } }
+            };
+
+            var complexDictionary = new Dictionary<string[,], List<int[,,]>>[1]
+            {
+                new Dictionary<string[,], List<int[,,]>>
+                {
+                    { array2D, new List<int[,,]>{ array3D } }
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(complexDictionary);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("???");
         }
 
         [Fact]
@@ -213,7 +425,11 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.Organization}\r\n  Name: \"superdev gmbh\"\r\n  Persons: ...\r\n");
+            dump.Should().Be(
+                "{Organization}\r\n" +
+                "  Name: \"superdev gmbh\"\r\n" +
+                "  Persons: ...\r\n" +
+                "  IsAfterCollection: true");
         }
 
         // TODO: Bug in dumping random structs
@@ -224,7 +440,7 @@ namespace ObjectDumping.Tests
         //    var dictionaryEntry = new DictionaryEntry { Key = 1, Value = "Value1" };
 
         //    // Act
-        //    var dump = ObjectDumperCSharp.Dump(dictionaryEntry);
+        //    var dump = ObjectDumperConsole.Dump(dictionaryEntry);
 
         //    // Assert
         //    this.testOutputHelper.WriteLine(dump);
@@ -245,14 +461,14 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.RecursivePerson}\r\n  Parent: { }\r\n    {ObjectDumping.Tests.Testdata.RecursivePerson} <-- bidirectional reference found\r\n");
+            dump.Should().Be("{RecursivePerson}\r\n");
         }
-        
+
         [Fact]
         public void ShouldDumpRecursiveTypes_RuntimeProperties()
         {
             // Arrange
-            var person = PersonFactory.GeneratePersons(count: 1).First();
+            var person = PersonFactory.GeneratePersons(count: 1).Single();
             var properties = person.GetType().GetRuntimeProperties();
             var options = new DumpOptions { MaxLevel = 2 };
 
@@ -262,7 +478,6 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Contain("<-- bidirectional reference found");
         }
 
         [Fact]
@@ -279,7 +494,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.TestObject}\r\n  NullableDateTime: null\r\n");
+            dump.Should().Be("{TestObject}\r\n  NullableDateTime: null");
         }
 
         [Fact]
@@ -296,7 +511,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("{ObjectDumping.Tests.Testdata.OrderPropertyTestObject}\r\n  A: null\r\n  B: null\r\n  C: null\r\n");
+            dump.Should().Be("{OrderPropertyTestObject}\r\n  A: null\r\n  B: null\r\n  C: null");
         }
 
         [Fact]
@@ -343,7 +558,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("Utc");
+            dump.Should().Be("DateTimeKind.Utc");
         }
 
         [Fact]
@@ -358,7 +573,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("024cc229-dea0-4d7a-9fc8-722e3a0c69a3");
+            dump.Should().Be("{024cc229-dea0-4d7a-9fc8-722e3a0c69a3}");
         }
 
         [Fact]
@@ -378,7 +593,42 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("[1, Value1]\r\n[2, Value2]\r\n[3, Value3]\r\n");
+            dump.Should().Be("{ 1, \"Value1\" }\r\n{ 2, \"Value2\" }\r\n{ 3, \"Value3\" }");
+        }
+
+        [Fact]
+        public void ShouldDumpArray_OneDimensional()
+        {
+            // Arrange
+            var array = new string[] { "aaa", "bbb" };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("\"aaa\"\r\n\"bbb\"");
+        }
+
+        [Fact(Skip = "to be implemented")]
+        public void ShouldDumpArray_TwoDimensional()
+        {
+            // Arrange
+            var array = new int[3, 2]
+            {
+                {1, 2},
+                {3, 4},
+                {5, 6}
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("???");
         }
 
         [Fact]
@@ -415,9 +665,95 @@ namespace ObjectDumping.Tests
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
-            dump.Should().NotBeNull();
-            dump.Should().Contain("Name: \"de-CH\"");
-            dump.Should().Contain("EnglishName: \"German (Switzerland)\"");
+            dump.Should().Be("de-CH");
         }
+
+        [Fact]
+        public void ShouldDumpStruct()
+        {
+            // Arrange            
+            var x509ChainStatusStruct = new System.Security.Cryptography.X509Certificates.X509ChainStatus
+            {
+                Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,
+                StatusInformation = "Test status"
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(x509ChainStatusStruct);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{X509ChainStatus}\r\n" +
+                "  Status: X509ChainStatusFlags.NoError\r\n" +
+                "  StatusInformation: \"Test status\"");
+        }
+
+
+#if NETCORE
+        [Fact]
+        public void ShouldDumpValueTuple_Arity0()
+        {
+            // Arrange 
+            var valueTuple = ValueTuple.Create();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(valueTuple);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("()");
+        }
+
+        [Fact]
+        public void ShouldDumpValueTuple_Arity3()
+        {
+            // Arrange 
+            var valueTuple = (1, "Bill", "Gates");
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(valueTuple);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("(1, \"Bill\", \"Gates\")");
+        }
+
+        [Fact]
+        public void ShouldDumpValueTuple_WithDefaultValue()
+        {
+            // Arrange 
+            (int Id, string FirstName, string LastName) valueTuple = default;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(valueTuple);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("(0, null, null)");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_ValueTuples()
+        {
+            // Arrange 
+            var persons = PersonFactory.GeneratePersons(count: 2).ToList();
+            var valueTuples = persons.Select(s => (s.Name, s.Age)).ToList();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(valueTuples);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "(\"Person 1\", 3)\r\n" +
+                "(\"Person 2\", 3)");
+        }
+#endif
     }
 }
