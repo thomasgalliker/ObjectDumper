@@ -630,7 +630,6 @@ namespace ObjectDumping.Tests
             // Act
             var dump = ObjectDumperConsole.Dump(valueTuple);
 
-
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
@@ -645,7 +644,6 @@ namespace ObjectDumping.Tests
 
             // Act
             var dump = ObjectDumperConsole.Dump(valueTuple);
-
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
