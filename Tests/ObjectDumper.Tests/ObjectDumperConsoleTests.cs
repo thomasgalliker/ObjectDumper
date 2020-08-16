@@ -586,7 +586,7 @@ namespace ObjectDumping.Tests
         public void ShouldDumpStruct()
         {
             // Arrange            
-            var x509ChainStatusStruct = new X509ChainStatus
+            var x509ChainStatusStruct = new System.Security.Cryptography.X509Certificates.X509ChainStatus
             {
                 Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,
                 StatusInformation = "Test status"
