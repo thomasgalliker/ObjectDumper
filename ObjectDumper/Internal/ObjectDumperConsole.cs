@@ -257,7 +257,11 @@ namespace ObjectDumping.Internal
 
             if (o is Enum)
             {
-                this.Write($"{type.GetFormattedName(this.DumpOptions.UseTypeFullName)}.{o}", intentLevel);
+                var enumFlags = $"{o}".Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries); 
+                var enumTypeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+                // In case of multiple flags, we prefer short class name here
+                var enumValues = string.Join(" | ", enumFlags.Select(f => $"{(enumFlags.Length > 1 ? "" : $"{enumTypeName}.")}{f.Replace(" ", "")}"));
+                this.Write($"{enumValues}", intentLevel);
                 return;
             }
 

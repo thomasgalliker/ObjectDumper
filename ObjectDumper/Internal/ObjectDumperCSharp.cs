@@ -304,9 +304,14 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            var type = o.GetType();
+
             if (o is Enum)
             {
-                this.Write($"{o.GetType().FullName}.{o}", intentLevel);
+                var enumTypeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+                var enumFlags = $"{o}".Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var enumValues = string.Join(" | ", enumFlags.Select(f => $"{enumTypeName}.{f.Replace(" ", "")}"));
+                this.Write($"{enumValues}", intentLevel);
                 return;
             }
 
@@ -316,7 +321,6 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            var type = o.GetType();
             if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(type, out var func))
             {
                 this.Write(func(o));
@@ -332,7 +336,7 @@ namespace ObjectDumping.Internal
                     return;
                 }
 
-                this.Write($"typeof({systemType.FullName})", intentLevel);
+                this.Write($"typeof({systemType.GetFormattedName(this.DumpOptions.UseTypeFullName)})", intentLevel);
                 return;
             }
             var typeInfo = type.GetTypeInfo();

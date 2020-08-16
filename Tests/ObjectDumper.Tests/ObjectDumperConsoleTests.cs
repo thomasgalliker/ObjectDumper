@@ -205,13 +205,11 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(@"{System.Collections.Generic.KeyNotFoundException}
-  _message: ""message text""
-  _HResult: -2146232969
-  Message: ""message text""
-  Data: ...
-  HResult: -2146232969
-");
+            dump.Should().Be(
+                "{KeyNotFoundException}\r\n" +
+                "  Message: \"message text\"\r\n" +
+                "  Data: ...\r\n" +
+                "  HResult: -2146232969");
         }
 
         [Fact]
@@ -227,7 +225,11 @@ namespace ObjectDumping.Tests
             {
                 ex = e;
             }
-            var options = new DumpOptions { IgnoreDefaultValues = true, ExcludeProperties = { "CustomAttributes", "Module", "StackTrace" } };
+            var options = new DumpOptions
+            {
+                IgnoreDefaultValues = true,
+                ExcludeProperties = { "CustomAttributes", "Module", "StackTrace" }
+            };
 
             // Act
             var dump = ObjectDumperConsole.Dump(ex, options);
@@ -235,32 +237,35 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(@"{System.Collections.Generic.KeyNotFoundException}
-  _message: ""message text""
-  _HResult: -2146232969
-  Message: ""message text""
-  Data: ...
-  TargetSite: {System.Reflection.RuntimeMethodInfo}
-    Name: ""ShouldDumpExceptionAfterThrow""
-    DeclaringType: ObjectDumping.Tests.ObjectDumperCSharpCSharpTests
-    ReflectedType: ObjectDumping.Tests.ObjectDumperCSharpCSharpTests
-    MemberType: Method
-    MetadataToken: 100663310
-    IsSecurityCritical: true
-    MethodHandle: {System.RuntimeMethodHandle}
-    Attributes: PrivateScope, Public, HideBySig
-    CallingConvention: Standard, HasThis
-    ReturnType: System.Void
-    ReturnTypeCustomAttributes: {RuntimeParameterInfo}
-      ParameterType: typeof(System.Void)
-      HasDefaultValue: true
-      MetadataToken: 134217728
-      Position: -1
-    IsPublic: true
-    IsHideBySig: true
-  Source: ""ObjectDumper.Tests""
-  HResult: -2146232969
-");
+
+#if NETCORE
+            dump.Should().Be(
+             "{KeyNotFoundException}\r\n" +
+             "  TargetSite: {RuntimeMethodInfo}\r\n" +
+             "    Name: \"ShouldDumpExceptionAfterThrow\"\r\n" +
+             "    DeclaringType: ObjectDumping.Tests.ObjectDumperConsoleTests\r\n" +
+             "    ReflectedType: ObjectDumping.Tests.ObjectDumperConsoleTests\r\n" +
+             "    MemberType: MemberTypes.Method\r\n" +
+             "    MetadataToken: 100663311\r\n" +
+             "    IsSecurityCritical: true\r\n" +
+             "    MethodHandle: {RuntimeMethodHandle}\r\n" +
+             "      Value: {IntPtr}\r\n" +
+             "\r\n" +
+             "    Attributes: PrivateScope | Public | HideBySig\r\n" +
+             "    CallingConvention: Standard | HasThis\r\n" +
+             "    ReturnType: System.Void\r\n" +
+             "    ReturnTypeCustomAttributes: {RuntimeParameterInfo}\r\n" +
+             "      ParameterType: System.Void\r\n" +
+             "      HasDefaultValue: true\r\n" +
+             "      MetadataToken: 134217728\r\n" +
+             "      Position: -1\r\n" +
+             "    IsHideBySig: true\r\n" +
+             "    IsPublic: true\r\n" +
+             "  Message: \"message text\"\r\n" +
+             "  Data: ...\r\n" +
+             "  Source: \"ObjectDumper.Tests\"\r\n" +
+             "  HResult: -2146232969");
+#endif
         }
 
         [Fact]
@@ -559,6 +564,21 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("DateTimeKind.Utc");
+        }
+
+        [Fact]
+        public void ShouldDumpEnum_WithMultipleFlags()
+        {
+            // Arrange
+            var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(methodAttributes);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("PrivateScope | Public | Static | HideBySig");
         }
 
         [Fact]

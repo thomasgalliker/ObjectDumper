@@ -147,14 +147,15 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(@"var keyNotFoundException = new KeyNotFoundException
-{
-  Message = ""message text"",
-  Data = new ListDictionaryInternal
-  {
-  },
-  HResult = -2146232969
-};");
+            dump.Should().Be(
+                "var keyNotFoundException = new KeyNotFoundException\r\n" +
+                "{\r\n" +
+                "  Message = \"message text\",\r\n" +
+                "  Data = new ListDictionaryInternal\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  HResult = -2146232969\r\n" +
+                "};");
         }
 
         [Fact]
@@ -178,42 +179,47 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(@"var keyNotFoundException = new KeyNotFoundException
-{
-  Message = ""message text"",
-  Data = new ListDictionaryInternal
-  {
-  },
-  TargetSite = new RuntimeMethodInfo
-  {
-    Name = ""ShouldDumpExceptionAfterThrow"",
-    DeclaringType = typeof(ObjectDumping.Tests.ObjectDumperCSharpCSharpTests),
-    ReflectedType = typeof(ObjectDumping.Tests.ObjectDumperCSharpCSharpTests),
-    MemberType = System.Reflection.MemberTypes.Method,
-    MetadataToken = 100663330,
-    IsSecurityCritical = true,
-    MethodHandle = new RuntimeMethodHandle
-    {
-      Value = new IntPtr
-      {
-      }
-    },
-    Attributes = System.Reflection.MethodAttributes.PrivateScope, Public, HideBySig,
-    CallingConvention = System.Reflection.CallingConventions.Standard, HasThis,
-    ReturnType = typeof(System.Void),
-    ReturnTypeCustomAttributes = new RuntimeParameterInfo
-    {
-      ParameterType = typeof(System.Void),
-      HasDefaultValue = true,
-      MetadataToken = 134217728,
-      Position = -1,
-    },
-    IsPublic = true,
-    IsHideBySig = true
-  },
-  Source = ""ObjectDumper.Tests"",
-  HResult = -2146232969
-};");
+
+
+#if NETCORE
+            dump.Should().Be(
+               "var keyNotFoundException = new KeyNotFoundException\r\n" +
+               "{\r\n" +
+               "  TargetSite = new RuntimeMethodInfo\r\n" +
+               "  {\r\n" +
+               "    Name = \"ShouldDumpExceptionAfterThrow\",\r\n" +
+               "    DeclaringType = typeof(ObjectDumperCSharpTests),\r\n" +
+               "    ReflectedType = typeof(ObjectDumperCSharpTests),\r\n" +
+               "    MemberType = MemberTypes.Method,\r\n" +
+               "    MetadataToken = 100663341,\r\n" +
+               "    IsSecurityCritical = true,\r\n" +
+               "    MethodHandle = new RuntimeMethodHandle\r\n" +
+               "    {\r\n" +
+               "      Value = new IntPtr\r\n" +
+               "      {\r\n" +
+               "      }\r\n" +
+               "    },\r\n" +
+               "    Attributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.HideBySig,\r\n" +
+               "    CallingConvention = CallingConventions.Standard | CallingConventions.HasThis,\r\n" +
+               "    ReturnType = typeof(Void),\r\n" +
+               "    ReturnTypeCustomAttributes = new RuntimeParameterInfo\r\n" +
+               "    {\r\n" +
+               "      ParameterType = typeof(Void),\r\n" +
+               "      HasDefaultValue = true,\r\n" +
+               "      MetadataToken = 134217728,\r\n" +
+               "      Position = -1\r\n" +
+               "    },\r\n" +
+               "    IsHideBySig = true,\r\n" +
+               "    IsPublic = true\r\n" +
+               "  },\r\n" +
+               "  Message = \"message text\",\r\n" +
+               "  Data = new ListDictionaryInternal\r\n" +
+               "  {\r\n" +
+               "  },\r\n" +
+               "  Source = \"ObjectDumper.Tests\",\r\n" +
+               "  HResult = -2146232969\r\n" +
+               "};");
+#endif
         }
 
         [Fact]
@@ -616,6 +622,21 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("var dateTimeKind = System.DateTimeKind.Utc;");
+        }
+
+        [Fact]
+        public void ShouldDumpEnum_WithMultipleFlags()
+        {
+            // Arrange
+            var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(methodAttributes);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;");
         }
 
         [Fact]
