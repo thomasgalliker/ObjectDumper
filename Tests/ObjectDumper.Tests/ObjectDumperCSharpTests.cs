@@ -117,6 +117,24 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpEnumerable_EmptyCollection()
+        {
+            // Arrange
+            var persons = new List<Person>();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(persons);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var listOfPersons = new List<Person>\r\n" +
+                "{\r\n" +
+                "};");
+        }
+
+        [Fact]
         public void ShouldDumpNestedObjects()
         {
             // Arrange
