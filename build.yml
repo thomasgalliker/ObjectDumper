@@ -69,7 +69,7 @@ steps:
   inputs:
     command: test
     projects: '**/*.Tests.csproj'
-    arguments: '--framework netcoreapp2.2'
+    arguments: '--framework netcoreapp3.1'
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack NuGet PreRelease'

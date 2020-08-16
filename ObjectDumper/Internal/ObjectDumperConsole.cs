@@ -286,7 +286,7 @@ namespace ObjectDumping.Internal
                     return;
                 }
 
-                this.Write($"{systemType.FullName}", intentLevel);
+                this.Write($"{systemType.GetFormattedName(this.DumpOptions.UseTypeFullName)}", intentLevel);
                 return;
             }
 
