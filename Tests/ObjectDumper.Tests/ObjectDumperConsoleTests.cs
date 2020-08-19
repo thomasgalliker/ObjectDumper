@@ -346,7 +346,12 @@ namespace ObjectDumping.Tests
         {
             // Arrange
             var person = PersonFactory.GeneratePersons(count: 1).First();
-            var genericClass = new GenericClass<string, float, Person> { Prop1 = "Test", Prop2 = 123.45f, Prop3 = person };
+            var genericClass = new GenericClass<string, float, Person>
+            {
+                Prop1 = "Test",
+                Prop2 = 123.45f,
+                Prop3 = person
+            };
 
             // Act
             var dump = ObjectDumperConsole.Dump(genericClass);
@@ -356,7 +361,7 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
 
             dump.Should().Be(
-                "{GenericClass<String, Single, Person>}\r\n" +
+                "{GenericClass<string, float, Person>}\r\n" +
                 "  Prop1: \"Test\"\r\n" +
                 "  Prop2: 123.45\r\n" +
                 "  Prop3: {Person}\r\n" +
@@ -693,6 +698,36 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpRuntimeType()
+        {
+            // Arrange            
+            var type = typeof(Person);
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(type);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("Person");
+        }
+
+        [Fact]
+        public void ShouldDumpRuntimeType_BuiltInType()
+        {
+            // Arrange            
+            var type = typeof(string);
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(type);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("string");
+        }
+
+        [Fact]
         public void ShouldDumpStruct()
         {
             // Arrange            
@@ -779,5 +814,20 @@ namespace ObjectDumping.Tests
                 "(\"Person 2\", 3)");
         }
 #endif
+
+        [Fact]
+        public void ShouldDumpValueOfBuiltInType()
+        {
+            // Arrange
+            var stringValue = "test";
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(stringValue);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("\"test\"");
+        }
     }
 }
