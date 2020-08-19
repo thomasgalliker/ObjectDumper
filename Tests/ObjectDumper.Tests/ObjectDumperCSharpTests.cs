@@ -214,10 +214,10 @@ namespace ObjectDumping.Tests
                "    },\r\n" +
                "    Attributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.HideBySig,\r\n" +
                "    CallingConvention = CallingConventions.Standard | CallingConventions.HasThis,\r\n" +
-               "    ReturnType = typeof(Void),\r\n" +
+               "    ReturnType = typeof(void),\r\n" +
                "    ReturnTypeCustomAttributes = new RuntimeParameterInfo\r\n" +
                "    {\r\n" +
-               "      ParameterType = typeof(Void),\r\n" +
+               "      ParameterType = typeof(void),\r\n" +
                "      HasDefaultValue = true,\r\n" +
                "      Position = -1\r\n" +
                "    },\r\n" +

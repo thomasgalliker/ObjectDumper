@@ -258,9 +258,9 @@ namespace ObjectDumping.Tests
              "\r\n" +
              "    Attributes: PrivateScope | Public | HideBySig\r\n" +
              "    CallingConvention: Standard | HasThis\r\n" +
-             "    ReturnType: Void\r\n" +
+             "    ReturnType: void\r\n" +
              "    ReturnTypeCustomAttributes: {RuntimeParameterInfo}\r\n" +
-             "      ParameterType: Void\r\n" +
+             "      ParameterType: void\r\n" +
              "      HasDefaultValue: true\r\n" +
              "      Position: -1\r\n" +
              "    IsHideBySig: true\r\n" +
