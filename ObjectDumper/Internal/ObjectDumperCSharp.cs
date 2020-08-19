@@ -465,6 +465,11 @@ namespace ObjectDumping.Internal
                     ;
             }
 
+            if (TypeExtensions.IsKeyword(variableName))
+            {
+                variableName += "Value";
+            }
+
             return variableName.ToLowerFirst();
         }
     }
