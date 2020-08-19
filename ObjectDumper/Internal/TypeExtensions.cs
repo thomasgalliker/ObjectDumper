@@ -88,7 +88,7 @@ namespace ObjectDumping.Internal
         {
             string typeName;
 
-            if (type.TryGetBuiltInTypeName(out var keyword))
+            if (useFullName == false && type.TryGetBuiltInTypeName(out var keyword))
             {
                 return keyword;
             }

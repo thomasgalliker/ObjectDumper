@@ -80,11 +80,25 @@ namespace ObjectDumping.Tests.Internal
             var type = typeof(GenericClass<string, Person, object>);
 
             // Act
-            var dump = type.GetFormattedName(false);
+            var dump = type.GetFormattedName(useFullName: false);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().Be("GenericClass<string, Person, object>");
+        }
+
+        [Fact]
+        public void ShouldGetFormattedName_GenericType_UseFullName()
+        {
+            // Arrange
+            var type = typeof(GenericClass<string, Person, object>);
+
+            // Act
+            var dump = type.GetFormattedName(useFullName: true);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().Be("ObjectDumping.Tests.Testdata.GenericClass<System.String, ObjectDumping.Tests.Testdata.Person, System.Object>");
         }
 
         [Fact]
