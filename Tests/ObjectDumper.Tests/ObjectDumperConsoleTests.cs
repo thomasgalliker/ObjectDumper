@@ -193,6 +193,86 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpException()
+        {
+            // Arrange
+            var ex = new KeyNotFoundException("message text");
+            var options = new DumpOptions { IgnoreDefaultValues = true };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(ex, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{KeyNotFoundException}\r\n" +
+                "  Message: \"message text\"\r\n" +
+                "  Data: ...\r\n" +
+                "  HResult: -2146232969");
+        }
+
+        [Fact]
+        public void ShouldDumpExceptionAfterThrow()
+        {
+            // Arrange
+            Exception ex;
+            try
+            {
+                throw new KeyNotFoundException("message text");
+            }
+            catch (Exception e)
+            {
+                ex = e;
+            }
+            var options = new DumpOptions
+            {
+                IgnoreDefaultValues = true,
+                ExcludeProperties =
+                {
+                    "CustomAttributes",
+                    "Module",
+                    "StackTrace",
+                    "MetadataToken"
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(ex, options);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+
+#if NETCORE
+            dump.Should().Be(
+             "{KeyNotFoundException}\r\n" +
+             "  TargetSite: {RuntimeMethodInfo}\r\n" +
+             "    Name: \"ShouldDumpExceptionAfterThrow\"\r\n" +
+             "    DeclaringType: ObjectDumperConsoleTests\r\n" +
+             "    ReflectedType: ObjectDumperConsoleTests\r\n" +
+             "    MemberType: MemberTypes.Method\r\n" +
+             "    IsSecurityCritical: true\r\n" +
+             "    MethodHandle: {RuntimeMethodHandle}\r\n" +
+             "      Value: {IntPtr}\r\n" +
+             "\r\n" +
+             "    Attributes: PrivateScope | Public | HideBySig\r\n" +
+             "    CallingConvention: Standard | HasThis\r\n" +
+             "    ReturnType: void\r\n" +
+             "    ReturnTypeCustomAttributes: {RuntimeParameterInfo}\r\n" +
+             "      ParameterType: void\r\n" +
+             "      HasDefaultValue: true\r\n" +
+             "      Position: -1\r\n" +
+             "    IsHideBySig: true\r\n" +
+             "    IsPublic: true\r\n" +
+             "  Message: \"message text\"\r\n" +
+             "  Data: ...\r\n" +
+             "  Source: \"ObjectDumper.Tests\"\r\n" +
+             "  HResult: -2146232969");
+#endif
+        }
+
+        [Fact]
         public void ShouldDumpNestedObjects()
         {
             // Arrange
@@ -493,6 +573,21 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be("DateTimeKind.Utc");
+        }
+
+        [Fact]
+        public void ShouldDumpEnum_WithMultipleFlags()
+        {
+            // Arrange
+            var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(methodAttributes);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("PrivateScope | Public | Static | HideBySig");
         }
 
         [Fact]
