@@ -748,8 +748,17 @@ namespace ObjectDumping.Tests
         public void ShouldEscapeStrings()
         {
             // Arrange
-            var expectedPerson = new Person { Name = "Boris \"The Blade\", \\GANGSTA\\ aka 'The Bullet Dodger' \a \b \f \r\nOn a new\twith tab \v \0" };
-            var dumpOptions = new DumpOptions { SetPropertiesOnly = true, IgnoreDefaultValues = true, MaxLevel = 1, ExcludeProperties = { "ByteArray" } };
+            var expectedPerson = new Person
+            {
+                Name = "Boris \"The Blade\", \\GANGSTA\\ aka 'The Bullet Dodger' \a \b \f \r\nOn a new\twith tab \v \0"
+            };
+            var dumpOptions = new DumpOptions
+            {
+                SetPropertiesOnly = true,
+                IgnoreDefaultValues = true,
+                MaxLevel = 1,
+                ExcludeProperties = { "ByteArray" }
+            };
 
             // Act
             var dump = ObjectDumperCSharp.Dump(expectedPerson, dumpOptions);
@@ -757,6 +766,11 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
+            /*dump.Should().Be(
+                "var person = new Person\r\n" +
+                "{\r\n" +
+                "  Name = \"Boris \\\"The Blade\\\", \\\\GANGSTA\\\\ aka \\\'The Bullet Dodger\\\' \\a \\b \\f \r\nOn a new\\twith tab \\v \\0\"\r\n" +
+                "};");*/
 
             // Compare generated object with input
             var person = new Person
