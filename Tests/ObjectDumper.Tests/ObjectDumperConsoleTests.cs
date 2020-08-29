@@ -49,7 +49,7 @@ namespace ObjectDumping.Tests
                 this.Add((short)123, "123");
 
                 // ushort
-                this.Add(ushort.MinValue, "MinValue");
+                this.Add(ushort.MinValue, "0");
                 this.Add(ushort.MaxValue, "MaxValue");
                 this.Add((ushort)123, "123");
 
@@ -59,7 +59,7 @@ namespace ObjectDumping.Tests
                 this.Add((int)123, "123");
 
                 // uint
-                this.Add(uint.MinValue, "MinValue");
+                this.Add(uint.MinValue, "0");
                 this.Add(uint.MaxValue, "MaxValue");
                 this.Add((uint)123, "123");
 
@@ -69,7 +69,7 @@ namespace ObjectDumping.Tests
                 this.Add((long)123, "123");
 
                 // ulong
-                this.Add(ulong.MinValue, "MinValue");
+                this.Add(ulong.MinValue, "0");
                 this.Add(ulong.MaxValue, "MaxValue");
                 this.Add((ulong)123, "123");
 

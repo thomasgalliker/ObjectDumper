@@ -224,11 +224,9 @@ namespace ObjectDumping.Internal
 
             if (o is ushort @ushort)
             {
-                if (@ushort == ushort.MinValue)
-                {
-                    this.Write($"ushort.MinValue", intentLevel);
-                }
-                else if (@ushort == ushort.MaxValue)
+                // No special handling for MinValue
+
+                if (@ushort == ushort.MaxValue)
                 {
                     this.Write($"ushort.MaxValue", intentLevel);
                 }
@@ -260,17 +258,15 @@ namespace ObjectDumping.Internal
 
             if (o is uint @uint)
             {
-                if (@uint == uint.MinValue)
-                {
-                    this.Write($"uint.MinValue", intentLevel);
-                }
-                else if (@uint == uint.MaxValue)
+                // No special handling for MinValue
+
+                if (@uint == uint.MaxValue)
                 {
                     this.Write($"uint.MaxValue", intentLevel);
                 }
                 else
                 {
-                    this.Write($"{@uint.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                    this.Write($"{@uint.ToString(CultureInfo.InvariantCulture)}u", intentLevel);
                 }
 
                 return;
@@ -288,7 +284,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{@long.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                    this.Write($"{@long.ToString(CultureInfo.InvariantCulture)}L", intentLevel);
                 }
 
                 return;
@@ -296,17 +292,15 @@ namespace ObjectDumping.Internal
 
             if (o is ulong @ulong)
             {
-                if (@ulong == ulong.MinValue)
-                {
-                    this.Write($"ulong.MinValue", intentLevel);
-                }
-                else if (@ulong == ulong.MaxValue)
+                // No special handling for MinValue
+
+                if (@ulong == ulong.MaxValue)
                 {
                     this.Write($"ulong.MaxValue", intentLevel);
                 }
                 else
                 {
-                    this.Write($"{@ulong.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                    this.Write($"{@ulong.ToString(CultureInfo.InvariantCulture)}UL", intentLevel);
                 }
 
                 return;

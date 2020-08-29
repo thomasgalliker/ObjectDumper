@@ -208,11 +208,9 @@ namespace ObjectDumping.Internal
             
             if (o is ushort @ushort)
             {
-                if (@ushort == ushort.MinValue)
-                {
-                    this.Write($"MinValue", intentLevel);
-                }
-                else if (@ushort == ushort.MaxValue)
+                // No special handling for MinValue
+
+                if (@ushort == ushort.MaxValue)
                 {
                     this.Write($"MaxValue", intentLevel);
                 }
@@ -244,11 +242,9 @@ namespace ObjectDumping.Internal
 
             if (o is uint @uint)
             {
-                if (@uint == uint.MinValue)
-                {
-                    this.Write($"MinValue", intentLevel);
-                }
-                else if (@uint == uint.MaxValue)
+                // No special handling for MinValue
+
+                if (@uint == uint.MaxValue)
                 {
                     this.Write($"MaxValue", intentLevel);
                 }
@@ -280,11 +276,9 @@ namespace ObjectDumping.Internal
 
             if (o is ulong @ulong)
             {
-                if (@ulong == ulong.MinValue)
-                {
-                    this.Write($"MinValue", intentLevel);
-                }
-                else if (@ulong == ulong.MaxValue)
+                // No special handling for MinValue
+
+                if (@ulong == ulong.MaxValue)
                 {
                     this.Write($"MaxValue", intentLevel);
                 }

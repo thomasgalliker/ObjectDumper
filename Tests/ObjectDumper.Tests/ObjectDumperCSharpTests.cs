@@ -49,7 +49,7 @@ namespace ObjectDumping.Tests
                 this.Add((short)123, "var shortValue = 123;");
                
                 // ushort
-                this.Add(ushort.MinValue, "var ushortValue = ushort.MinValue;");
+                this.Add(ushort.MinValue, "var ushortValue = 0;");
                 this.Add(ushort.MaxValue, "var ushortValue = ushort.MaxValue;");
                 this.Add((ushort)123, "var ushortValue = 123;");
                 
@@ -59,19 +59,19 @@ namespace ObjectDumping.Tests
                 this.Add((int)123, "var intValue = 123;");
                
                 // uint
-                this.Add(uint.MinValue, "var uintValue = uint.MinValue;");
+                this.Add(uint.MinValue, "var uintValue = 0u;");
                 this.Add(uint.MaxValue, "var uintValue = uint.MaxValue;");
-                this.Add((uint)123, "var uintValue = 123;");
+                this.Add((uint)123, "var uintValue = 123u;");
 
                 // long
                 this.Add(long.MinValue, "var longValue = long.MinValue;");
                 this.Add(long.MaxValue, "var longValue = long.MaxValue;");
-                this.Add((long)123, "var longValue = 123;");
+                this.Add((long)123, "var longValue = 123L;");
 
                 // ulong
-                this.Add(ulong.MinValue, "var ulongValue = ulong.MinValue;");
+                this.Add(ulong.MinValue, "var ulongValue = 0UL;");
                 this.Add(ulong.MaxValue, "var ulongValue = ulong.MaxValue;");
-                this.Add((ulong)123, "var ulongValue = 123;");
+                this.Add((ulong)123, "var ulongValue = 123UL;");
 
                 // decimal
                 this.Add(decimal.MinValue, "var decimalValue = decimal.MinValue;");
@@ -118,7 +118,7 @@ namespace ObjectDumping.Tests
                 "  Bool = false,\r\n" +
                 "  Byte = 0,\r\n" +
                 "  ByteArray = new byte[]\r\n" +
-                "  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0,\r\n  Long = 0L,\r\n  ULong = 0L,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = DateTimeKind.Unspecified\r\n};");
+                "  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0u,\r\n  Long = 0L,\r\n  ULong = 0UL,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = DateTimeKind.Unspecified\r\n};");
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0,\n	Long = 0L,\n	ULong = 0L,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = DateTimeKind.Unspecified\n};");
+            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0u,\n	Long = 0L,\n	ULong = 0UL,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = DateTimeKind.Unspecified\n};");
         }
 
         [Fact]
@@ -167,7 +167,7 @@ namespace ObjectDumping.Tests
                 "    Bool = false,\r\n" +
                 "    Byte = 0,\r\n" +
                 "    ByteArray = new byte[]\r\n" +
-                "    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n" +
+                "    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0u,\r\n    Long = 0L,\r\n    ULong = 0UL,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n" +
                 "  },\r\n" +
                 "  new Person\r\n" +
                 "  {\r\n" +
@@ -186,9 +186,9 @@ namespace ObjectDumping.Tests
                 "    },\r\n" +
                 "    SByte = 0,\r\n" +
                 "    Float = 0f,\r\n" +
-                "    Uint = 0,\r\n" +
+                "    Uint = 0u,\r\n" +
                 "    Long = 0L,\r\n" +
-                "    ULong = 0L,\r\n" +
+                "    ULong = 0UL,\r\n" +
                 "    Short = 0,\r\n" +
                 "    UShort = 0,\r\n" +
                 "    Decimal = 0m,\r\n" +
@@ -350,9 +350,9 @@ namespace ObjectDumping.Tests
                 "      },\r\n" +
                 "      SByte = 0,\r\n" +
                 "      Float = 0f,\r\n" +
-                "      Uint = 0,\r\n" +
+                "      Uint = 0u,\r\n" +
                 "      Long = 0L,\r\n" +
-                "      ULong = 0L,\r\n" +
+                "      ULong = 0UL,\r\n" +
                 "      Short = 0,\r\n" +
                 "      UShort = 0,\r\n" +
                 "      Decimal = 0m,\r\n" +
@@ -378,9 +378,9 @@ namespace ObjectDumping.Tests
                 "      },\r\n" +
                 "      SByte = 0,\r\n" +
                 "      Float = 0f,\r\n" +
-                "      Uint = 0,\r\n" +
+                "      Uint = 0u,\r\n" +
                 "      Long = 0L,\r\n" +
-                "      ULong = 0L,\r\n" +
+                "      ULong = 0UL,\r\n" +
                 "      Short = 0,\r\n" +
                 "      UShort = 0,\r\n" +
                 "      Decimal = 0m,\r\n" +
@@ -418,7 +418,7 @@ namespace ObjectDumping.Tests
                 "    Char = '',\r\n" +
                 "    Age = 2,\r\n" +
                 "    GetOnly = 11,\r\n" +
-                "    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n  }\r\n};");
+                "    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0u,\r\n    Long = 0L,\r\n    ULong = 0UL,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n  }\r\n};");
         }
 
         [Fact]
