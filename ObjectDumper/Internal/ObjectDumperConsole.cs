@@ -182,13 +182,186 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            if (o is double || o is decimal || o is byte || o is sbyte ||
-                o is float || o is int || o is uint || o is long || o is ulong || o is short || o is ushort)
+            if (o is byte || o is sbyte)
             {
                 this.Write($"{o}", intentLevel);
                 return;
             }
 
+            if (o is short @short)
+            {
+                if (@short == short.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@short == short.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@short.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+            
+            if (o is ushort @ushort)
+            {
+                if (@ushort == ushort.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@ushort == ushort.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@ushort.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+            
+            if (o is int @int)
+            {
+                if (@int == int.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@int == int.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@int.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is uint @uint)
+            {
+                if (@uint == uint.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@uint == uint.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@uint.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is long @long)
+            {
+                if (@long == long.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@long == long.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@long.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is ulong @ulong)
+            {
+                if (@ulong == ulong.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@ulong == ulong.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@ulong.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is double @double)
+            {
+                if (@double == double.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@double == double.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else if (double.IsNaN(@double))
+                {
+                    this.Write($"NaN", intentLevel);
+                }
+                else if (double.IsPositiveInfinity(@double))
+                {
+                    this.Write($"PositiveInfinity", intentLevel);
+                }
+                else if (double.IsNegativeInfinity(@double))
+                {
+                    this.Write($"NegativeInfinity", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@double.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is decimal @decimal)
+            {
+                if (@decimal == decimal.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@decimal == decimal.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@decimal.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is float @float)
+            {
+                if (@float == float.MinValue)
+                {
+                    this.Write($"MinValue", intentLevel);
+                }
+                else if (@float == float.MaxValue)
+                {
+                    this.Write($"MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@float.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
+                return;
+            }
+            
             if (o is DateTime dateTime)
             {
                 if (dateTime == DateTime.MinValue)
