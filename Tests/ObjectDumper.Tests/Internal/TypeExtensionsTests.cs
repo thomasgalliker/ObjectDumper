@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using My;
+using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
 using Xunit;
 using Xunit.Abstractions;
-using ObjectDumping.Internal;
 
 namespace ObjectDumping.Tests.Internal
 {

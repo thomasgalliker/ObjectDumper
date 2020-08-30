@@ -205,7 +205,7 @@ namespace ObjectDumping.Internal
 
                 return;
             }
-            
+
             if (o is ushort @ushort)
             {
                 // No special handling for MinValue
@@ -221,7 +221,7 @@ namespace ObjectDumping.Internal
 
                 return;
             }
-            
+
             if (o is int @int)
             {
                 if (@int == int.MinValue)
@@ -355,7 +355,7 @@ namespace ObjectDumping.Internal
 
                 return;
             }
-            
+
             if (o is DateTime dateTime)
             {
                 if (dateTime == DateTime.MinValue)
@@ -424,7 +424,7 @@ namespace ObjectDumping.Internal
 
             if (o is Enum)
             {
-                var enumFlags = $"{o}".Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries); 
+                var enumFlags = $"{o}".Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 var enumTypeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
                 // In case of multiple flags, we prefer short class name here
                 var enumValues = string.Join(" | ", enumFlags.Select(f => $"{(enumFlags.Length > 1 ? "" : $"{enumTypeName}.")}{f.Replace(" ", "")}"));

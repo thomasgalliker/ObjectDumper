@@ -47,17 +47,17 @@ namespace ObjectDumping.Tests
                 this.Add(short.MinValue, "var shortValue = short.MinValue;");
                 this.Add(short.MaxValue, "var shortValue = short.MaxValue;");
                 this.Add((short)123, "var shortValue = 123;");
-               
+
                 // ushort
                 this.Add(ushort.MinValue, "var ushortValue = 0;");
                 this.Add(ushort.MaxValue, "var ushortValue = ushort.MaxValue;");
                 this.Add((ushort)123, "var ushortValue = 123;");
-                
+
                 // int
                 this.Add(int.MinValue, "var intValue = int.MinValue;");
                 this.Add(int.MaxValue, "var intValue = int.MaxValue;");
                 this.Add((int)123, "var intValue = 123;");
-               
+
                 // uint
                 this.Add(uint.MinValue, "var uintValue = 0u;");
                 this.Add(uint.MaxValue, "var uintValue = uint.MaxValue;");

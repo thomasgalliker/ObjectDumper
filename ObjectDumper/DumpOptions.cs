@@ -60,7 +60,7 @@ public class DumpOptions
 
     public CustomInstanceFormatters CustomInstanceFormatters { get; }
 
-    public bool UseTypeFullName { get;  set; }
+    public bool UseTypeFullName { get; set; }
 }
 
 public class CustomInstanceFormatters

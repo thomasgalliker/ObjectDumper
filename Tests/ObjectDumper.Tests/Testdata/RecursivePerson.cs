@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ObjectDumping.Tests.Testdata
+﻿namespace ObjectDumping.Tests.Testdata
 {
     public class RecursivePerson
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ObjectDumping.Internal
@@ -28,7 +27,7 @@ namespace ObjectDumping.Internal
             get => level;
             set
             {
-                if(value < 0)
+                if (value < 0)
                 {
                     throw new ArgumentException("Level must not be a negative number", nameof(Level));
                 }

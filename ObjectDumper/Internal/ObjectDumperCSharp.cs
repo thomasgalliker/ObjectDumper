@@ -350,7 +350,7 @@ namespace ObjectDumping.Internal
                 {
                     this.Write($"{@decimal.ToString(CultureInfo.InvariantCulture)}m", intentLevel);
                 }
-                
+
                 return;
             }
 
