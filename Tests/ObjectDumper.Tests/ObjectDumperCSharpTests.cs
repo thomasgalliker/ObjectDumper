@@ -22,6 +22,80 @@ namespace ObjectDumping.Tests
             this.testOutputHelper = testOutputHelper;
         }
 
+        [Theory]
+        [ClassData(typeof(BuiltInTypeTestdata))]
+        public void ShouldDumpValueOfBuiltInType(object value, string expectedOutput)
+        {
+            // Act
+            var dump = ObjectDumperCSharp.Dump(value);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(expectedOutput);
+        }
+
+        public class BuiltInTypeTestdata : TheoryData<object, string>
+        {
+            public BuiltInTypeTestdata()
+            {
+                // string
+                this.Add("", "var stringValue = \"\";");
+                this.Add("test", "var stringValue = \"test\";");
+
+                // short
+                this.Add(short.MinValue, "var shortValue = short.MinValue;");
+                this.Add(short.MaxValue, "var shortValue = short.MaxValue;");
+                this.Add((short)123, "var shortValue = 123;");
+               
+                // ushort
+                this.Add(ushort.MinValue, "var ushortValue = 0;");
+                this.Add(ushort.MaxValue, "var ushortValue = ushort.MaxValue;");
+                this.Add((ushort)123, "var ushortValue = 123;");
+                
+                // int
+                this.Add(int.MinValue, "var intValue = int.MinValue;");
+                this.Add(int.MaxValue, "var intValue = int.MaxValue;");
+                this.Add((int)123, "var intValue = 123;");
+               
+                // uint
+                this.Add(uint.MinValue, "var uintValue = 0u;");
+                this.Add(uint.MaxValue, "var uintValue = uint.MaxValue;");
+                this.Add((uint)123, "var uintValue = 123u;");
+
+                // long
+                this.Add(long.MinValue, "var longValue = long.MinValue;");
+                this.Add(long.MaxValue, "var longValue = long.MaxValue;");
+                this.Add((long)123, "var longValue = 123L;");
+
+                // ulong
+                this.Add(ulong.MinValue, "var ulongValue = 0UL;");
+                this.Add(ulong.MaxValue, "var ulongValue = ulong.MaxValue;");
+                this.Add((ulong)123, "var ulongValue = 123UL;");
+
+                // decimal
+                this.Add(decimal.MinValue, "var decimalValue = decimal.MinValue;");
+                this.Add(decimal.MaxValue, "var decimalValue = decimal.MaxValue;");
+                this.Add(123.45678m, "var decimalValue = 123.45678m;");
+
+                // double
+                this.Add(double.MinValue, "var doubleValue = double.MinValue;");
+                this.Add(double.MaxValue, "var doubleValue = double.MaxValue;");
+                this.Add(double.NegativeInfinity, "var doubleValue = double.NegativeInfinity;");
+                this.Add(double.PositiveInfinity, "var doubleValue = double.PositiveInfinity;");
+                this.Add(double.NaN, "var doubleValue = double.NaN;");
+                this.Add(123.45678d, "var doubleValue = 123.45678d;");
+
+                // float
+                this.Add(float.MinValue, "var floatValue = float.MinValue;");
+                this.Add(float.MaxValue, "var floatValue = float.MaxValue;");
+
+#if NETCORE
+                this.Add(123.45678f, "var floatValue = 123.45678f;");
+#endif
+            }
+        }
+
         [Fact]
         public void ShouldDumpObject()
         {
@@ -38,7 +112,13 @@ namespace ObjectDumping.Tests
                 "var person = new Person\r\n" +
                 "{\r\n" +
                 "  Name = \"Person 1\",\r\n" +
-                "  Char = '',\r\n  Age = 2,\r\n  GetOnly = 11,\r\n  Bool = false,\r\n  Byte = 0,\r\n  ByteArray = new byte[]\r\n  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0,\r\n  Long = 0L,\r\n  ULong = 0L,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = DateTimeKind.Unspecified\r\n};");
+                "  Char = '',\r\n" +
+                "  Age = 2,\r\n" +
+                "  GetOnly = 11,\r\n" +
+                "  Bool = false,\r\n" +
+                "  Byte = 0,\r\n" +
+                "  ByteArray = new byte[]\r\n" +
+                "  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0u,\r\n  Long = 0L,\r\n  ULong = 0UL,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = DateTimeKind.Unspecified\r\n};");
         }
 
         [Fact]
@@ -60,7 +140,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0,\n	Long = 0L,\n	ULong = 0L,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = DateTimeKind.Unspecified\n};");
+            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0u,\n	Long = 0L,\n	ULong = 0UL,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = DateTimeKind.Unspecified\n};");
         }
 
         [Fact]
@@ -87,7 +167,7 @@ namespace ObjectDumping.Tests
                 "    Bool = false,\r\n" +
                 "    Byte = 0,\r\n" +
                 "    ByteArray = new byte[]\r\n" +
-                "    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n" +
+                "    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0u,\r\n    Long = 0L,\r\n    ULong = 0UL,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n" +
                 "  },\r\n" +
                 "  new Person\r\n" +
                 "  {\r\n" +
@@ -106,9 +186,9 @@ namespace ObjectDumping.Tests
                 "    },\r\n" +
                 "    SByte = 0,\r\n" +
                 "    Float = 0f,\r\n" +
-                "    Uint = 0,\r\n" +
+                "    Uint = 0u,\r\n" +
                 "    Long = 0L,\r\n" +
-                "    ULong = 0L,\r\n" +
+                "    ULong = 0UL,\r\n" +
                 "    Short = 0,\r\n" +
                 "    UShort = 0,\r\n" +
                 "    Decimal = 0m,\r\n" +
@@ -270,9 +350,9 @@ namespace ObjectDumping.Tests
                 "      },\r\n" +
                 "      SByte = 0,\r\n" +
                 "      Float = 0f,\r\n" +
-                "      Uint = 0,\r\n" +
+                "      Uint = 0u,\r\n" +
                 "      Long = 0L,\r\n" +
-                "      ULong = 0L,\r\n" +
+                "      ULong = 0UL,\r\n" +
                 "      Short = 0,\r\n" +
                 "      UShort = 0,\r\n" +
                 "      Decimal = 0m,\r\n" +
@@ -298,9 +378,9 @@ namespace ObjectDumping.Tests
                 "      },\r\n" +
                 "      SByte = 0,\r\n" +
                 "      Float = 0f,\r\n" +
-                "      Uint = 0,\r\n" +
+                "      Uint = 0u,\r\n" +
                 "      Long = 0L,\r\n" +
-                "      ULong = 0L,\r\n" +
+                "      ULong = 0UL,\r\n" +
                 "      Short = 0,\r\n" +
                 "      UShort = 0,\r\n" +
                 "      Decimal = 0m,\r\n" +
@@ -338,7 +418,7 @@ namespace ObjectDumping.Tests
                 "    Char = '',\r\n" +
                 "    Age = 2,\r\n" +
                 "    GetOnly = 11,\r\n" +
-                "    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0,\r\n    Long = 0L,\r\n    ULong = 0L,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n  }\r\n};");
+                "    Bool = false,\r\n    Byte = 0,\r\n    ByteArray = new byte[]\r\n    {\r\n      1,\r\n      2,\r\n      3,\r\n      4\r\n    },\r\n    SByte = 0,\r\n    Float = 0f,\r\n    Uint = 0u,\r\n    Long = 0L,\r\n    ULong = 0UL,\r\n    Short = 0,\r\n    UShort = 0,\r\n    Decimal = 0m,\r\n    Double = 0d,\r\n    DateTime = DateTime.MinValue,\r\n    NullableDateTime = null,\r\n    Enum = DateTimeKind.Unspecified\r\n  }\r\n};");
         }
 
         [Fact]
@@ -784,7 +864,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpDateTimeOffset()
         {
-            // Arrange            
+            // Arrange
             var offset = new DateTimeOffset(2000, 01, 01, 23, 59, 59, TimeSpan.Zero);
 
             // Act
@@ -799,7 +879,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpDateTimeOffsetMinValue()
         {
-            // Arrange            
+            // Arrange
             var offset = DateTimeOffset.MinValue;
 
             // Act
@@ -814,7 +894,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpDateTimeOffsetMaxValue()
         {
-            // Arrange            
+            // Arrange
             var offset = DateTimeOffset.MaxValue;
 
             // Act
@@ -829,7 +909,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpCultureInfo()
         {
-            // Arrange            
+            // Arrange
             var cultureInfo = new CultureInfo("de-CH");
 
             // Act
@@ -844,7 +924,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpRuntimeType()
         {
-            // Arrange            
+            // Arrange
             var type = typeof(Person);
 
             // Act
@@ -859,7 +939,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpRuntimeType_BuiltInType()
         {
-            // Arrange            
+            // Arrange
             var type = typeof(string);
 
             // Act
@@ -874,7 +954,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpTypes_UsingCustomTypeFormatter()
         {
-            // Arrange            
+            // Arrange
             var typeMap = new TypeMap
             {
                 Map = new Dictionary<Type, Type>
@@ -945,7 +1025,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpObjectWithIndexer_IntegerArray_IgnoredByDefaultDumpOptions()
         {
-            // Arrange            
+            // Arrange
             var tempRecord = new TempRecord
             {
                 [0] = 58.3f,
@@ -964,7 +1044,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpObjectWithIndexer_IntegerArray()
         {
-            // Arrange            
+            // Arrange
             var tempRecord = new TempRecord
             {
                 AProp = 99,
@@ -990,7 +1070,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpObjectWithIndexer_NonIntegerArray_Ignored()
         {
-            // Arrange            
+            // Arrange
             var viewModelValidation = new ViewModelValidation
             {
                 ["property1"] = new List<string> { "error1" },
@@ -1014,7 +1094,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpStruct()
         {
-            // Arrange            
+            // Arrange
             var x509ChainStatusStruct = new System.Security.Cryptography.X509Certificates.X509ChainStatus
             {
                 Status = System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError,
@@ -1102,20 +1182,5 @@ namespace ObjectDumping.Tests
                 "};");
         }
 #endif
-
-        [Fact]
-        public void ShouldDumpValueOfBuiltInType()
-        {
-            // Arrange
-            var stringValue = "test";
-
-            // Act
-            var dump = ObjectDumperCSharp.Dump(stringValue);
-
-            // Assert
-            this.testOutputHelper.WriteLine(dump);
-            dump.Should().NotBeNull();
-            dump.Should().Be("var stringValue = \"test\";");
-        }
     }
 }

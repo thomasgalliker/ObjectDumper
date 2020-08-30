@@ -39,6 +39,8 @@
     <RootNamespace>ObjectDumping</RootNamespace>
     <PackageReleaseNotes>3.0.0
 - New formatting logic for DumpStyle.Console (default)
+- Bug fix for dumping decimal numbers in different cultures
+- Dump MinValue, MaxValue for built-in types (where available)
 
 2.5.0
 - Handle CultureInfo formatting

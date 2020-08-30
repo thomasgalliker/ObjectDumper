@@ -22,6 +22,79 @@ namespace ObjectDumping.Tests
             this.testOutputHelper = testOutputHelper;
         }
 
+        [Theory]
+        [ClassData(typeof(BuiltInTypeTestdata))]
+        public void ShouldDumpValueOfBuiltInType(object value, string expectedOutput)
+        {
+            // Act
+            var dump = ObjectDumperConsole.Dump(value);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(expectedOutput);
+        }
+
+        public class BuiltInTypeTestdata : TheoryData<object, string>
+        {
+            public BuiltInTypeTestdata()
+            {
+                // string
+                this.Add("", "\"\"");
+                this.Add("test", "\"test\"");
+
+                // short
+                this.Add(short.MinValue, "MinValue");
+                this.Add(short.MaxValue, "MaxValue");
+                this.Add((short)123, "123");
+
+                // ushort
+                this.Add(ushort.MinValue, "0");
+                this.Add(ushort.MaxValue, "MaxValue");
+                this.Add((ushort)123, "123");
+
+                // int
+                this.Add(int.MinValue, "MinValue");
+                this.Add(int.MaxValue, "MaxValue");
+                this.Add((int)123, "123");
+
+                // uint
+                this.Add(uint.MinValue, "0");
+                this.Add(uint.MaxValue, "MaxValue");
+                this.Add((uint)123, "123");
+
+                // long
+                this.Add(long.MinValue, "MinValue");
+                this.Add(long.MaxValue, "MaxValue");
+                this.Add((long)123, "123");
+
+                // ulong
+                this.Add(ulong.MinValue, "0");
+                this.Add(ulong.MaxValue, "MaxValue");
+                this.Add((ulong)123, "123");
+
+                // decimal
+                this.Add(decimal.MinValue, "MinValue");
+                this.Add(decimal.MaxValue, "MaxValue");
+                this.Add(123.45678m, "123.45678");
+
+                // double
+                this.Add(double.MinValue, "MinValue");
+                this.Add(double.MaxValue, "MaxValue");
+                this.Add(double.NegativeInfinity, "NegativeInfinity");
+                this.Add(double.PositiveInfinity, "PositiveInfinity");
+                this.Add(double.NaN, "NaN");
+                this.Add(123.45678d, "123.45678");
+
+                // float
+                this.Add(float.MinValue, "MinValue");
+                this.Add(float.MaxValue, "MaxValue");
+#if NETCORE
+                this.Add(123.45678f, "123.45678");
+#endif
+            }
+        }
+
         [Fact]
         public void ShouldDumpObject()
         {
@@ -814,20 +887,5 @@ namespace ObjectDumping.Tests
                 "(\"Person 2\", 3)");
         }
 #endif
-
-        [Fact]
-        public void ShouldDumpValueOfBuiltInType()
-        {
-            // Arrange
-            var stringValue = "test";
-
-            // Act
-            var dump = ObjectDumperConsole.Dump(stringValue);
-
-            // Assert
-            this.testOutputHelper.WriteLine(dump);
-            dump.Should().NotBeNull();
-            dump.Should().Be("\"test\"");
-        }
     }
 }
