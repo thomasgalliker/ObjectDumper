@@ -26,7 +26,7 @@ namespace ObjectDumping.Internal
             var instance = new ObjectDumperCSharp(dumpOptions);
             if (!dumpOptions.TrimInitialVariableName)
             {
-                instance.Write($"var {GetVariableName(element)} = ");
+                instance.Write($"var {instance.GetVariableName(element)} = ");
             }
 
             instance.FormatValue(element);
@@ -42,7 +42,9 @@ namespace ObjectDumping.Internal
         {
             this.AddAlreadyTouched(o);
 
-            this.Write($"new {GetClassName(o)}", intentLevel);
+            var type = o.GetType();
+
+            this.Write($"new {type.GetFormattedName(this.DumpOptions.UseTypeFullName)}", intentLevel);
             this.LineBreak();
             this.Write("{");
             this.LineBreak();
@@ -163,7 +165,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        private void FormatValue(object o, int intentLevel = 0)
+        protected override void FormatValue(object o, int intentLevel = 0)
         {
             if (this.IsMaxLevel())
             {
@@ -196,45 +198,177 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            if (o is double)
-            {
-                this.Write($"{o}d", intentLevel);
-                return;
-            }
-
-            if (o is decimal)
-            {
-                this.Write($"{o}m", intentLevel);
-                return;
-            }
-
             if (o is byte || o is sbyte)
             {
                 this.Write($"{o}", intentLevel);
                 return;
             }
 
-            if (o is float)
+            if (o is short @short)
             {
-                this.Write($"{o}f", intentLevel);
+                if (@short == short.MinValue)
+                {
+                    this.Write($"short.MinValue", intentLevel);
+                }
+                else if (@short == short.MaxValue)
+                {
+                    this.Write($"short.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@short.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
                 return;
             }
 
-            if (o is int || o is uint)
+            if (o is ushort @ushort)
             {
-                this.Write($"{o}", intentLevel);
+                // No special handling for MinValue
+
+                if (@ushort == ushort.MaxValue)
+                {
+                    this.Write($"ushort.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@ushort.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
                 return;
             }
 
-            if (o is long || o is ulong)
+            if (o is int @int)
             {
-                this.Write($"{o}L", intentLevel);
+                if (@int == int.MinValue)
+                {
+                    this.Write($"int.MinValue", intentLevel);
+                }
+                else if (@int == int.MaxValue)
+                {
+                    this.Write($"int.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@int.ToString(CultureInfo.InvariantCulture)}", intentLevel);
+                }
+
                 return;
             }
 
-            if (o is short || o is ushort)
+            if (o is uint @uint)
             {
-                this.Write($"{o}", intentLevel);
+                // No special handling for MinValue
+
+                if (@uint == uint.MaxValue)
+                {
+                    this.Write($"uint.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@uint.ToString(CultureInfo.InvariantCulture)}u", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is long @long)
+            {
+                if (@long == long.MinValue)
+                {
+                    this.Write($"long.MinValue", intentLevel);
+                }
+                else if (@long == long.MaxValue)
+                {
+                    this.Write($"long.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@long.ToString(CultureInfo.InvariantCulture)}L", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is ulong @ulong)
+            {
+                // No special handling for MinValue
+
+                if (@ulong == ulong.MaxValue)
+                {
+                    this.Write($"ulong.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@ulong.ToString(CultureInfo.InvariantCulture)}UL", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is double @double)
+            {
+                if (@double == double.MinValue)
+                {
+                    this.Write($"double.MinValue", intentLevel);
+                }
+                else if (@double == double.MaxValue)
+                {
+                    this.Write($"double.MaxValue", intentLevel);
+                }
+                else if (double.IsNaN(@double))
+                {
+                    this.Write($"double.NaN", intentLevel);
+                }
+                else if (double.IsPositiveInfinity(@double))
+                {
+                    this.Write($"double.PositiveInfinity", intentLevel);
+                }
+                else if (double.IsNegativeInfinity(@double))
+                {
+                    this.Write($"double.NegativeInfinity", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@double.ToString(CultureInfo.InvariantCulture)}d", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is decimal @decimal)
+            {
+                if (@decimal == decimal.MinValue)
+                {
+                    this.Write($"decimal.MinValue", intentLevel);
+                }
+                else if (@decimal == decimal.MaxValue)
+                {
+                    this.Write($"decimal.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@decimal.ToString(CultureInfo.InvariantCulture)}m", intentLevel);
+                }
+
+                return;
+            }
+
+            if (o is float @float)
+            {
+                if (@float == float.MinValue)
+                {
+                    this.Write($"float.MinValue", intentLevel);
+                }
+                else if (@float == float.MaxValue)
+                {
+                    this.Write($"float.MaxValue", intentLevel);
+                }
+                else
+                {
+                    this.Write($"{@float.ToString(CultureInfo.InvariantCulture)}f", intentLevel);
+                }
+
                 return;
             }
 
@@ -302,9 +436,14 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+            var type = o.GetType();
+
             if (o is Enum)
             {
-                this.Write($"{o.GetType().FullName}.{o}", intentLevel);
+                var enumTypeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+                var enumFlags = $"{o}".Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var enumValues = string.Join(" | ", enumFlags.Select(f => $"{enumTypeName}.{f.Replace(" ", "")}"));
+                this.Write($"{enumValues}", intentLevel);
                 return;
             }
 
@@ -314,7 +453,6 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            var type = o.GetType();
             if (this.DumpOptions.CustomInstanceFormatters.TryGetFormatter(type, out var func))
             {
                 this.Write(func(o));
@@ -330,7 +468,7 @@ namespace ObjectDumping.Internal
                     return;
                 }
 
-                this.Write($"typeof({systemType.FullName})", intentLevel);
+                this.Write($"typeof({systemType.GetFormattedName(this.DumpOptions.UseTypeFullName)})", intentLevel);
                 return;
             }
             var typeInfo = type.GetTypeInfo();
@@ -347,9 +485,17 @@ namespace ObjectDumping.Internal
                 return;
             }
 
+#if NETSTANDARD_2
+            if (type.IsValueTuple())
+            {
+                WriteValueTuple(o, type);
+                return;
+            }
+#endif
+
             if (o is IEnumerable enumerable)
             {
-                this.Write($"new {GetClassName(o)}", intentLevel);
+                this.Write($"new {type.GetFormattedName(this.DumpOptions.UseTypeFullName)}", intentLevel);
                 this.LineBreak();
                 this.Write("{");
                 this.LineBreak();
@@ -361,13 +507,38 @@ namespace ObjectDumping.Internal
             this.CreateObject(o, intentLevel);
         }
 
+#if NETSTANDARD_2
+        private void WriteValueTuple(object o, Type type)
+        {
+            var fields = type.GetFields().ToList();
+            if (fields.Any())
+            {
+                var last = fields.LastOrDefault();
+
+                this.Write("(");
+                foreach (var field in fields)
+                {
+                    var fieldValue = field.GetValue(o);
+                    this.FormatValue(fieldValue, 0);
+                    if (!Equals(field, last))
+                    {
+                        this.Write(", ");
+                    }
+                }
+                this.Write(")");
+            }
+            else
+            {
+                this.Write("ValueTuple.Create()");
+            }
+        }
+#endif
+
         private void WriteItems(IEnumerable items)
         {
             this.Level++;
             if (this.IsMaxLevel())
             {
-                ////this.StartLine("// Omitted code");
-                ////this.LineBreak();
                 this.Level--;
                 return;
             }
@@ -391,21 +562,16 @@ namespace ObjectDumping.Internal
             this.Level--;
         }
 
-        private static string GetClassName(object o)
-        {
-            var type = o.GetType();
-            var className = type.GetFormattedName();
-            return className;
-        }
-
-        private static string GetVariableName(object element)
+        private string GetVariableName(object element)
         {
             if (element == null)
             {
                 return "x";
             }
 
-            var className = GetClassName(element);
+            var type = element.GetType();
+
+            var className = type.GetFormattedName(useFullName: false, useValueTupleFormatting: false);
             string variableName;
 
             var splitGenerics = className.Split('<');
@@ -423,11 +589,17 @@ namespace ObjectDumping.Internal
                 variableName = className
                     .Replace("Nullable<", "OfNullable")
                     .Replace("<", "Of")
+                    .Replace("<", "Of")
                     .Replace(">", "s")
                     .Replace(" ", "")
                     .Replace("[", "Array")
                     .Replace("]", "")
                     ;
+            }
+
+            if (TypeExtensions.IsKeyword(variableName))
+            {
+                variableName += "Value";
             }
 
             return variableName.ToLowerFirst();

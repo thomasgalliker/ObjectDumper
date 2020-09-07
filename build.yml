@@ -1,10 +1,10 @@
 ####################################################################
 # VSTS Build Configuration, Version 1.3
 #
-# (c)2019 superdev GmbH
+# (c)2020 superdev GmbH
 ####################################################################
 
-name: 2.5.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 3.0.$(date:yy)$(DayOfYear).$(rev:rr)
 
 pool:
   vmImage: 'windows-2019'
@@ -42,9 +42,9 @@ steps:
     FileVersionNumber: '$(Build.BuildNumber)'
 
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 5.5.1'
+  displayName: 'Use NuGet 5.x'
   inputs:
-    versionSpec: 5.5.1
+    versionSpec: 5.x
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
@@ -69,7 +69,7 @@ steps:
   inputs:
     command: test
     projects: '**/*.Tests.csproj'
-    arguments: '--framework netcoreapp2.2'
+    arguments: '--framework netcoreapp3.1'
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack NuGet PreRelease'

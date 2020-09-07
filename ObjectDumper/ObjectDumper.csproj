@@ -25,6 +25,10 @@
     <DefineConstants>$(DefineConstants);NET45</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD_2</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
@@ -33,7 +37,12 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>2.5.0
+    <PackageReleaseNotes>3.0.0
+- New formatting logic for DumpStyle.Console (default)
+- Bug fix for dumping decimal numbers in different cultures
+- Dump MinValue, MaxValue for built-in types (where available)
+
+2.5.0
 - Handle CultureInfo formatting
 - Extend GetFormattedName to handle nested generics and multi-dimensional arrays
 - Optimize variable naming for generic types
