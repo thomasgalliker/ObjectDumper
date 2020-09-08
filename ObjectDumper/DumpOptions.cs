@@ -43,6 +43,11 @@ public class DumpOptions
     public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
 
     /// <summary>
+    /// Will throw the exception rather than swallow and list it on the property.  Default is catch and swallow.
+    /// </summary>
+    public bool ThrowExceptions { get; set; }
+
+    /// <summary>
     /// Ignores default values if set to <c>true</c>.
     /// Default: <c>false</c>
     /// </summary>

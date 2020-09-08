@@ -78,7 +78,7 @@ namespace ObjectDumping.Internal
 
             foreach (var property in properties)
             {
-                var value = property.TryGetValue(o);
+                var value = property.TryGetValue(o, this.DumpOptions.ThrowExceptions);
 
                 if (this.AlreadyTouched(value))
                 {

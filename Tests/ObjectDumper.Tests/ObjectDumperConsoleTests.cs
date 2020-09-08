@@ -585,6 +585,29 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldThrowException()
+        {
+            // Arrange
+            var thrownException = new Exception();
+            var testObject = new TestObjectWithException()
+            {
+                Exception = thrownException,
+            };
+            var options = new DumpOptions() { ThrowExceptions = true, };
+
+            try
+            {
+                // Act
+                var dump = ObjectDumperConsole.Dump(testObject, options);
+            }
+            catch (Exception ex)
+            {
+                // Assert
+                Assert.Equal(ex.InnerException, thrownException);
+            }
+        }
+
+        [Fact]
         public void ShouldOrderProperties()
         {
             // Arrange

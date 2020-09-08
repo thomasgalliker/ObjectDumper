@@ -5,7 +5,7 @@ namespace ObjectDumping.Internal
 {
     internal static class PropertyInfoExtensions
     {
-        internal static object TryGetValue(this PropertyInfo property, object element)
+        internal static object TryGetValue(this PropertyInfo property, object element, bool throwException)
         {
             object value;
             try
@@ -14,6 +14,8 @@ namespace ObjectDumping.Internal
             }
             catch (Exception ex)
             {
+                if (throwException)
+                    throw;
                 value = $"{{{ex.Message}}}";
             }
 
