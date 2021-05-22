@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -820,6 +821,51 @@ namespace ObjectDumping.Tests
                 "{X509ChainStatus}\r\n" +
                 "  Status: X509ChainStatusFlags.NoError\r\n" +
                 "  StatusInformation: \"Test status\"");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject()
+        {
+            // Arrange
+            var dynamicObject = new
+            {
+                IntProperty = 10,
+                StringProperty = "hello",
+                DoubleProperty = 3.14d,
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(dynamicObject);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{AnonymousObject}\r\n" +
+                "  IntProperty: 10\r\n" +
+                "  StringProperty: \"hello\"\r\n" +
+                "  DoubleProperty: 3.14");
+        }
+
+        [Fact]
+        public void ShouldDumpExpandoObject()
+        {
+            // Arrange
+            dynamic expandoObject = new ExpandoObject();
+            expandoObject.IntProperty = 10;
+            expandoObject.StringProperty = "hello";
+            expandoObject.DoubleProperty = 3.14d;
+
+            // Act
+            string dump = ObjectDumperConsole.Dump(expandoObject);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{ \"IntProperty\", 10 }\r\n" +
+                "{ \"StringProperty\", \"hello\" }\r\n" +
+                "{ \"DoubleProperty\", 3.14 }");
         }
 
 

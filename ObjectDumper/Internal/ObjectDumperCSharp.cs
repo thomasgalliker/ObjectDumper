@@ -44,15 +44,23 @@ namespace ObjectDumping.Internal
 
             var type = o.GetType();
 
-            this.Write($"new {type.GetFormattedName(this.DumpOptions.UseTypeFullName)}", intentLevel);
+            var typeName = type.IsAnonymous() ? "" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+
+            this.Write($"new {typeName}", intentLevel);
             this.LineBreak();
             this.Write("{");
             this.LineBreak();
             this.Level++;
+            this.DumpProperties(o);
+            this.Level--;
+            this.Write("}");
+        }
 
+        private void DumpProperties(object o)
+        {
             var properties = o.GetType().GetRuntimeProperties()
-                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
-                .ToList();
+                            .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
+                            .ToList();
 
             if (this.DumpOptions.ExcludeProperties != null && this.DumpOptions.ExcludeProperties.Any())
             {
@@ -103,7 +111,7 @@ namespace ObjectDumping.Internal
                 {
                     if (!this.DumpOptions.IgnoreIndexers)
                     {
-                        DumpIntegerArrayIndexer(o, property, indexParameters);
+                        this.DumpIntegerArrayIndexer(o, property, indexParameters);
                     }
                 }
                 else
@@ -118,9 +126,6 @@ namespace ObjectDumping.Internal
                     this.LineBreak();
                 }
             }
-
-            this.Level--;
-            this.Write("}");
         }
 
         private void DumpIntegerArrayIndexer(object o, PropertyInfo property, ParameterInfo[] indexParameters)
@@ -150,7 +155,7 @@ namespace ObjectDumping.Internal
                 {
                     var arrayValue = arrayValues[arrayIndex];
                     this.Write($"[{arrayIndex}] = ");
-                    FormatValue(arrayValue);
+                    this.FormatValue(arrayValue);
                     if (!Equals(arrayValue, lastArrayValue))
                     {
                         this.Write($",{this.DumpOptions.LineBreakChar}");
@@ -495,7 +500,8 @@ namespace ObjectDumping.Internal
 
             if (o is IEnumerable enumerable)
             {
-                this.Write($"new {type.GetFormattedName(this.DumpOptions.UseTypeFullName)}", intentLevel);
+                var typeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+                this.Write($"new {typeName}", intentLevel);
                 this.LineBreak();
                 this.Write("{");
                 this.LineBreak();
@@ -570,6 +576,10 @@ namespace ObjectDumping.Internal
             }
 
             var type = element.GetType();
+            if (type.IsAnonymous())
+            {
+                return "x";
+            }
 
             var className = type.GetFormattedName(useFullName: false, useValueTupleFormatting: false);
             string variableName;

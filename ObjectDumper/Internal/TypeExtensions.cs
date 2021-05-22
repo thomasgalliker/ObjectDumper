@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace ObjectDumping.Internal
 {
@@ -132,6 +133,29 @@ namespace ObjectDumping.Internal
         public static T GetDefaultGeneric<T>()
         {
             return default(T);
+        }
+
+        public static bool IsAnonymous(this Type type)
+        {
+            return type.GetTypeInfo().IsAnonymous();
+        }
+
+        public static bool IsAnonymous(this TypeInfo typeInfo)
+        {
+            if (typeInfo.IsGenericType)
+            {
+                var genericTypeDefinition = typeInfo.GetGenericTypeDefinition().GetTypeInfo();
+                if (genericTypeDefinition.IsClass && genericTypeDefinition.IsSealed && genericTypeDefinition.Attributes.HasFlag(TypeAttributes.NotPublic))
+                {
+                    var attributes = genericTypeDefinition.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false);
+                    if (attributes != null && attributes.Any())
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
 #if NETSTANDARD_2

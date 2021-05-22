@@ -32,8 +32,8 @@ namespace ObjectDumping.Internal
             this.AddAlreadyTouched(o);
 
             var type = o.GetType();
-
-            this.Write($"{{{type.GetFormattedName(this.DumpOptions.UseTypeFullName)}}}", intentLevel);
+            var typeName = type.IsAnonymous() ? "AnonymousObject" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+            this.Write($"{{{typeName}}}", intentLevel);
             this.LineBreak();
             this.Level++;
 
@@ -486,7 +486,7 @@ namespace ObjectDumping.Internal
                     this.Write($"...", intentLevel);
                     this.Level++;
                 }
-
+                
                 this.WriteItems(enumerable);
                 return;
             }
