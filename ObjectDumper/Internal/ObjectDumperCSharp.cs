@@ -83,18 +83,29 @@ namespace ObjectDumping.Internal
                     .ToList();
             }
 
-            var last = properties.LastOrDefault();
+            var propertiesAndValues = properties
+                .Select(p => new PropertyAndValue(o, p))
+                .ToList();
 
-            foreach (var property in properties)
+            PropertyAndValue lastProperty;
+            if (this.DumpOptions.IgnoreDefaultValues)
             {
-                var value = property.TryGetValue(o);
+                lastProperty = propertiesAndValues.LastOrDefault(pv => !pv.IsDefaultValue);
+            }
+            else
+            {
+                lastProperty = propertiesAndValues.LastOrDefault();
+            }
+
+            foreach (var propertiesAndValue in propertiesAndValues)
+            {
+                var value = propertiesAndValue.Value;
 
                 if (this.AlreadyTouched(value))
                 {
-                    var defaultValue = property.PropertyType.GetDefault();
-                    this.Write($"{property.Name} = ");
-                    this.FormatValue(defaultValue);
-                    if (!Equals(property, last))
+                    this.Write($"{propertiesAndValue.Property.Name} = ");
+                    this.FormatValue(propertiesAndValue.DefaultValue);
+                    if (!Equals(propertiesAndValue, lastProperty))
                     {
                         this.Write(",");
                     }
@@ -105,27 +116,25 @@ namespace ObjectDumping.Internal
 
                 if (this.DumpOptions.IgnoreDefaultValues)
                 {
-                    var defaultValue = property.PropertyType.GetDefault();
-                    var isDefaultValue = Equals(value, defaultValue);
-                    if (isDefaultValue)
+                    if (propertiesAndValue.IsDefaultValue)
                     {
                         continue;
                     }
                 }
 
-                var indexParameters = property.GetIndexParameters();
+                var indexParameters = propertiesAndValue.Property.GetIndexParameters();
                 if (indexParameters.Length > 0)
                 {
                     if (!this.DumpOptions.IgnoreIndexers)
                     {
-                        this.DumpIntegerArrayIndexer(o, property, indexParameters);
+                        this.DumpIntegerArrayIndexer(o, propertiesAndValue.Property, indexParameters);
                     }
                 }
                 else
                 {
-                    this.Write($"{property.Name} = ");
+                    this.Write($"{propertiesAndValue.Property.Name} = ");
                     this.FormatValue(value);
-                    if (!Equals(property, last))
+                    if (!Equals(propertiesAndValue, lastProperty))
                     {
                         this.Write(",");
                     }

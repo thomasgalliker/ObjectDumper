@@ -112,7 +112,20 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\r\n{\r\n  Name = \"Thomas\",\r\n  Age = 30,\r\n  GetOnly = 11,\r\n  ByteArray = new byte[]\r\n  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  }\r\n};");
+            dump.Should().Be(
+                "var person = new Person\r\n" +
+                "{\r\n" +
+                "  Name = \"Thomas\",\r\n" +
+                "  Age = 30,\r\n" +
+                "  GetOnly = 11,\r\n" +
+                "  ByteArray = new byte[]\r\n" +
+                "  {\r\n" +
+                "    1,\r\n" +
+                "    2,\r\n" +
+                "    3,\r\n" +
+                "    4\r\n" +
+                "  }\r\n" +
+                "};");
         }
     }
 }

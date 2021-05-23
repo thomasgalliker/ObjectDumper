@@ -337,10 +337,10 @@ namespace ObjectDumping.Tests
              "      ParameterType: void\r\n" +
              "      HasDefaultValue: true\r\n" +
              "      Member: null --> Circular reference detected\r\n" +
-             "      Position: -1\r\n\r\n" +
+             "      Position: -1\r\n" +
              "    ReturnParameter: null --> Circular reference detected\r\n" +
              "    IsHideBySig: true\r\n" +
-             "    IsPublic: true\r\n\r\n" +
+             "    IsPublic: true\r\n" +
              "  Message: \"message text\"\r\n" +
              "  Data: ...\r\n" +
              "  Source: \"ObjectDumper.Tests\"\r\n" +

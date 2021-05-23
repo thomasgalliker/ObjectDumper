@@ -300,8 +300,10 @@ namespace ObjectDumping.Tests
                "    {\r\n" +
                "      ParameterType = typeof(void),\r\n" +
                "      HasDefaultValue = true,\r\n" +
+               "      Member = null, // Circular reference detected\r\n" +
                "      Position = -1\r\n" +
                "    },\r\n" +
+               "    ReturnParameter = null, // Circular reference detected\r\n" +
                "    IsHideBySig = true,\r\n" +
                "    IsPublic = true\r\n" +
                "  },\r\n" +
@@ -1166,7 +1168,11 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var viewModelValidation = new ViewModelValidation\r\n{\r\n};");
+            dump.Should().Be(
+                "var viewModelValidation = new ViewModelValidation\r\n" +
+                "{\r\n" +
+                "  Errors = null, // Circular reference detected\r\n" +
+                "};");
         }
 
         [Fact]
