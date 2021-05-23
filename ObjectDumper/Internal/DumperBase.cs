@@ -24,15 +24,15 @@ namespace ObjectDumping.Internal
 
         public int Level
         {
-            get => level;
+            get => this.level;
             set
             {
                 if (value < 0)
                 {
-                    throw new ArgumentException("Level must not be a negative number", nameof(Level));
+                    throw new ArgumentException("Level must not be a negative number", nameof(this.Level));
                 }
 
-                level = value;
+                this.level = value;
             }
         }
 
@@ -52,11 +52,11 @@ namespace ObjectDumping.Internal
         {
             if (this.isNewLine)
             {
-                Write(value, Level);
+                this.Write(value, this.Level);
             }
             else
             {
-                Write(value, 0);
+                this.Write(value, 0);
             }
         }
 
@@ -92,12 +92,13 @@ namespace ObjectDumping.Internal
         protected void LineBreak()
         {
             this.stringBuilder.Append(this.DumpOptions.LineBreakChar);
-            isNewLine = true;
+            this.isNewLine = true;
         }
 
-        protected void AddAlreadyTouched(object element)
+        protected void AddAlreadyTouched(object value)
         {
-            this.hashListOfFoundElements.Add(element.GetHashCode());
+            var hashCode = GenerateHashCode(value);
+            this.hashListOfFoundElements.Add(hashCode);
         }
 
         protected bool AlreadyTouched(object value)
@@ -107,16 +108,21 @@ namespace ObjectDumping.Internal
                 return false;
             }
 
-            var hash = value.GetHashCode();
+            var hashCode = GenerateHashCode(value);
             for (var i = 0; i < this.hashListOfFoundElements.Count; i++)
             {
-                if (this.hashListOfFoundElements[i] == hash)
+                if (this.hashListOfFoundElements[i] == hashCode)
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private static int GenerateHashCode(object value)
+        {
+            return HashCode.Combine(value, value.GetType());
         }
 
         /// <summary>

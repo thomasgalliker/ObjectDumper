@@ -59,8 +59,8 @@ namespace ObjectDumping.Internal
         private void DumpProperties(object o)
         {
             var properties = o.GetType().GetRuntimeProperties()
-                            .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
-                            .ToList();
+                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
+                .ToList();
 
             if (this.DumpOptions.ExcludeProperties != null && this.DumpOptions.ExcludeProperties.Any())
             {
@@ -76,22 +76,10 @@ namespace ObjectDumping.Internal
                     .ToList();
             }
 
-            if (this.DumpOptions.IgnoreDefaultValues)
-            {
-                properties = properties
-                    .Where(p =>
-                    {
-                        var value = p.GetValue(o);
-                        var defaultValue = p.PropertyType.GetDefault();
-                        var isDefaultValue = Equals(value, defaultValue);
-                        return !isDefaultValue;
-                    })
-                    .ToList();
-            }
-
             if (this.DumpOptions.PropertyOrderBy != null)
             {
-                properties = properties.OrderBy(this.DumpOptions.PropertyOrderBy.Compile())
+                properties = properties
+                    .OrderBy(this.DumpOptions.PropertyOrderBy.Compile())
                     .ToList();
             }
 
@@ -103,7 +91,26 @@ namespace ObjectDumping.Internal
 
                 if (this.AlreadyTouched(value))
                 {
+                    var defaultValue = property.PropertyType.GetDefault();
+                    this.Write($"{property.Name} = ");
+                    this.FormatValue(defaultValue);
+                    if (!Equals(property, last))
+                    {
+                        this.Write(",");
+                    }
+                    this.Write(" // Circular reference detected");
+                    this.LineBreak();
                     continue;
+                }
+
+                if (this.DumpOptions.IgnoreDefaultValues)
+                {
+                    var defaultValue = property.PropertyType.GetDefault();
+                    var isDefaultValue = Equals(value, defaultValue);
+                    if (isDefaultValue)
+                    {
+                        continue;
+                    }
                 }
 
                 var indexParameters = property.GetIndexParameters();

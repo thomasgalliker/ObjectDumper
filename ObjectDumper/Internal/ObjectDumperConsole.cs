@@ -55,19 +55,6 @@ namespace ObjectDumping.Internal
                     .ToList();
             }
 
-            if (this.DumpOptions.IgnoreDefaultValues)
-            {
-                properties = properties
-                    .Where(p =>
-                    {
-                        var value = p.GetValue(o);
-                        var defaultValue = p.PropertyType.GetDefault();
-                        var isDefaultValue = Equals(value, defaultValue);
-                        return !isDefaultValue;
-                    })
-                    .ToList();
-            }
-
             if (this.DumpOptions.PropertyOrderBy != null)
             {
                 properties = properties.OrderBy(this.DumpOptions.PropertyOrderBy.Compile())
@@ -82,7 +69,25 @@ namespace ObjectDumping.Internal
 
                 if (this.AlreadyTouched(value))
                 {
+                    var defaultValue = property.PropertyType.GetDefault();
+                    this.Write($"{property.Name}: ");
+                    this.FormatValue(defaultValue);
+                    this.Write(" --> Circular reference detected");
+                    if (!Equals(property, last))
+                    {
+                        this.LineBreak();
+                    }
                     continue;
+                }
+
+                if (this.DumpOptions.IgnoreDefaultValues)
+                {
+                    var defaultValue = property.PropertyType.GetDefault();
+                    var isDefaultValue = Equals(value, defaultValue);
+                    if (isDefaultValue)
+                    {
+                        continue;
+                    }
                 }
 
                 var indexParameters = property.GetIndexParameters();
@@ -90,7 +95,7 @@ namespace ObjectDumping.Internal
                 {
                     if (!this.DumpOptions.IgnoreIndexers)
                     {
-                        DumpIntegerArrayIndexer(o, property, indexParameters);
+                        this.DumpIntegerArrayIndexer(o, property, indexParameters);
                     }
                 }
                 else
@@ -134,7 +139,7 @@ namespace ObjectDumping.Internal
                 {
                     var arrayValue = arrayValues[arrayIndex];
                     this.Write($"[{arrayIndex}]: ");
-                    FormatValue(arrayValue);
+                    this.FormatValue(arrayValue);
                     if (!Equals(arrayValue, lastArrayValue))
                     {
                         this.Write($",{this.DumpOptions.LineBreakChar}");
@@ -541,7 +546,7 @@ namespace ObjectDumping.Internal
                 //this.LineBreak();
             }
 
-            if (Level > 0)
+            if (this.Level > 0)
             {
                 this.Level--;
             }

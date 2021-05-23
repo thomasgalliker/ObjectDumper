@@ -336,9 +336,11 @@ namespace ObjectDumping.Tests
              "    ReturnTypeCustomAttributes: {RuntimeParameterInfo}\r\n" +
              "      ParameterType: void\r\n" +
              "      HasDefaultValue: true\r\n" +
-             "      Position: -1\r\n" +
+             "      Member: null --> Circular reference detected\r\n" +
+             "      Position: -1\r\n\r\n" +
+             "    ReturnParameter: null --> Circular reference detected\r\n" +
              "    IsHideBySig: true\r\n" +
-             "    IsPublic: true\r\n" +
+             "    IsPublic: true\r\n\r\n" +
              "  Message: \"message text\"\r\n" +
              "  Data: ...\r\n" +
              "  Source: \"ObjectDumper.Tests\"\r\n" +
@@ -537,19 +539,87 @@ namespace ObjectDumping.Tests
         //}
 
         [Fact]
-        public void ShouldDumpRecursiveTypes_RecursivePerson()
+        public void ShouldDumpRecursiveTypes_CircularReference_Case1()
         {
             // Arrange
             var person = new RecursivePerson();
             person.Parent = person;
 
+            var dumpOptions = new DumpOptions
+            {
+                IgnoreDefaultValues = false
+            };
+
             // Act
-            var dump = ObjectDumperConsole.Dump(person);
+            var dump = ObjectDumperConsole.Dump(person, dumpOptions);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{RecursivePerson}\r\n");
+            dump.Should().Be(
+                "{RecursivePerson}\r\n" +
+                "  Id: 0\r\n" +
+                "  Parent: null --> Circular reference detected");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case2()
+        {
+            // Arrange
+            var nestedItemA = new NestedItemA
+            {
+                Property = 1,
+                Next = new NestedItemB
+                {
+                    Property = 1,
+                    Next = null
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(nestedItemA);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{NestedItemA}\r\n" +
+                "  Next: {NestedItemB}\r\n" +
+                "    Next: null\r\n" +
+                "    Property: 1\r\n" +
+                "  Property: 1");
+        }
+        
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case3()
+        {
+            // Arrange
+            var nestedItemB = new NestedItemB
+            {
+                Property = 1,
+                Next = null,
+            };
+
+            var nestedItemA = new NestedItemA
+            {
+                Property = 1,
+                Next = nestedItemB,
+            };
+
+            nestedItemB.Next = nestedItemA;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(nestedItemA);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{NestedItemA}\r\n" +
+                "  Next: {NestedItemB}\r\n" +
+                "    Next: null --> Circular reference detected\r\n" +
+                "    Property: 1\r\n" +
+                "  Property: 1");
         }
 
         [Fact]
