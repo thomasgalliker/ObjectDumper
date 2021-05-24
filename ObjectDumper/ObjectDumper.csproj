@@ -40,6 +40,9 @@
     <PackageReleaseNotes>3.1.0
 - Add support for dumping anonymous types
 - Add support for .NET 5
+- Detect circular references for hash combinations h(value, type)
+- Dump warning for circular references
+- Performance improvement for property dumps
 
 3.0.0
 - New formatting logic for DumpStyle.Console (default)
