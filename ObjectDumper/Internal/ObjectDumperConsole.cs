@@ -32,8 +32,8 @@ namespace ObjectDumping.Internal
             this.AddAlreadyTouched(o);
 
             var type = o.GetType();
-
-            this.Write($"{{{type.GetFormattedName(this.DumpOptions.UseTypeFullName)}}}", intentLevel);
+            var typeName = type.IsAnonymous() ? "AnonymousObject" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+            this.Write($"{{{typeName}}}", intentLevel);
             this.LineBreak();
             this.Level++;
 
@@ -55,49 +55,63 @@ namespace ObjectDumping.Internal
                     .ToList();
             }
 
-            if (this.DumpOptions.IgnoreDefaultValues)
-            {
-                properties = properties
-                    .Where(p =>
-                    {
-                        var value = p.GetValue(o);
-                        var defaultValue = p.PropertyType.GetDefault();
-                        var isDefaultValue = Equals(value, defaultValue);
-                        return !isDefaultValue;
-                    })
-                    .ToList();
-            }
-
             if (this.DumpOptions.PropertyOrderBy != null)
             {
                 properties = properties.OrderBy(this.DumpOptions.PropertyOrderBy.Compile())
                     .ToList();
             }
 
-            var last = properties.LastOrDefault();
+            var propertiesAndValues = properties
+                  .Select(p => new PropertyAndValue(o, p))
+                  .ToList();
 
-            foreach (var property in properties)
+            PropertyAndValue lastProperty;
+            if (this.DumpOptions.IgnoreDefaultValues)
             {
-                var value = property.TryGetValue(o);
+                lastProperty = propertiesAndValues.LastOrDefault(pv => !pv.IsDefaultValue);
+            }
+            else
+            {
+                lastProperty = propertiesAndValues.LastOrDefault();
+            }
+
+            foreach (var propertiesAndValue in propertiesAndValues)
+            {
+                var value = propertiesAndValue.Value;
 
                 if (this.AlreadyTouched(value))
                 {
+                    this.Write($"{propertiesAndValue.Property.Name}: ");
+                    this.FormatValue(propertiesAndValue.DefaultValue);
+                    this.Write(" --> Circular reference detected");
+                    if (!Equals(propertiesAndValue, lastProperty))
+                    {
+                        this.LineBreak();
+                    }
                     continue;
                 }
 
-                var indexParameters = property.GetIndexParameters();
+                if (this.DumpOptions.IgnoreDefaultValues)
+                {
+                    if (propertiesAndValue.IsDefaultValue)
+                    {
+                        continue;
+                    }
+                }
+
+                var indexParameters = propertiesAndValue.Property.GetIndexParameters();
                 if (indexParameters.Length > 0)
                 {
                     if (!this.DumpOptions.IgnoreIndexers)
                     {
-                        DumpIntegerArrayIndexer(o, property, indexParameters);
+                        this.DumpIntegerArrayIndexer(o, propertiesAndValue.Property, indexParameters);
                     }
                 }
                 else
                 {
-                    this.Write($"{property.Name}: ");
+                    this.Write($"{propertiesAndValue.Property.Name}: ");
                     this.FormatValue(value);
-                    if (!Equals(property, last))
+                    if (!Equals(propertiesAndValue, lastProperty))
                     {
                         this.LineBreak();
                     }
@@ -134,7 +148,7 @@ namespace ObjectDumping.Internal
                 {
                     var arrayValue = arrayValues[arrayIndex];
                     this.Write($"[{arrayIndex}]: ");
-                    FormatValue(arrayValue);
+                    this.FormatValue(arrayValue);
                     if (!Equals(arrayValue, lastArrayValue))
                     {
                         this.Write($",{this.DumpOptions.LineBreakChar}");
@@ -486,7 +500,7 @@ namespace ObjectDumping.Internal
                     this.Write($"...", intentLevel);
                     this.Level++;
                 }
-
+                
                 this.WriteItems(enumerable);
                 return;
             }
@@ -541,7 +555,7 @@ namespace ObjectDumping.Internal
                 //this.LineBreak();
             }
 
-            if (Level > 0)
+            if (this.Level > 0)
             {
                 this.Level--;
             }

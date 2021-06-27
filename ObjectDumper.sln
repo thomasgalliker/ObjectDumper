@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2011
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{533683F1-B92C-4149-A2AD-6045623BC6D8}"
 EndProject
@@ -15,6 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectDumper", "ObjectDumpe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5B2E3BCA-E4CD-4F89-9165-C968EABB6825}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		build.yml = build.yml
 		README.md = README.md
 	EndProjectSection

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -299,8 +300,10 @@ namespace ObjectDumping.Tests
                "    {\r\n" +
                "      ParameterType = typeof(void),\r\n" +
                "      HasDefaultValue = true,\r\n" +
+               "      Member = null, // Circular reference detected\r\n" +
                "      Position = -1\r\n" +
                "    },\r\n" +
+               "    ReturnParameter = null, // Circular reference detected\r\n" +
                "    IsHideBySig = true,\r\n" +
                "    IsPublic = true\r\n" +
                "  },\r\n" +
@@ -468,19 +471,96 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
-        public void ShouldDumpRecursiveTypes_RecursivePerson()
+        public void ShouldDumpRecursiveTypes_CircularReference_Case1()
         {
             // Arrange
             var person = new RecursivePerson();
             person.Parent = person;
 
+            var dumpOptions = new DumpOptions
+            {
+                IgnoreDefaultValues = false
+            };
+
             // Act
-            var dump = ObjectDumperCSharp.Dump(person);
+            var dump = ObjectDumperCSharp.Dump(person, dumpOptions);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var recursivePerson = new RecursivePerson\r\n{\r\n};");
+            dump.Should().Be("var recursivePerson = new RecursivePerson\r\n" +
+                "{\r\n" +
+                "  Id = 0,\r\n" +
+                "  Parent = null // Circular reference detected\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case2()
+        {
+            // Arrange
+            var nestedItemA = new NestedItemA
+            {
+                Property = 1,
+                Next = new NestedItemB
+                {
+                    Property = 1,
+                    Next = null
+                }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(nestedItemA);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var nestedItemA = new NestedItemA\r\n" +
+                "{\r\n" +
+                "  Next = new NestedItemB\r\n" +
+                "  {\r\n" +
+                "    Next = null,\r\n" +
+                "    Property = 1\r\n" +
+                "  },\r\n" +
+                "  Property = 1\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case3()
+        {
+            // Arrange
+            var nestedItemB = new NestedItemB
+            {
+                Property = 1,
+                Next = null,
+            };
+
+            var nestedItemA = new NestedItemA
+            {
+                Property = 1,
+                Next = nestedItemB,
+            };
+
+            nestedItemB.Next = nestedItemA;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(nestedItemA);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var nestedItemA = new NestedItemA\r\n" +
+                "{\r\n" +
+                "  Next = new NestedItemB\r\n" +
+                "  {\r\n" +
+                "    Next = null, // Circular reference detected\r\n" +
+                "    Property = 1\r\n" +
+                "  },\r\n" +
+                "  Property = 1\r\n" +
+                "};");
         }
 
         [Fact]
@@ -1088,7 +1168,11 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var viewModelValidation = new ViewModelValidation\r\n{\r\n};");
+            dump.Should().Be(
+                "var viewModelValidation = new ViewModelValidation\r\n" +
+                "{\r\n" +
+                "  Errors = null, // Circular reference detected\r\n" +
+                "};");
         }
 
         [Fact]
@@ -1112,6 +1196,56 @@ namespace ObjectDumping.Tests
                 "{\r\n" +
                 "  Status = X509ChainStatusFlags.NoError,\r\n" +
                 "  StatusInformation = \"Test status\"\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject()
+        {
+            // Arrange
+            var dynamicObject = new
+            {
+                IntProperty = 10,
+                StringProperty = "hello",
+                DoubleProperty = 3.14d,
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(dynamicObject);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var x = new \r\n" +
+                "{\r\n" +
+                "  IntProperty = 10,\r\n" +
+                "  StringProperty = \"hello\",\r\n" +
+                "  DoubleProperty = 3.14d\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpExpandoObject()
+        {
+            // Arrange
+            dynamic expandoObject = new ExpandoObject();
+            expandoObject.IntProperty = 10;
+            expandoObject.StringProperty = "hello";
+            expandoObject.DoubleProperty = 3.14d;
+
+            // Act
+            string dump = ObjectDumperCSharp.Dump(expandoObject);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var expandoObject = new ExpandoObject\r\n" +
+                "{\r\n" +
+                "  { \"IntProperty\", 10 },\r\n" +
+                "  { \"StringProperty\", \"hello\" },\r\n" +
+                "  { \"DoubleProperty\", 3.14d }\r\n" +
                 "};");
         }
 

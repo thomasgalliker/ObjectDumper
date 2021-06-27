@@ -8,11 +8,11 @@ using Xunit.Abstractions;
 namespace ObjectDumping.Tests
 {
     [Collection(TestCollections.CultureSpecific)]
-    public class ObjectDumperTests
+    public class ObjectDumperExtensionsTests
     {
         private readonly ITestOutputHelper testOutputHelper;
 
-        public ObjectDumperTests(ITestOutputHelper testOutputHelper)
+        public ObjectDumperExtensionsTests(ITestOutputHelper testOutputHelper)
         {
             this.testOutputHelper = testOutputHelper;
         }
@@ -24,7 +24,7 @@ namespace ObjectDumping.Tests
             var person = PersonFactory.GeneratePersons(count: 1).Single();
 
             // Act
-            var dump = ObjectDumper.Dump(person);
+            var dump = person.Dump();
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -64,7 +64,7 @@ namespace ObjectDumping.Tests
             var dumpStyle = DumpStyle.CSharp;
 
             // Act
-            var dump = ObjectDumper.Dump(person, dumpStyle);
+            var dump = person.Dump(dumpStyle);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -117,7 +117,7 @@ namespace ObjectDumping.Tests
             };
 
             // Act
-            var dump = ObjectDumper.Dump(person, dumpOptions);
+            var dump = person.Dump(dumpOptions);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
@@ -142,38 +142,6 @@ namespace ObjectDumping.Tests
                 "        Uint = 0u,\n" +
                 "        ULong = 0UL,\n" +
                 "        UShort = 0\n" +
-                "};");
-        }
-
-        [Fact]
-        public void ShouldDumpObject_WithOptions_IgnoreDefaultValues()
-        {
-            // Arrange
-            var person = PersonFactory.GetPersonThomas();
-            var dumpOptions = new DumpOptions
-            {
-                DumpStyle = DumpStyle.CSharp,
-                IgnoreDefaultValues = true
-            };
-
-            // Act
-            var dump = ObjectDumper.Dump(person, dumpOptions);
-
-            // Assert
-            this.testOutputHelper.WriteLine(dump);
-            dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\r\n" +
-                "{\r\n" +
-                "  Name = \"Thomas\",\r\n" +
-                "  Age = 30,\r\n" +
-                "  GetOnly = 11,\r\n" +
-                "  ByteArray = new byte[]\r\n" +
-                "  {\r\n" +
-                "    1,\r\n" +
-                "    2,\r\n" +
-                "    3,\r\n" +
-                "    4\r\n" +
-                "  }\r\n" +
                 "};");
         }
     }
