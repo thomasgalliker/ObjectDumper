@@ -1,10 +1,10 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.3
+# VSTS Build Configuration, Version 1.4
 #
 # (c)2021 superdev GmbH
 ####################################################################
 
-name: 3.1.$(date:yy)$(DayOfYear).$(rev:rr)
+name: $[format('{0}', variables['buildName'])]
 
 pool:
   vmImage: 'windows-2019'
@@ -14,32 +14,61 @@ trigger:
     include:
     - master
     - develop
-    - release/*
     - feature/*
+    - bugfix/*
 
   paths:
     exclude:
     - README.md
+    - Images/*
+    - Samples/*
 
 variables:
   solution: 'ObjectDumper.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  buildVersionPostfix: '-pre'
+  majorVersion: 3
+  minorVersion: 2
+  patchVersion: $[counter(format('{0}.{1}', variables.majorVersion, variables.minorVersion), 0)]
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    # Versioning: 1.0.0
+    semVersion: $[format('{0}.{1}.{2}', variables.majorVersion, variables.minorVersion, variables.patchVersion)]
+  ${{ if and(ne(variables['Build.SourceBranch'], 'refs/heads/master'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/'))) }}:
+    # Versioning: 1.0.0-pre
+    semVersion: $[format('{0}.{1}.{2}-pre', variables.majorVersion, variables.minorVersion, variables.patchVersion)]
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
+    # Versioning: 1.0.0-pr.000000001
+    semVersion: $[format('{0}.{1}.{2}-pr.{3}', variables.majorVersion, variables.minorVersion, variables.patchVersion, variables['System.PullRequest.PullRequestId'])]
+  buildName: $[format('{0}', variables.semVersion)]
 
 steps:
-- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-NetCore.Assembly-Info-NetCore@2
-  displayName: 'Set Assembly Manifest Data'
+- task: Bash@3
+  displayName: 'Print all variables'
   inputs:
+    targetType: 'inline'
+    script: 'env | sort'
+   
+- task: Assembly-Info-NetCore@2
+  displayName: 'Update Assembly Info'
+  inputs:
+    Path: '$(Build.SourcesDirectory)'
     FileNames: |
-     ObjectDumper.csproj
+      **/*.csproj
     InsertAttributes: true
+    FileEncoding: 'auto'
+    WriteBOM: false
     Product: 'ObjectDumper'
     Description: ''
     Company: 'superdev GmbH'
     Copyright: '(c) $(date:YYYY) superdev GmbH'
     VersionNumber: '$(Build.BuildNumber)'
     FileVersionNumber: '$(Build.BuildNumber)'
+    InformationalVersion: '$(Build.BuildNumber)'
+    PackageVersion: '$(Build.BuildNumber)'
+    LogLevel: 'verbose'
+    FailOnWarning: false
+    DisableTelemetry: false'
+
 
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 5.x'
@@ -51,11 +80,6 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- powershell: |
-   Write-Host "##vso[task.setvariable variable=PackageVersion]$(Build.BuildNumber)"
-   Write-Host "##vso[task.setvariable variable=PackageVersionPre]$(Build.BuildNumber)$(BuildVersionPostfix)"
-  displayName: 'Set PackageVersion'
-
 - task: VSBuild@1
   displayName: 'Build solution'
   inputs:
@@ -63,29 +87,21 @@ steps:
     msbuildArgs: ''
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-
+    
 - task: DotNetCoreCLI@2
   displayName: 'Run UnitTests'
   inputs:
     command: test
     projects: '**/*.Tests.csproj'
-    arguments: '--framework netcoreapp3.1'
-
+    arguments: '--no-restore --no-build --configuration $(buildConfiguration)'
+    
 - task: DotNetCoreCLI@2
-  displayName: 'Pack NuGet PreRelease'
+  displayName: 'Pack ObjectDumper'
   inputs:
     command: pack
     packagesToPack: ObjectDumper/ObjectDumper.csproj
     versioningScheme: byEnvVar
-    versionEnvVar: PackageVersionPre
-
-- task: DotNetCoreCLI@2
-  displayName: 'Pack NuGet Prod'
-  inputs:
-    command: pack
-    packagesToPack: ObjectDumper/ObjectDumper.csproj
-    versioningScheme: byEnvVar
-    versionEnvVar: PackageVersion
+    versionEnvVar: semVersion
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
