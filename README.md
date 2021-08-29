@@ -80,5 +80,9 @@ var listOfPersons = new List<Person>
 };
 ```
 
+### Links
+C# Escape / Unescape
+https://codebeautify.org/csharp-escape-unescape
+
 ### License
 This project is Copyright &copy; 2021 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
