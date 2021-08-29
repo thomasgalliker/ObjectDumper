@@ -6,7 +6,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <Version>1.0.0</Version>
     <Authors>Thomas Galliker</Authors>
-    <TargetFrameworks>netstandard1.2;netstandard2.0;net45;net5.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.2;netstandard2.0;netstandard2.1</TargetFrameworks>
     <AssemblyName>ObjectDumping</AssemblyName>
     <PackageId>ObjectDumper.NET</PackageId>
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
@@ -19,14 +19,7 @@
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.2' ">$(PackageTargetFallback);netcoreapp1.0</PackageTargetFallback>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.2' ">1.6.1</NetStandardImplicitPackageVersion>
     <SignAssembly>True</SignAssembly>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);NET45</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD_2</DefineConstants>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,7 +30,13 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>3.1.0
+    <PackageReleaseNotes>3.3.0
+- Bug fix for generic default value creation
+
+3.2.0
+- New versioning schema
+
+3.1.0
 - Add support for dumping anonymous types
 - Add support for .NET 5
 - Detect circular references for hash combinations h(value, type)

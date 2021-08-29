@@ -50,7 +50,7 @@ namespace ObjectDumping.Internal
                 return $"{typeName}{arrayBrackets}";
             }
 
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
             if (useValueTupleFormatting && type.IsValueTuple())
             {
                 return typeName.RemoveGenericBackTick();
@@ -94,7 +94,7 @@ namespace ObjectDumping.Internal
                 return keyword;
             }
             else
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
             if (useValueTupleFormatting && type.IsValueTuple())
             {
                 typeName = $"({string.Join(", ", type.GenericTypeArguments.Select(t => GetTypeName(t, useFullName, useValueTupleFormatting)))})";
@@ -126,8 +126,25 @@ namespace ObjectDumping.Internal
 
         public static object GetDefault(this Type t)
         {
+            //var defaultValue = FastDefault.Get(t);
             var defaultValue = typeof(TypeExtensions).GetRuntimeMethod("GetDefaultGeneric", new Type[] { }).MakeGenericMethod(t).Invoke(null, null);
             return defaultValue;
+        }
+        
+        public static object TryGetDefault(this Type t)
+        {
+            object value;
+
+            try
+            {
+                value = t.GetDefault();
+            }
+            catch (Exception ex)
+            {
+                value = $"{{{ex.GetType().Name}: {ex.Message}}}";
+            }
+
+            return value;
         }
 
         public static T GetDefaultGeneric<T>()
@@ -158,7 +175,7 @@ namespace ObjectDumping.Internal
             return false;
         }
 
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
         public static bool IsValueTuple(this Type type)
         {
             return

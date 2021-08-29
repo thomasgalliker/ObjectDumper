@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Mail;
 using FluentAssertions;
 using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
@@ -141,6 +142,20 @@ namespace ObjectDumping.Tests.Internal
             this.testOutputHelper.WriteLine(dump);
             dump.Should().Be("Dictionary<string[,], List<Nullable<int>[,][]>[,,]>[]");
             //dump.Should().Be("Dictionary<string[,], List<int?[,][]>[,,]>[]");
+        }
+
+        [Theory]
+        [InlineData(typeof(string), default(string))]
+        [InlineData(typeof(char), default(char))]
+        [InlineData(typeof(int), default(int))]
+        [InlineData(typeof(MailMessage), default(MailMessage))]
+        public void ShouldGetDefault(Type type, object expectedDefaultValue)
+        {
+            // Act
+            var dump = type.GetDefault();
+
+            // Assert
+            dump.Should().Be(expectedDefaultValue);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ObjectDumperConsoleApp.Model;
 
-namespace ObjectDumperSample.Netfx
+namespace ObjectDumperConsoleApp
 {
     class Program
     {

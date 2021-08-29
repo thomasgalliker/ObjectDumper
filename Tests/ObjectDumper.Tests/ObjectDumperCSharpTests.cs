@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Mail;
 using System.Reflection;
 using FluentAssertions;
 using ObjectDumping.Internal;
@@ -1316,5 +1317,99 @@ namespace ObjectDumping.Tests
                 "};");
         }
 #endif
+        [Fact]
+        public void ShouldDumpMailMessage()
+        {
+            // Arrange
+            var mailmessage = new MailMessage("sender@mail.com", "receiver@mail.com", "Subject", "Body");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(mailmessage);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var mailMessage = new MailMessage\r\n" +
+                "{\r\n" +
+                "  From = new MailAddress\r\n" +
+                "  {\r\n" +
+                "    DisplayName = \"\",\r\n" +
+                "    User = \"sender\",\r\n" +
+                "    Host = \"mail.com\",\r\n" +
+                "    Address = \"sender@mail.com\"\r\n" +
+                "  },\r\n" +
+                "  Sender = null,\r\n" +
+                "  ReplyTo = null,\r\n" +
+                "  ReplyToList = new MailAddressCollection\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  To = new MailAddressCollection\r\n" +
+                "  {\r\n" +
+                "    new MailAddress\r\n" +
+                "    {\r\n" +
+                "      DisplayName = \"\",\r\n" +
+                "      User = \"receiver\",\r\n" +
+                "      Host = \"mail.com\",\r\n" +
+                "      Address = \"receiver@mail.com\"\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  Bcc = new MailAddressCollection\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  CC = new MailAddressCollection\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  Priority = MailPriority.Normal,\r\n" +
+                "  DeliveryNotificationOptions = DeliveryNotificationOptions.None,\r\n" +
+                "  Subject = \"Subject\",\r\n" +
+                "  SubjectEncoding = null,\r\n" +
+                "  Headers = new HeaderCollection\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  HeadersEncoding = null,\r\n" +
+                "  Body = \"Body\",\r\n" +
+#if NET452
+                "  BodyEncoding = new ASCIIEncoding\r\n" +
+#else
+                "  BodyEncoding = new ASCIIEncodingSealed\r\n" +
+#endif
+                "  {\r\n" +
+                "    IsSingleByte = true,\r\n" +
+#if NETCOREAPP3_1_OR_GREATER || NET5_0_OR_GREATER
+                "    Preamble = \"{NotSupportedException: Specified method is not supported.}\",\r\n" +
+#endif
+                "    BodyName = \"us-ascii\",\r\n" +
+                "    EncodingName = \"US-ASCII\",\r\n" +
+                "    HeaderName = \"us-ascii\",\r\n" +
+                "    WebName = \"us-ascii\",\r\n" +
+                "    WindowsCodePage = 1252,\r\n" +
+                "    IsBrowserDisplay = false,\r\n" +
+                "    IsBrowserSave = false,\r\n" +
+                "    IsMailNewsDisplay = true,\r\n" +
+                "    IsMailNewsSave = true,\r\n" +
+                "    EncoderFallback = new EncoderReplacementFallback\r\n" +
+                "    {\r\n" +
+                "      DefaultString = \"?\",\r\n" +
+                "      MaxCharCount = 1\r\n" +
+                "    },\r\n" +
+                "    DecoderFallback = new DecoderReplacementFallback\r\n" +
+                "    {\r\n" +
+                "      DefaultString = \"?\",\r\n" +
+                "      MaxCharCount = 1\r\n" +
+                "    },\r\n" +
+                "    IsReadOnly = true,\r\n" +
+                "    CodePage = 20127\r\n" +
+                "  },\r\n" +
+                "  BodyTransferEncoding = TransferEncoding.Unknown,\r\n" +
+                "  IsBodyHtml = false,\r\n" +
+                "  Attachments = new AttachmentCollection\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  AlternateViews = new AlternateViewCollection\r\n" +
+                "  {\r\n" +
+                "  }\r\n" +
+                "};");
+        }
     }
 }

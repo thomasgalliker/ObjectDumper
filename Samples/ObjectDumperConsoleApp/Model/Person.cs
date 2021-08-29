@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ObjectDumperSample.Netfx
+namespace ObjectDumperConsoleApp.Model
 {
     public class Person
     {
