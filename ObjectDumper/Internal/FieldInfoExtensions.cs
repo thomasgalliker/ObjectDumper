@@ -14,7 +14,7 @@ namespace ObjectDumping.Internal
             }
             catch (Exception ex)
             {
-                value = $"{{{ex.Message}}}";
+                value = $"{{{ex.GetType().Name}: {ex.Message}}}";
             }
 
             return value;

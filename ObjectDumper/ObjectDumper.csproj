@@ -19,6 +19,7 @@
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.2' ">$(PackageTargetFallback);netcoreapp1.0</PackageTargetFallback>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.2' ">1.6.1</NetStandardImplicitPackageVersion>
     <SignAssembly>True</SignAssembly>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,7 +30,13 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>3.1.0
+    <PackageReleaseNotes>3.3.0
+- Bug fix for generic default value creation
+
+3.2.0
+- New versioning schema
+
+3.1.0
 - Add support for dumping anonymous types
 - Add support for .NET 5
 - Detect circular references for hash combinations h(value, type)

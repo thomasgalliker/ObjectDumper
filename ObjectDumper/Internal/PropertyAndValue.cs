@@ -7,7 +7,7 @@ namespace ObjectDumping.Internal
         public PropertyAndValue(object source, PropertyInfo propertyInfo)
         {
             this.Value = propertyInfo.TryGetValue(source);
-            this.DefaultValue = propertyInfo.PropertyType.GetDefault();
+            this.DefaultValue = propertyInfo.PropertyType.TryGetDefault();
             this.Property = propertyInfo;
         }
 

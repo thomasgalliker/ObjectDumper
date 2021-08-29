@@ -126,8 +126,25 @@ namespace ObjectDumping.Internal
 
         public static object GetDefault(this Type t)
         {
+            //var defaultValue = FastDefault.Get(t);
             var defaultValue = typeof(TypeExtensions).GetRuntimeMethod("GetDefaultGeneric", new Type[] { }).MakeGenericMethod(t).Invoke(null, null);
             return defaultValue;
+        }
+        
+        public static object TryGetDefault(this Type t)
+        {
+            object value;
+
+            try
+            {
+                value = t.GetDefault();
+            }
+            catch (Exception ex)
+            {
+                value = $"{{{ex.GetType().Name}: {ex.Message}}}";
+            }
+
+            return value;
         }
 
         public static T GetDefaultGeneric<T>()
