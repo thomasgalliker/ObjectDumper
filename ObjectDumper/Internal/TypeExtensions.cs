@@ -50,7 +50,7 @@ namespace ObjectDumping.Internal
                 return $"{typeName}{arrayBrackets}";
             }
 
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
             if (useValueTupleFormatting && type.IsValueTuple())
             {
                 return typeName.RemoveGenericBackTick();
@@ -94,7 +94,7 @@ namespace ObjectDumping.Internal
                 return keyword;
             }
             else
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
             if (useValueTupleFormatting && type.IsValueTuple())
             {
                 typeName = $"({string.Join(", ", type.GenericTypeArguments.Select(t => GetTypeName(t, useFullName, useValueTupleFormatting)))})";
@@ -158,7 +158,7 @@ namespace ObjectDumping.Internal
             return false;
         }
 
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
         public static bool IsValueTuple(this Type type)
         {
             return

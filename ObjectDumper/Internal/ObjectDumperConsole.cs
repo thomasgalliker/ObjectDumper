@@ -485,7 +485,7 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
             if (type.IsValueTuple())
             {
                 WriteValueTuple(o, type);
@@ -508,7 +508,7 @@ namespace ObjectDumping.Internal
             this.CreateObject(o, intentLevel);
         }
 
-#if NETSTANDARD_2
+#if NETSTANDARD2_0_OR_GREATER
         protected void WriteValueTuple(object o, Type type)
         {
             var fields = type.GetFields().ToList();

@@ -21,14 +21,6 @@
     <SignAssembly>True</SignAssembly>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);NET45</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD_2</DefineConstants>
-  </PropertyGroup>
-
   <PropertyGroup>
     <ApplicationIcon />
     <OutputType>Library</OutputType>
