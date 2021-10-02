@@ -488,7 +488,7 @@ namespace ObjectDumping.Internal
 #if NETSTANDARD2_0_OR_GREATER
             if (type.IsValueTuple())
             {
-                WriteValueTuple(o, type);
+                this.WriteValueTuple(o, type);
                 return;
             }
 #endif
@@ -500,7 +500,7 @@ namespace ObjectDumping.Internal
                     this.Write($"...", intentLevel);
                     this.Level++;
                 }
-                
+
                 this.WriteItems(enumerable);
                 return;
             }

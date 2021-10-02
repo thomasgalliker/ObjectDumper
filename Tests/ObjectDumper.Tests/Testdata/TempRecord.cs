@@ -10,8 +10,8 @@
         // Indexer declaration: ObjectDumper can only handle index properties of type int[].
         public float this[int index]
         {
-            get => temps[index];
-            set => temps[index] = value;
+            get => this.temps[index];
+            set => this.temps[index] = value;
         }
 
         public string ZProp { get; set; }

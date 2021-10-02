@@ -21,9 +21,13 @@ namespace ObjectDumping.Internal
             foreach (var hashCode in hashCodes)
             {
                 if (i % 2 == 0)
+                {
                     hash1 = ((hash1 << 5) + hash1 + (hash1 >> 27)) ^ hashCode;
+                }
                 else
+                {
                     hash2 = ((hash2 << 5) + hash2 + (hash2 >> 27)) ^ hashCode;
+                }
 
                 ++i;
             }
