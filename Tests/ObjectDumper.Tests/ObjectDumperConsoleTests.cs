@@ -590,7 +590,7 @@ namespace ObjectDumping.Tests
                 "    Property: 1\r\n" +
                 "  Property: 1");
         }
-        
+
         [Fact]
         public void ShouldDumpRecursiveTypes_CircularReference_Case3()
         {
