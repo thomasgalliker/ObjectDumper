@@ -509,7 +509,7 @@ namespace ObjectDumping.Internal
 #if NETSTANDARD2_0_OR_GREATER
             if (type.IsValueTuple())
             {
-                WriteValueTuple(o, type);
+                this.WriteValueTuple(o, type);
                 return;
             }
 #endif

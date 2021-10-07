@@ -130,7 +130,7 @@ namespace ObjectDumping.Internal
             var defaultValue = typeof(TypeExtensions).GetRuntimeMethod("GetDefaultGeneric", new Type[] { }).MakeGenericMethod(t).Invoke(null, null);
             return defaultValue;
         }
-        
+
         public static object TryGetDefault(this Type t)
         {
             object value;
@@ -149,7 +149,7 @@ namespace ObjectDumping.Internal
 
         public static T GetDefaultGeneric<T>()
         {
-            return default(T);
+            return default;
         }
 
         public static bool IsAnonymous(this Type type)

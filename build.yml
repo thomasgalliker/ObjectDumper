@@ -87,13 +87,21 @@ steps:
     msbuildArgs: ''
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    
+
 - task: DotNetCoreCLI@2
   displayName: 'Run UnitTests'
   inputs:
     command: test
     projects: '**/*.Tests.csproj'
-    arguments: '--no-restore --no-build --configuration $(buildConfiguration)'
+    arguments: '--no-restore --no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:Exclude="[Microsoft*]*%2C[Mono*]*%2C[xunit*]*%2C[*.Testdata]*" /p:CoverletOutput=UnitTests.coverage.cobertura.xml /p:MergeWith=$(Build.SourcesDirectory)/Tests/CoverletOutput/coverage.json /p:CoverletOutputFormat=cobertura'
+    
+- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+  displayName: 'Create Code Coverage Report'
+  inputs:
+    reports: '$(Build.SourcesDirectory)/Tests/**/*.coverage.cobertura*.xml'
+    targetdir: '$(Build.SourcesDirectory)/CodeCoverage'
+    reporttypes: 'Cobertura'
+    assemblyfilters: '-xunit*'
     
 - task: DotNetCoreCLI@2
   displayName: 'Pack ObjectDumper'
@@ -102,7 +110,7 @@ steps:
     packagesToPack: ObjectDumper/ObjectDumper.csproj
     versioningScheme: byEnvVar
     versionEnvVar: semVersion
-
+    
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
   inputs:
@@ -113,6 +121,13 @@ steps:
      **\bin\*.nupkg
 
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+     
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
