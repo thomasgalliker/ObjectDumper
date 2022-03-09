@@ -42,6 +42,8 @@ public class DumpOptions
 
     public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
 
+    public Func<string, string> MemberRenamer { get; set; }
+
     /// <summary>
     /// Ignores default values if set to <c>true</c>.
     /// Default: <c>false</c>

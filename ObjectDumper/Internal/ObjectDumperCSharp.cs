@@ -16,6 +16,11 @@ namespace ObjectDumping.Internal
         {
         }
 
+        private string ResolvePropertyName(string name)
+        {
+            return this.DumpOptions.MemberRenamer != null ? this.DumpOptions.MemberRenamer.Invoke(name) : name;
+        }
+
         public static string Dump(object element, DumpOptions dumpOptions = null)
         {
             if (dumpOptions == null)
@@ -103,7 +108,7 @@ namespace ObjectDumping.Internal
 
                 if (this.AlreadyTouched(value))
                 {
-                    this.Write($"{propertiesAndValue.Property.Name} = ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)} = ");
                     this.FormatValue(propertiesAndValue.DefaultValue);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
@@ -132,7 +137,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{propertiesAndValue.Property.Name} = ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)} = ");
                     this.FormatValue(value);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {

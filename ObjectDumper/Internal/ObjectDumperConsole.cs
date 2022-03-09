@@ -27,6 +27,11 @@ namespace ObjectDumping.Internal
             return instance.ToString();
         }
 
+        private string ResolvePropertyName(string name)
+        {
+            return this.DumpOptions.MemberRenamer != null ? this.DumpOptions.MemberRenamer.Invoke(name) : name;
+        }
+
         private void CreateObject(object o, int intentLevel = 0)
         {
             this.AddAlreadyTouched(o);
@@ -81,7 +86,7 @@ namespace ObjectDumping.Internal
 
                 if (this.AlreadyTouched(value))
                 {
-                    this.Write($"{propertiesAndValue.Property.Name}: ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)}: ");
                     this.FormatValue(propertiesAndValue.DefaultValue);
                     this.Write(" --> Circular reference detected");
                     if (!Equals(propertiesAndValue, lastProperty))
@@ -109,7 +114,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{propertiesAndValue.Property.Name}: ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)}: ");
                     this.FormatValue(value);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
