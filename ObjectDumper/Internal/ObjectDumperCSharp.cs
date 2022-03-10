@@ -16,11 +16,6 @@ namespace ObjectDumping.Internal
         {
         }
 
-        private string ResolvePropertyName(string name)
-        {
-            return this.DumpOptions.MemberRenamer != null ? this.DumpOptions.MemberRenamer.Invoke(name) : name;
-        }
-
         public static string Dump(object element, DumpOptions dumpOptions = null)
         {
             if (dumpOptions == null)
@@ -587,6 +582,11 @@ namespace ObjectDumping.Internal
             }
 
             this.Level--;
+        }
+
+        private string ResolvePropertyName(string name)
+        {
+            return this.DumpOptions.MemberRenamer != null ? this.DumpOptions.MemberRenamer.Invoke(name) : name;
         }
 
         private string GetVariableName(object element)
