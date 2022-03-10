@@ -584,9 +584,9 @@ namespace ObjectDumping.Internal
             this.Level--;
         }
 
-        private string ResolvePropertyName(string name)
+        private string ResolvePropertyName(string propertyName)
         {
-            return this.DumpOptions.MemberRenamer != null ? this.DumpOptions.MemberRenamer.Invoke(name) : name;
+            return this.DumpOptions.MemberRenamer?.Invoke(propertyName) ?? propertyName;
         }
 
         private string GetVariableName(object element)
