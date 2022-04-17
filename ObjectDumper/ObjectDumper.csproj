@@ -101,10 +101,18 @@
 1.0.0
 - Initial release</PackageReleaseNotes>
     <Copyright>Copyright 2021</Copyright>
+    <PackageReadmeFile>nuget_readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Docs\nuget_readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
