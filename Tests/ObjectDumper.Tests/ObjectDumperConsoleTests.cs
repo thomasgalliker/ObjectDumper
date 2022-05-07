@@ -162,9 +162,11 @@ namespace ObjectDumping.Tests
 
             var options = new DumpOptions
             {
-                IndentChar = '\t',
                 IndentSize = 1,
-                SetPropertiesOnly = true
+                IndentChar = '\t',
+                LineBreakChar = "\n",
+                SetPropertiesOnly = true,
+                MemberRenamer = m => m == "Name" ? "RenamedName" : m,
             };
 
             // Act
@@ -173,25 +175,25 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{Person}\r\n" +
-                "	Name: \"Person 1\"\r\n" +
-                "	Char: ''\r\n" +
-                "	Age: 2\r\n" +
-                "	Bool: false\r\n" +
-                "	Byte: 0\r\n	ByteArray: ...\r\n" +
-                "		1\r\n" +
-                "		2\r\n" +
-                "		3\r\n" +
-                "		4\r\n" +
-                "	SByte: 0\r\n" +
-                "	Float: 0\r\n" +
-                "	Uint: 0\r\n" +
-                "	Long: 0\r\n	ULong: 0\r\n" +
-                "	Short: 0\r\n" +
-                "	UShort: 0\r\n" +
-                "	Decimal: 0\r\n" +
-                "	Double: 0\r\n	DateTime: DateTime.MinValue\r\n" +
-                "	NullableDateTime: null\r\n" +
+            dump.Should().Be("{Person}\n" +
+                "	RenamedName: \"Person 1\"\n" +
+                "	Char: ''\n" +
+                "	Age: 2\n" +
+                "	Bool: false\n" +
+                "	Byte: 0\n	ByteArray: ...\n" +
+                "		1\n" +
+                "		2\n" +
+                "		3\n" +
+                "		4\n" +
+                "	SByte: 0\n" +
+                "	Float: 0\n" +
+                "	Uint: 0\n" +
+                "	Long: 0\n	ULong: 0\n" +
+                "	Short: 0\n" +
+                "	UShort: 0\n" +
+                "	Decimal: 0\n" +
+                "	Double: 0\n	DateTime: DateTime.MinValue\n" +
+                "	NullableDateTime: null\n" +
                 "	Enum: DateTimeKind.Unspecified");
         }
 
