@@ -1,7 +1,7 @@
 ####################################################################
 # VSTS Build Configuration, Version 1.4
 #
-# (c)2021 superdev GmbH
+# (c)2022 superdev GmbH
 ####################################################################
 
 name: $[format('{0}', variables['buildName'])]

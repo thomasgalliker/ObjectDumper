@@ -120,6 +120,16 @@ namespace ObjectDumping.Internal
             return false;
         }
 
+        protected string ResolvePropertyName(string name)
+        {
+            if (this.DumpOptions.MemberRenamer is Func<string, string> memberRenamer)
+            {
+                return memberRenamer.Invoke(name);
+            }
+
+            return name;
+        }
+
         private static int GenerateHashCode(object value)
         {
             return HashCode.Combine(value, value.GetType());

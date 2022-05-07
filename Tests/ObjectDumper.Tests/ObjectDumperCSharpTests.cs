@@ -133,7 +133,8 @@ namespace ObjectDumping.Tests
                 IndentSize = 1,
                 IndentChar = '\t',
                 LineBreakChar = "\n",
-                SetPropertiesOnly = true
+                SetPropertiesOnly = true,
+                MemberRenamer = m => m == "Name" ? "RenamedName" : m,
             };
 
             // Act
@@ -142,7 +143,32 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0u,\n	Long = 0L,\n	ULong = 0UL,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = DateTimeKind.Unspecified\n};");
+            dump.Should().Be("var person = new Person\n" +
+                "{\n" +
+                "	RenamedName = \"Thomas\",\n" +
+                "	Char = '',\n" +
+                "	Age = 30,\n" +
+                "	Bool = false,\n" +
+                "	Byte = 0,\n" +
+                "	ByteArray = new byte[]\n" +
+                "	{\n" +
+                "		1,\n" +
+                "		2,\n" +
+                "		3,\n		4\n" +
+                "	},\n" +
+                "	SByte = 0,\n" +
+                "	Float = 0f,\n" +
+                "	Uint = 0u,\n" +
+                "	Long = 0L,\n" +
+                "	ULong = 0UL,\n" +
+                "	Short = 0,\n" +
+                "	UShort = 0,\n" +
+                "	Decimal = 0m,\n" +
+                "	Double = 0d,\n" +
+                "	DateTime = DateTime.MinValue,\n" +
+                "	NullableDateTime = null,\n" +
+                "	Enum = DateTimeKind.Unspecified\n" +
+                "};");
         }
 
         [Fact]

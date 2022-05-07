@@ -81,7 +81,7 @@ namespace ObjectDumping.Internal
 
                 if (this.AlreadyTouched(value))
                 {
-                    this.Write($"{propertiesAndValue.Property.Name}: ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)}: ");
                     this.FormatValue(propertiesAndValue.DefaultValue);
                     this.Write(" --> Circular reference detected");
                     if (!Equals(propertiesAndValue, lastProperty))
@@ -109,7 +109,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{propertiesAndValue.Property.Name}: ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)}: ");
                     this.FormatValue(value);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
