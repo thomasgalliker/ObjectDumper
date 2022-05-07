@@ -42,6 +42,9 @@ public class DumpOptions
 
     public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
 
+    /// <summary>
+    /// Allows to rename properties and fields before they are dumped.
+    /// </summary>
     public Func<string, string> MemberRenamer { get; set; }
 
     /// <summary>
