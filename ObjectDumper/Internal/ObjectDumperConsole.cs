@@ -27,11 +27,6 @@ namespace ObjectDumping.Internal
             return instance.ToString();
         }
 
-        private string ResolvePropertyName(string name)
-        {
-            return this.DumpOptions.MemberRenamer != null ? this.DumpOptions.MemberRenamer.Invoke(name) : name;
-        }
-
         private void CreateObject(object o, int intentLevel = 0)
         {
             this.AddAlreadyTouched(o);
