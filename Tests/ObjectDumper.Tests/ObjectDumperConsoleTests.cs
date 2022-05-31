@@ -921,6 +921,53 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpAnonymousObject_List()
+        {
+            // Arrange 
+            var list = new List<dynamic>
+            {
+                new { Prop = new { SomeInnerProp = "test_test_test" } },
+                new { Prop = new { SomeInnerProp = "test_test_test" } }
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"\r\n" +
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject_Enumerable()
+        {
+            // Arrange 
+            var obj = new { Prop = new { SomeInnerProp = "test_test_test" } };
+            var list = Enumerable.Range(0, 2).Select(_ => obj).ToList();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"\r\n" +
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"");
+        }
+
+        [Fact]
         public void ShouldDumpExpandoObject()
         {
             // Arrange
