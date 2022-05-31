@@ -35,7 +35,7 @@ namespace ObjectDumping.Tests.Internal
             public ValidTypeToKeywordMappings()
             {
                 this.Add(typeof(string), "string");
-                this.Add(typeof(String), "string");
+                this.Add(typeof(string), "string");
             }
         }
 
@@ -130,10 +130,24 @@ namespace ObjectDumping.Tests.Internal
         }
 
         [Fact]
+        public void ShouldGetFormattedName_AnonymousType()
+        {
+            // Arrange
+            var type = new { Prop = "A" }.GetType();
+
+            // Act
+            var dump = type.GetFormattedName(false);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().Be("dynamic");
+        }
+
+        [Fact]
         public void ShouldGetFormattedName_Complex()
         {
             // Arrange
-            var type = typeof(Dictionary<String[,], List<Nullable<Int32>[,][]>[,,]>[]);
+            var type = typeof(Dictionary<string[,], List<Nullable<Int32>[,][]>[,,]>[]);
 
             // Act
             var dump = type.GetFormattedName(useFullName: false, useValueTupleFormatting: false);
