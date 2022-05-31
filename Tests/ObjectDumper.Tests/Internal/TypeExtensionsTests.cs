@@ -171,5 +171,31 @@ namespace ObjectDumping.Tests.Internal
             // Assert
             dump.Should().Be(expectedDefaultValue);
         }
+
+        [Fact]
+        public void ShouldReturnIsAnonymous_TrueIfAnonymousType()
+        {
+            // Arrange
+            var type = new { Prop = "A" }.GetType();
+
+            // Act
+            var isAnonymous = type.IsAnonymous();
+
+            // Assert
+            isAnonymous.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldReturnIsAnonymous_FalseIfNotAnonymousType()
+        {
+            // Arrange
+            var type = new Person().GetType();
+
+            // Act
+            var isAnonymous = type.IsAnonymous();
+
+            // Assert
+            isAnonymous.Should().BeFalse();
+        }
     }
 }
