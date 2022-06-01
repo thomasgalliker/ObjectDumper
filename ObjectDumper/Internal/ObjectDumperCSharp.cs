@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -35,12 +36,13 @@ namespace ObjectDumping.Internal
                 instance.Write(";");
             }
 
+            instance.referenceResolver.EnsureEmpty();
             return instance.ToString();
         }
 
         private void CreateObject(object o, int intentLevel = 0)
         {
-            this.AddAlreadyTouched(o);
+            this.PushReferenceForCycleDetection(o);
 
             var type = o.GetType();
 
@@ -51,12 +53,14 @@ namespace ObjectDumping.Internal
             this.Write("{");
             this.LineBreak();
             this.Level++;
-            this.DumpProperties(o);
+            this.DumpProperties(o, intentLevel);
             this.Level--;
             this.Write("}");
+
+            this.PopReferenceForCycleDetection(o);
         }
 
-        private void DumpProperties(object o)
+        private void DumpProperties(object o, int intentLevel)
         {
             var properties = o.GetType().GetRuntimeProperties()
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
@@ -101,7 +105,7 @@ namespace ObjectDumping.Internal
             {
                 var value = propertiesAndValue.Value;
 
-                if (this.AlreadyTouched(value))
+                if (this.CheckForCircularReference(value))
                 {
                     this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)} = ");
                     this.FormatValue(propertiesAndValue.DefaultValue);

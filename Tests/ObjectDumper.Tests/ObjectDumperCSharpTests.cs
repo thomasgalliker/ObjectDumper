@@ -1333,10 +1333,11 @@ namespace ObjectDumping.Tests
             // Arrange 
             var example1 = new Example { Name = "Name1" };
             var example2 = new Example { Name = "Name2", Reference = example1 };
-            
+
             // TODO: New test case
             //example1.Reference = example2;
 
+            // TODO: New test case
             //var example3 = new Example { Name = "Name3", Reference = example2 };
 
             var array = new[] { example1, example2, /*example3*/ };

@@ -341,7 +341,11 @@ namespace ObjectDumping.Tests
              "      HasDefaultValue: true\r\n" +
              "      Member: null --> Circular reference detected\r\n" +
              "      Position: -1\r\n" +
-             "    ReturnParameter: null --> Circular reference detected\r\n" +
+             "    ReturnParameter: {RuntimeParameterInfo}\r\n" +
+             "      ParameterType: void\r\n" +
+             "      HasDefaultValue: true\r\n" +
+             "      Member: null --> Circular reference detected\r\n" +
+             "      Position: -1\r\n" +
              "    IsHideBySig: true\r\n" +
              "    IsPublic: true\r\n" +
              "  Message: \"message text\"\r\n" +
@@ -965,6 +969,32 @@ namespace ObjectDumping.Tests
                 "{AnonymousObject}\r\n" +
                 "  Prop: {AnonymousObject}\r\n" +
                 "    SomeInnerProp: \"test_test_test\"");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_CorrectCircularReferenceDetection()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            var array = new[] { example1, example2 };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().NotContain("// Circular reference detected");
+            dump.Should().Be(
+                "{Example}\r\n" +
+                "  Name: \"Name1\"\r\n" +
+                "  Reference: null\r\n" +
+                "{Example}\r\n" +
+                "  Name: \"Name2\"\r\n" +
+                "  Reference: {Example}\r\n" +
+                "    Name: \"Name1\"\r\n" +
+                "    Reference: null");
         }
 
         [Fact]
