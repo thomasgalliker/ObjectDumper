@@ -330,7 +330,13 @@ namespace ObjectDumping.Tests
                "      Member = null, // Circular reference detected\r\n" +
                "      Position = -1\r\n" +
                "    },\r\n" +
-               "    ReturnParameter = null, // Circular reference detected\r\n" +
+               "    ReturnParameter = new RuntimeParameterInfo\r\n" +
+               "    {\r\n" +
+               "      ParameterType = typeof(void),\r\n" +
+               "      HasDefaultValue = true,\r\n" +
+               "      Member = null, // Circular reference detected\r\n" +
+               "      Position = -1\r\n" +
+               "    },\r\n" +
                "    IsHideBySig = true,\r\n" +
                "    IsPublic = true\r\n" +
                "  },\r\n" +
@@ -1316,6 +1322,48 @@ namespace ObjectDumping.Tests
                 "    Prop = new\r\n" +
                 "    {\r\n" +
                 "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_CorrectCircularReferenceDetection()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            
+            // TODO: New test case
+            //example1.Reference = example2;
+
+            //var example3 = new Example { Name = "Name3", Reference = example2 };
+
+            var array = new[] { example1, example2, /*example3*/ };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().NotContain("// Circular reference detected");
+
+            dump.Should().Be(
+                "var exampleArray = new Example[]\r\n" +
+                "{\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name1\",\r\n" +
+                "    Reference = null\r\n" +
+                "  },\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name2\",\r\n" +
+                "    Reference = new Example\r\n" +
+                "    {\r\n" +
+                "      Name = \"Name1\",\r\n" +
+                "      Reference = null\r\n" +
                 "    }\r\n" +
                 "  }\r\n" +
                 "};");
