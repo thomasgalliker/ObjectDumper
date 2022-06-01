@@ -97,6 +97,17 @@ namespace ObjectDumping.Internal
 
         protected void AddAlreadyTouched(object value)
         {
+            if (value.GetType().IsAnonymous())
+            {
+                // Because the Equals and GetHashCode methods on anonymous types
+                // are defined in terms of the Equals and GetHashCode methods
+                // of the properties, two instances of the same anonymous type are equal
+                // only if all their properties are equal.
+                //
+                // Source: https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/types/anonymous-types
+                return;
+            }
+
             var hashCode = GenerateHashCode(value);
             this.hashListOfFoundElements.Add(hashCode);
         }

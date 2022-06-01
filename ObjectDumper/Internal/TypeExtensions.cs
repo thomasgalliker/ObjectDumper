@@ -45,6 +45,12 @@ namespace ObjectDumping.Internal
             var typeName = GetTypeName(type, useFullName, useValueTupleFormatting);
 
             var typeInfo = type.GetTypeInfo();
+
+            if (typeInfo.IsAnonymous())
+            {
+                return "dynamic";
+            }
+
             if (!typeInfo.IsGenericType)
             {
                 return $"{typeName}{arrayBrackets}";

@@ -46,7 +46,7 @@ namespace ObjectDumping.Internal
 
             var typeName = type.IsAnonymous() ? "" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
 
-            this.Write($"new {typeName}", intentLevel);
+            this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}", intentLevel);
             this.LineBreak();
             this.Write("{");
             this.LineBreak();
@@ -517,7 +517,7 @@ namespace ObjectDumping.Internal
             if (o is IEnumerable enumerable)
             {
                 var typeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
-                this.Write($"new {typeName}", intentLevel);
+                this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}", intentLevel);
                 this.LineBreak();
                 this.Write("{");
                 this.LineBreak();

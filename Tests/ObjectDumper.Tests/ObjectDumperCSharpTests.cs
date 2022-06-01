@@ -1244,11 +1244,80 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be(
-                "var x = new \r\n" +
+                "var x = new\r\n" +
                 "{\r\n" +
                 "  IntProperty = 10,\r\n" +
                 "  StringProperty = \"hello\",\r\n" +
                 "  DoubleProperty = 3.14d\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_List()
+        {
+            // Arrange 
+            var list = new List<dynamic>
+            {
+                new { Prop = new { SomeInnerProp = "test_test_test" } },
+                new { Prop = new { SomeInnerProp = "test_test_test" } }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var listOfobjects = new List<object>\r\n" +
+                "{\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject_Enumerable()
+        {
+            // Arrange 
+            var obj = new { Prop = new { SomeInnerProp = "test_test_test" } };
+            var list = Enumerable.Range(0, 2).Select(_ => obj).ToList();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var listOfdynamics = new List<dynamic>\r\n" +
+                "{\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
                 "};");
         }
 
