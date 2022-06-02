@@ -597,6 +597,90 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case4()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+
+            // TODO: New test case
+            //example1.Reference = example2;
+
+            // TODO: New test case
+            //var example3 = new Example { Name = "Name3", Reference = example2 };
+
+            var array = new[] { example1, example2, /*example3*/ };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().NotContain("// Circular reference detected");
+
+            dump.Should().Be(
+                "var exampleArray = new Example[]\r\n" +
+                "{\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name1\",\r\n" +
+                "    Reference = null\r\n" +
+                "  },\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name2\",\r\n" +
+                "    Reference = new Example\r\n" +
+                "    {\r\n" +
+                "      Name = \"Name1\",\r\n" +
+                "      Reference = null\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case5()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            example1.Reference = example2; // This assignment causes a circular reference
+
+            var array = new[] { example1, example2 };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Contain("// Circular reference detected");
+            dump.Should().Be(
+                "var exampleArray = new Example[]\r\n" +
+                "{\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name1\",\r\n" +
+                "    Reference = new Example\r\n" +
+                "    {\r\n" +
+                "      Name = \"Name2\",\r\n" +
+                "      Reference = null // Circular reference detected\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name2\",\r\n" +
+                "    Reference = new Example\r\n" +
+                "    {\r\n" +
+                "      Name = \"Name1\",\r\n" +
+                "      Reference = null // Circular reference detected\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
+        [Fact]
         public void ShouldExcludeProperties()
         {
             // Arrange
@@ -1322,49 +1406,6 @@ namespace ObjectDumping.Tests
                 "    Prop = new\r\n" +
                 "    {\r\n" +
                 "      SomeInnerProp = \"test_test_test\"\r\n" +
-                "    }\r\n" +
-                "  }\r\n" +
-                "};");
-        }
-
-        [Fact]
-        public void ShouldDumpEnumerable_CorrectCircularReferenceDetection()
-        {
-            // Arrange 
-            var example1 = new Example { Name = "Name1" };
-            var example2 = new Example { Name = "Name2", Reference = example1 };
-
-            // TODO: New test case
-            //example1.Reference = example2;
-
-            // TODO: New test case
-            //var example3 = new Example { Name = "Name3", Reference = example2 };
-
-            var array = new[] { example1, example2, /*example3*/ };
-
-            // Act
-            var dump = ObjectDumperCSharp.Dump(array);
-
-            // Assert
-            this.testOutputHelper.WriteLine(dump);
-            dump.Should().NotBeNull();
-            dump.Should().NotContain("// Circular reference detected");
-
-            dump.Should().Be(
-                "var exampleArray = new Example[]\r\n" +
-                "{\r\n" +
-                "  new Example\r\n" +
-                "  {\r\n" +
-                "    Name = \"Name1\",\r\n" +
-                "    Reference = null\r\n" +
-                "  },\r\n" +
-                "  new Example\r\n" +
-                "  {\r\n" +
-                "    Name = \"Name2\",\r\n" +
-                "    Reference = new Example\r\n" +
-                "    {\r\n" +
-                "      Name = \"Name1\",\r\n" +
-                "      Reference = null\r\n" +
                 "    }\r\n" +
                 "  }\r\n" +
                 "};");

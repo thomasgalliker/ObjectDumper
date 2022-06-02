@@ -630,6 +630,62 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case4()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            var array = new[] { example1, example2 };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().NotContain("// Circular reference detected");
+            dump.Should().Be(
+                "{Example}\r\n" +
+                "  Name: \"Name1\"\r\n" +
+                "  Reference: null\r\n" +
+                "{Example}\r\n" +
+                "  Name: \"Name2\"\r\n" +
+                "  Reference: {Example}\r\n" +
+                "    Name: \"Name1\"\r\n" +
+                "    Reference: null");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case5()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            example1.Reference = example2; // This assignment causes a circular reference
+
+            var array = new[] { example1, example2 };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Contain("--> Circular reference detected");
+            dump.Should().Be(
+                "{Example}\r\n" +
+                "  Name: \"Name1\"\r\n" +
+                "  Reference: {Example}\r\n" +
+                "    Name: \"Name2\"\r\n" +
+                "    Reference: null --> Circular reference detected\r\n" +
+                "{Example}\r\n" +
+                "  Name: \"Name2\"\r\n" +
+                "  Reference: {Example}\r\n" +
+                "    Name: \"Name1\"\r\n" +
+                "    Reference: null --> Circular reference detected");
+        }
+
+        [Fact]
         public void ShouldDumpRecursiveTypes_RuntimeProperties()
         {
             // Arrange
@@ -969,32 +1025,6 @@ namespace ObjectDumping.Tests
                 "{AnonymousObject}\r\n" +
                 "  Prop: {AnonymousObject}\r\n" +
                 "    SomeInnerProp: \"test_test_test\"");
-        }
-
-        [Fact]
-        public void ShouldDumpEnumerable_CorrectCircularReferenceDetection()
-        {
-            // Arrange 
-            var example1 = new Example { Name = "Name1" };
-            var example2 = new Example { Name = "Name2", Reference = example1 };
-            var array = new[] { example1, example2 };
-
-            // Act
-            var dump = ObjectDumperConsole.Dump(array);
-
-            // Assert
-            this.testOutputHelper.WriteLine(dump);
-            dump.Should().NotBeNull();
-            dump.Should().NotContain("// Circular reference detected");
-            dump.Should().Be(
-                "{Example}\r\n" +
-                "  Name: \"Name1\"\r\n" +
-                "  Reference: null\r\n" +
-                "{Example}\r\n" +
-                "  Name: \"Name2\"\r\n" +
-                "  Reference: {Example}\r\n" +
-                "    Name: \"Name1\"\r\n" +
-                "    Reference: null");
         }
 
         [Fact]
