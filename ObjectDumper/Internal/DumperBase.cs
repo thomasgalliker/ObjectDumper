@@ -5,7 +5,7 @@ namespace ObjectDumping.Internal
 {
     public abstract class DumperBase
     {
-        internal readonly IgnoreReferenceResolver referenceResolver;
+        private readonly CircularReferenceDetector circularReferenceDetector;
         private readonly StringBuilder stringBuilder;
         private bool isNewLine;
         private int level;
@@ -15,7 +15,7 @@ namespace ObjectDumping.Internal
             this.DumpOptions = dumpOptions;
             this.Level = 0;
             this.stringBuilder = new StringBuilder();
-            this.referenceResolver = new IgnoreReferenceResolver();
+            this.circularReferenceDetector = new CircularReferenceDetector();
             this.isNewLine = true;
         }
 
@@ -113,7 +113,7 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            this.referenceResolver.PushReferenceForCycleDetection(value);
+            this.circularReferenceDetector.PushReferenceForCycleDetection(value);
         }
 
         protected void PopReferenceForCycleDetection(object value)
@@ -129,7 +129,7 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            this.referenceResolver.PopReferenceForCycleDetection();
+            this.circularReferenceDetector.PopReferenceForCycleDetection();
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace ObjectDumping.Internal
             //    return false;
             //}
 
-            var contains = this.referenceResolver.ContainsReferenceForCycleDetection(value);
+            var contains = this.circularReferenceDetector.ContainsReferenceForCycleDetection(value);
             if (contains)
             {
                 return true;
@@ -167,17 +167,14 @@ namespace ObjectDumping.Internal
             return name;
         }
 
-        private static int GenerateHashCode(object value)
-        {
-            return HashCode.Combine(value, value.GetType());
-        }
-
         /// <summary>
         /// Converts the value of this instance to a <see cref="string"/>
         /// </summary>
         /// <returns>string</returns>
         public override string ToString()
         {
+            this.circularReferenceDetector.EnsureEmpty();
+
             return this.stringBuilder.ToString();
         }
     }

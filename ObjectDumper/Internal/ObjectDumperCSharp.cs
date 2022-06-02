@@ -36,7 +36,6 @@ namespace ObjectDumping.Internal
                 instance.Write(";");
             }
 
-            instance.referenceResolver.EnsureEmpty();
             return instance.ToString();
         }
 

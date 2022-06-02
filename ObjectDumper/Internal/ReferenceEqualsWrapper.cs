@@ -5,26 +5,26 @@ namespace ObjectDumping.Internal
 {
     internal struct ReferenceEqualsWrapper : IEquatable<ReferenceEqualsWrapper>
     {
-        private readonly object @object;
+        private readonly object value;
 
-        public ReferenceEqualsWrapper(object obj)
+        public ReferenceEqualsWrapper(object value)
         {
-            this.@object = obj;
+            this.value = value;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object value)
         {
-            return obj is ReferenceEqualsWrapper otherObj && this.Equals(otherObj);
+            return value is ReferenceEqualsWrapper wrapper && this.Equals(wrapper);
         }
 
-        public bool Equals(ReferenceEqualsWrapper obj)
+        public bool Equals(ReferenceEqualsWrapper wrapper)
         {
-            return ReferenceEquals(this.@object, obj.@object);
+            return ReferenceEquals(this.value, wrapper.value);
         }
 
         public override int GetHashCode()
         {
-            return RuntimeHelpers.GetHashCode(this.@object);
+            return RuntimeHelpers.GetHashCode(this.value);
         }
     }
 }
