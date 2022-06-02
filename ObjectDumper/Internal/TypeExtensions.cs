@@ -163,6 +163,15 @@ namespace ObjectDumping.Internal
             return type.GetTypeInfo().IsAnonymous();
         }
 
+        public static bool IsPrimitive(this Type type)
+        {
+#if NETSTANDARD1_2
+            return type.GetTypeInfo().IsPrimitive;
+#else
+            return type.IsPrimitive;
+#endif
+        }
+
         public static bool IsAnonymous(this TypeInfo typeInfo)
         {
             if (typeInfo.IsGenericType)
