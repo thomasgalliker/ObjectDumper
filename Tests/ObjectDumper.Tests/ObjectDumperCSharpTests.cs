@@ -1259,7 +1259,7 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
-        public void ShouldDumpRecursiveTypes_List()
+        public void ShouldDumpAnonymousObject_List()
         {
             // Arrange 
             var list = new List<dynamic>
