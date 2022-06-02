@@ -197,5 +197,19 @@ namespace ObjectDumping.Tests.Internal
             // Assert
             isAnonymous.Should().BeFalse();
         }
+
+        [Theory]
+        [InlineData(typeof(int), true)]
+        [InlineData(typeof(double), true)]
+        [InlineData(typeof(string), false)]
+        [InlineData(typeof(Person), false)]
+        public void ShouldReturnIsPrimitive(Type type, bool expectedResult)
+        {
+            // Act
+            var isPrimitive = type.IsPrimitive();
+
+            // Assert
+            isPrimitive.Should().Be(expectedResult);
+        }
     }
 }
