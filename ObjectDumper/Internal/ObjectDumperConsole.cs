@@ -29,7 +29,7 @@ namespace ObjectDumping.Internal
 
         private void CreateObject(object o, int intentLevel = 0)
         {
-            this.AddAlreadyTouched(o);
+            this.PushReferenceForCycleDetection(o);
 
             var type = o.GetType();
             var typeName = type.IsAnonymous() ? "AnonymousObject" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
@@ -79,9 +79,9 @@ namespace ObjectDumping.Internal
             {
                 var value = propertiesAndValue.Value;
 
-                if (this.AlreadyTouched(value))
+                if (this.CheckForCircularReference(value))
                 {
-                    this.Write($"{propertiesAndValue.Property.Name}: ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)}: ");
                     this.FormatValue(propertiesAndValue.DefaultValue);
                     this.Write(" --> Circular reference detected");
                     if (!Equals(propertiesAndValue, lastProperty))
@@ -109,7 +109,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{propertiesAndValue.Property.Name}: ");
+                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)}: ");
                     this.FormatValue(value);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
@@ -119,6 +119,7 @@ namespace ObjectDumping.Internal
             }
 
             this.Level--;
+            this.PopReferenceForCycleDetection(o);
         }
 
         private void DumpIntegerArrayIndexer(object o, PropertyInfo property, ParameterInfo[] indexParameters)

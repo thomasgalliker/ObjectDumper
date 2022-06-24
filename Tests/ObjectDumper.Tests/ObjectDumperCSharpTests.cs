@@ -133,7 +133,8 @@ namespace ObjectDumping.Tests
                 IndentSize = 1,
                 IndentChar = '\t',
                 LineBreakChar = "\n",
-                SetPropertiesOnly = true
+                SetPropertiesOnly = true,
+                MemberRenamer = m => m == "Name" ? "RenamedName" : m,
             };
 
             // Act
@@ -142,7 +143,32 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\n{\n	Name = \"Thomas\",\n	Char = '',\n	Age = 30,\n	Bool = false,\n	Byte = 0,\n	ByteArray = new byte[]\n	{\n		1,\n		2,\n		3,\n		4\n	},\n	SByte = 0,\n	Float = 0f,\n	Uint = 0u,\n	Long = 0L,\n	ULong = 0UL,\n	Short = 0,\n	UShort = 0,\n	Decimal = 0m,\n	Double = 0d,\n	DateTime = DateTime.MinValue,\n	NullableDateTime = null,\n	Enum = DateTimeKind.Unspecified\n};");
+            dump.Should().Be("var person = new Person\n" +
+                "{\n" +
+                "	RenamedName = \"Thomas\",\n" +
+                "	Char = '',\n" +
+                "	Age = 30,\n" +
+                "	Bool = false,\n" +
+                "	Byte = 0,\n" +
+                "	ByteArray = new byte[]\n" +
+                "	{\n" +
+                "		1,\n" +
+                "		2,\n" +
+                "		3,\n		4\n" +
+                "	},\n" +
+                "	SByte = 0,\n" +
+                "	Float = 0f,\n" +
+                "	Uint = 0u,\n" +
+                "	Long = 0L,\n" +
+                "	ULong = 0UL,\n" +
+                "	Short = 0,\n" +
+                "	UShort = 0,\n" +
+                "	Decimal = 0m,\n" +
+                "	Double = 0d,\n" +
+                "	DateTime = DateTime.MinValue,\n" +
+                "	NullableDateTime = null,\n" +
+                "	Enum = DateTimeKind.Unspecified\n" +
+                "};");
         }
 
         [Fact]
@@ -304,7 +330,13 @@ namespace ObjectDumping.Tests
                "      Member = null, // Circular reference detected\r\n" +
                "      Position = -1\r\n" +
                "    },\r\n" +
-               "    ReturnParameter = null, // Circular reference detected\r\n" +
+               "    ReturnParameter = new RuntimeParameterInfo\r\n" +
+               "    {\r\n" +
+               "      ParameterType = typeof(void),\r\n" +
+               "      HasDefaultValue = true,\r\n" +
+               "      Member = null, // Circular reference detected\r\n" +
+               "      Position = -1\r\n" +
+               "    },\r\n" +
                "    IsHideBySig = true,\r\n" +
                "    IsPublic = true\r\n" +
                "  },\r\n" +
@@ -561,6 +593,90 @@ namespace ObjectDumping.Tests
                 "    Property = 1\r\n" +
                 "  },\r\n" +
                 "  Property = 1\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case4()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+
+            // TODO: New test case
+            //example1.Reference = example2;
+
+            // TODO: New test case
+            //var example3 = new Example { Name = "Name3", Reference = example2 };
+
+            var array = new[] { example1, example2, /*example3*/ };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().NotContain("// Circular reference detected");
+
+            dump.Should().Be(
+                "var exampleArray = new Example[]\r\n" +
+                "{\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name1\",\r\n" +
+                "    Reference = null\r\n" +
+                "  },\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name2\",\r\n" +
+                "    Reference = new Example\r\n" +
+                "    {\r\n" +
+                "      Name = \"Name1\",\r\n" +
+                "      Reference = null\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case5()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            example1.Reference = example2; // This assignment causes a circular reference
+
+            var array = new[] { example1, example2 };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Contain("// Circular reference detected");
+            dump.Should().Be(
+                "var exampleArray = new Example[]\r\n" +
+                "{\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name1\",\r\n" +
+                "    Reference = new Example\r\n" +
+                "    {\r\n" +
+                "      Name = \"Name2\",\r\n" +
+                "      Reference = null // Circular reference detected\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  new Example\r\n" +
+                "  {\r\n" +
+                "    Name = \"Name2\",\r\n" +
+                "    Reference = new Example\r\n" +
+                "    {\r\n" +
+                "      Name = \"Name1\",\r\n" +
+                "      Reference = null // Circular reference detected\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
                 "};");
         }
 
@@ -1218,11 +1334,80 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be(
-                "var x = new \r\n" +
+                "var x = new\r\n" +
                 "{\r\n" +
                 "  IntProperty = 10,\r\n" +
                 "  StringProperty = \"hello\",\r\n" +
                 "  DoubleProperty = 3.14d\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject_List()
+        {
+            // Arrange 
+            var list = new List<dynamic>
+            {
+                new { Prop = new { SomeInnerProp = "test_test_test" } },
+                new { Prop = new { SomeInnerProp = "test_test_test" } }
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var listOfobjects = new List<object>\r\n" +
+                "{\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject_Enumerable()
+        {
+            // Arrange 
+            var obj = new { Prop = new { SomeInnerProp = "test_test_test" } };
+            var list = Enumerable.Range(0, 2).Select(_ => obj).ToList();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var listOfdynamics = new List<dynamic>\r\n" +
+                "{\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  },\r\n" +
+                "  new\r\n" +
+                "  {\r\n" +
+                "    Prop = new\r\n" +
+                "    {\r\n" +
+                "      SomeInnerProp = \"test_test_test\"\r\n" +
+                "    }\r\n" +
+                "  }\r\n" +
                 "};");
         }
 

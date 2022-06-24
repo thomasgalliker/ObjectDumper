@@ -45,6 +45,12 @@ namespace ObjectDumping.Internal
             var typeName = GetTypeName(type, useFullName, useValueTupleFormatting);
 
             var typeInfo = type.GetTypeInfo();
+
+            if (typeInfo.IsAnonymous())
+            {
+                return "dynamic";
+            }
+
             if (!typeInfo.IsGenericType)
             {
                 return $"{typeName}{arrayBrackets}";
@@ -155,6 +161,15 @@ namespace ObjectDumping.Internal
         public static bool IsAnonymous(this Type type)
         {
             return type.GetTypeInfo().IsAnonymous();
+        }
+
+        public static bool IsPrimitive(this Type type)
+        {
+#if NETSTANDARD1_2
+            return type.GetTypeInfo().IsPrimitive;
+#else
+            return type.IsPrimitive;
+#endif
         }
 
         public static bool IsAnonymous(this TypeInfo typeInfo)

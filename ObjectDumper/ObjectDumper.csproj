@@ -30,8 +30,12 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>3.3.0
+    <PackageReleaseNotes>3.4.0
+- Improve circular reference detection
+
+3.3.0
 - Bug fix for generic default value creation
+- Bug fix for anonymous object dumping
 
 3.2.0
 - New versioning schema
@@ -72,7 +76,7 @@
 - Bug fixes
 
 1.0.8
-- Bugfix for .Net Standard: CSharp initializer code generation for KeyValuePairs is currently disabled in this release
+- Bugfix for .NET Standard: CSharp initializer code generation for KeyValuePairs is currently disabled in this release
 
 1.0.7
 - Change DateTime formatting to ISO 8601 standard
@@ -88,7 +92,7 @@
 - Bug fix: Use default dump options if not specified
 
 1.0.3
-- Add support for .Net Standard
+- Add support for .NET Standard
 - Add DumpOptions several serialization options, e.g. C#-like DumpStyle
 
 1.0.2
@@ -100,7 +104,7 @@
       
 1.0.0
 - Initial release</PackageReleaseNotes>
-    <Copyright>Copyright 2021</Copyright>
+    <Copyright>Copyright 2022</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

@@ -162,9 +162,11 @@ namespace ObjectDumping.Tests
 
             var options = new DumpOptions
             {
-                IndentChar = '\t',
                 IndentSize = 1,
-                SetPropertiesOnly = true
+                IndentChar = '\t',
+                LineBreakChar = "\n",
+                SetPropertiesOnly = true,
+                MemberRenamer = m => m == "Name" ? "RenamedName" : m,
             };
 
             // Act
@@ -173,25 +175,25 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{Person}\r\n" +
-                "	Name: \"Person 1\"\r\n" +
-                "	Char: ''\r\n" +
-                "	Age: 2\r\n" +
-                "	Bool: false\r\n" +
-                "	Byte: 0\r\n	ByteArray: ...\r\n" +
-                "		1\r\n" +
-                "		2\r\n" +
-                "		3\r\n" +
-                "		4\r\n" +
-                "	SByte: 0\r\n" +
-                "	Float: 0\r\n" +
-                "	Uint: 0\r\n" +
-                "	Long: 0\r\n	ULong: 0\r\n" +
-                "	Short: 0\r\n" +
-                "	UShort: 0\r\n" +
-                "	Decimal: 0\r\n" +
-                "	Double: 0\r\n	DateTime: DateTime.MinValue\r\n" +
-                "	NullableDateTime: null\r\n" +
+            dump.Should().Be("{Person}\n" +
+                "	RenamedName: \"Person 1\"\n" +
+                "	Char: ''\n" +
+                "	Age: 2\n" +
+                "	Bool: false\n" +
+                "	Byte: 0\n	ByteArray: ...\n" +
+                "		1\n" +
+                "		2\n" +
+                "		3\n" +
+                "		4\n" +
+                "	SByte: 0\n" +
+                "	Float: 0\n" +
+                "	Uint: 0\n" +
+                "	Long: 0\n	ULong: 0\n" +
+                "	Short: 0\n" +
+                "	UShort: 0\n" +
+                "	Decimal: 0\n" +
+                "	Double: 0\n	DateTime: DateTime.MinValue\n" +
+                "	NullableDateTime: null\n" +
                 "	Enum: DateTimeKind.Unspecified");
         }
 
@@ -339,7 +341,11 @@ namespace ObjectDumping.Tests
              "      HasDefaultValue: true\r\n" +
              "      Member: null --> Circular reference detected\r\n" +
              "      Position: -1\r\n" +
-             "    ReturnParameter: null --> Circular reference detected\r\n" +
+             "    ReturnParameter: {RuntimeParameterInfo}\r\n" +
+             "      ParameterType: void\r\n" +
+             "      HasDefaultValue: true\r\n" +
+             "      Member: null --> Circular reference detected\r\n" +
+             "      Position: -1\r\n" +
              "    IsHideBySig: true\r\n" +
              "    IsPublic: true\r\n" +
              "  Message: \"message text\"\r\n" +
@@ -621,6 +627,62 @@ namespace ObjectDumping.Tests
                 "    Next: null --> Circular reference detected\r\n" +
                 "    Property: 1\r\n" +
                 "  Property: 1");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case4()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            var array = new[] { example1, example2 };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().NotContain("// Circular reference detected");
+            dump.Should().Be(
+                "{Example}\r\n" +
+                "  Name: \"Name1\"\r\n" +
+                "  Reference: null\r\n" +
+                "{Example}\r\n" +
+                "  Name: \"Name2\"\r\n" +
+                "  Reference: {Example}\r\n" +
+                "    Name: \"Name1\"\r\n" +
+                "    Reference: null");
+        }
+
+        [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case5()
+        {
+            // Arrange 
+            var example1 = new Example { Name = "Name1" };
+            var example2 = new Example { Name = "Name2", Reference = example1 };
+            example1.Reference = example2; // This assignment causes a circular reference
+
+            var array = new[] { example1, example2 };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Contain("--> Circular reference detected");
+            dump.Should().Be(
+                "{Example}\r\n" +
+                "  Name: \"Name1\"\r\n" +
+                "  Reference: {Example}\r\n" +
+                "    Name: \"Name2\"\r\n" +
+                "    Reference: null --> Circular reference detected\r\n" +
+                "{Example}\r\n" +
+                "  Name: \"Name2\"\r\n" +
+                "  Reference: {Example}\r\n" +
+                "    Name: \"Name1\"\r\n" +
+                "    Reference: null --> Circular reference detected");
         }
 
         [Fact]
@@ -916,6 +978,53 @@ namespace ObjectDumping.Tests
                 "  IntProperty: 10\r\n" +
                 "  StringProperty: \"hello\"\r\n" +
                 "  DoubleProperty: 3.14");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject_List()
+        {
+            // Arrange 
+            var list = new List<dynamic>
+            {
+                new { Prop = new { SomeInnerProp = "test_test_test" } },
+                new { Prop = new { SomeInnerProp = "test_test_test" } }
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"\r\n" +
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"");
+        }
+
+        [Fact]
+        public void ShouldDumpAnonymousObject_Enumerable()
+        {
+            // Arrange 
+            var obj = new { Prop = new { SomeInnerProp = "test_test_test" } };
+            var list = Enumerable.Range(0, 2).Select(_ => obj).ToList();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(list);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"\r\n" +
+                "{AnonymousObject}\r\n" +
+                "  Prop: {AnonymousObject}\r\n" +
+                "    SomeInnerProp: \"test_test_test\"");
         }
 
         [Fact]

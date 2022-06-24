@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace ObjectDumping.Internal
 {
     public abstract class DumperBase
     {
-        private readonly List<int> hashListOfFoundElements;
+        private readonly CircularReferenceDetector circularReferenceDetector;
         private readonly StringBuilder stringBuilder;
         private bool isNewLine;
         private int level;
@@ -16,7 +15,7 @@ namespace ObjectDumping.Internal
             this.DumpOptions = dumpOptions;
             this.Level = 0;
             this.stringBuilder = new StringBuilder();
-            this.hashListOfFoundElements = new List<int>();
+            this.circularReferenceDetector = new CircularReferenceDetector();
             this.isNewLine = true;
         }
 
@@ -95,34 +94,77 @@ namespace ObjectDumping.Internal
             this.isNewLine = true;
         }
 
-        protected void AddAlreadyTouched(object value)
+        protected void PushReferenceForCycleDetection(object value)
         {
-            var hashCode = GenerateHashCode(value);
-            this.hashListOfFoundElements.Add(hashCode);
+            var type = value.GetType();
+            if (type.IsAnonymous())
+            {
+                // Because the Equals and GetHashCode methods on anonymous types
+                // are defined in terms of the Equals and GetHashCode methods
+                // of the properties, two instances of the same anonymous type are equal
+                // only if all their properties are equal.
+                //
+                // Source: https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/types/anonymous-types
+                return;
+            }
+
+            if (type.IsPrimitive() || type == typeof(string))
+            {
+                return;
+            }
+
+            this.circularReferenceDetector.PushReferenceForCycleDetection(value);
         }
 
-        protected bool AlreadyTouched(object value)
+        protected void PopReferenceForCycleDetection(object value)
+        {
+            var type = value.GetType();
+            if (type.IsAnonymous())
+            {
+                return;
+            }
+
+            if (type.IsPrimitive() || type == typeof(string))
+            {
+                return;
+            }
+
+            this.circularReferenceDetector.PopReferenceForCycleDetection();
+        }
+
+        /// <summary>
+        /// Checks if the given <paramref name="value"/> is part of an infinite recursion.
+        /// </summary>
+        protected bool CheckForCircularReference(object value)
         {
             if (value == null)
             {
                 return false;
             }
 
-            var hashCode = GenerateHashCode(value);
-            for (var i = 0; i < this.hashListOfFoundElements.Count; i++)
+            //var type = value.GetType();
+            //if (type.IsPrimitive() || type == typeof(string))
+            //{
+            //    return false;
+            //}
+
+            var contains = this.circularReferenceDetector.ContainsReferenceForCycleDetection(value);
+            if (contains)
             {
-                if (this.hashListOfFoundElements[i] == hashCode)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
 
-        private static int GenerateHashCode(object value)
+        protected string ResolvePropertyName(string name)
         {
-            return HashCode.Combine(value, value.GetType());
+            if (this.DumpOptions.MemberRenamer is Func<string, string> memberRenamer)
+            {
+                return memberRenamer.Invoke(name);
+            }
+
+            return name;
         }
 
         /// <summary>
@@ -131,6 +173,8 @@ namespace ObjectDumping.Internal
         /// <returns>string</returns>
         public override string ToString()
         {
+            this.circularReferenceDetector.EnsureEmpty();
+
             return this.stringBuilder.ToString();
         }
     }
