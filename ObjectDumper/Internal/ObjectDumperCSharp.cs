@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -519,6 +518,12 @@ namespace ObjectDumping.Internal
 
             if (o is IEnumerable enumerable)
             {
+                if (this.CheckForCircularReference(o))
+                {
+                    this.Write("null /* Circular reference detected */");
+                    return;
+                }
+                this.PushReferenceForCycleDetection(o);
                 var typeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
                 this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}", intentLevel);
                 this.LineBreak();
@@ -526,6 +531,7 @@ namespace ObjectDumping.Internal
                 this.LineBreak();
                 this.WriteItems(enumerable);
                 this.Write("}");
+                this.PopReferenceForCycleDetection(o);
                 return;
             }
 

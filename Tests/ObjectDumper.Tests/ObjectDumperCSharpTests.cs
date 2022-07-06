@@ -681,6 +681,30 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case6()
+        {
+            // Arrange 
+
+            var array = new object[] { 1, null, 3 };
+            array[1] = array;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Contain("/* Circular reference detected */");
+            dump.Should().Be(
+                "var objectArray = new object[]\r\n" +
+                "{\r\n" +
+                "  1,\r\n" +
+                "  null /* Circular reference detected */,\r\n" +
+                "  3\r\n" +
+                "};");
+        }
+
+        [Fact]
         public void ShouldExcludeProperties()
         {
             // Arrange
