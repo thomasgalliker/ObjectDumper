@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +12,9 @@ namespace ObjectDumping.Internal
     /// </summary>
     internal class ObjectDumperCSharp : DumperBase
     {
+
+        private readonly string[] languageKeywords = { "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while" };
+
         public ObjectDumperCSharp(DumpOptions dumpOptions) : base(dumpOptions)
         {
         }
@@ -106,7 +108,7 @@ namespace ObjectDumping.Internal
 
                 if (this.CheckForCircularReference(value))
                 {
-                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)} = ");
+                    this.Write($"{this.EscapeCsharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))} = ");
                     this.FormatValue(propertiesAndValue.DefaultValue);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
@@ -135,7 +137,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{this.ResolvePropertyName(propertiesAndValue.Property.Name)} = ");
+                    this.Write($"{this.EscapeCsharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))} = ");
                     this.FormatValue(value);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
@@ -632,6 +634,16 @@ namespace ObjectDumping.Internal
             }
 
             return variableName.ToLowerFirst();
+        }
+
+        private string EscapeCsharpKeywords(string name)
+        {
+            if (this.languageKeywords.Contains(name))
+            {
+                return $"@{name}";
+            }
+
+            return name;
         }
     }
 }
