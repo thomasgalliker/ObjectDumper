@@ -7,7 +7,7 @@
 name: $[format('{0}', variables['buildName'])]
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'windows-2022'
 
 trigger:
   branches:
@@ -19,9 +19,7 @@ trigger:
 
   paths:
     exclude:
-    - README.md
-    - Images/*
-    - Samples/*
+    - Docs/*
 
 variables:
   solution: 'ObjectDumper.sln'
@@ -69,24 +67,22 @@ steps:
     FailOnWarning: false
     DisableTelemetry: false'
 
-
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 5.x'
+  displayName: 'Use NuGet 6.x'
   inputs:
-    versionSpec: 5.x
+    versionSpec: 6.x
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'NuGet restore'
   inputs:
-    restoreSolution: '$(solution)'
+    command: restore
+    projects: '$(solution)'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
   displayName: 'Build solution'
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: ''
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+    projects: '$(solution)'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'Run UnitTests'
@@ -110,7 +106,7 @@ steps:
     packagesToPack: ObjectDumper/ObjectDumper.csproj
     versioningScheme: byEnvVar
     versionEnvVar: semVersion
-    
+
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
   inputs:
