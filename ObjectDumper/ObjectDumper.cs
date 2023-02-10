@@ -51,7 +51,7 @@ public static class ObjectDumper
     public static void DumpToConsole(object o, string name) {
         using(var w = new System.IO.StringWriter()) {
             Dump(t, name, w);
-            Console.Write(w.ToString());
+            Console.WriteLine(w.ToString());
 		}
     }
 }
