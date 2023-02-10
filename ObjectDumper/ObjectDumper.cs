@@ -1,4 +1,5 @@
 using ObjectDumping.Internal;
+using System;
 
 // ReSharper disable once CheckNamespace
 public static class ObjectDumper
@@ -45,5 +46,12 @@ public static class ObjectDumper
         }
 
         return ObjectDumperCSharp.Dump(element, dumpOptions);
+    }
+    
+    public static void DumpToConsole(object o, string name) {
+        using(var w = new System.IO.StringWriter()) {
+            Dump(t, name, w);
+            Console.Write(w.ToString());
+		}
     }
 }
