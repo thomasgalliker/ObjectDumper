@@ -58,7 +58,9 @@ namespace ObjectDumping.Internal
                     .ToList();
 
                 var recordCtor = type.GetConstructors()
-                    .Select(c => (Ctor: c, Parameters: c.GetParameters().Select(p => (Parameter: p, PropertyInfo: initOnlyProperties.SingleOrDefault(x => x.Name == p.Name && x.PropertyType == p.ParameterType))).ToArray()))
+                    .Select(c => (Ctor: c, Parameters: c.GetParameters()
+                                                        .Select(p => (Parameter: p, PropertyInfo: initOnlyProperties.SingleOrDefault(x => x.Name == p.Name && x.PropertyType == p.ParameterType)))
+                                                        .ToArray()))
                     .Where(c => c.Parameters.All(p => p.PropertyInfo != null))
                     .OrderByDescending(c => c.Parameters.Length)
                     .FirstOrDefault();
@@ -70,7 +72,19 @@ namespace ObjectDumping.Internal
 
                 properties = this.GetPropertyToDump(type, recordCtorProperties);
 
-                this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}({string.Join(", ", recordCtorPropertiesAndValues.Select(p => $"{p.Property.Name}: {p.Value}"))})", intentLevel);
+                if (!recordCtorPropertiesAndValues.Any())
+                {
+                    this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}()", intentLevel);
+                }
+                else
+                {
+                    this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}(", intentLevel);
+                    this.LineBreak();
+                    this.Level++;
+                    this.DumpProperties(o, recordCtorPropertiesAndValues.Select(x => x.Property).ToArray(), ": ");
+                    this.Level--;
+                    this.Write(")");
+                }
             }
             else
 #endif
@@ -86,7 +100,7 @@ namespace ObjectDumping.Internal
                 this.Write("{");
                 this.LineBreak();
                 this.Level++;
-                this.DumpProperties(o, properties);
+                this.DumpProperties(o, properties, " = ");
                 this.Level--;
                 this.Write("}");
             }
@@ -94,7 +108,14 @@ namespace ObjectDumping.Internal
             this.PopReferenceForCycleDetection(o);
         }
 
-        private void DumpProperties(object o, PropertyInfo[] properties)
+        internal class AssignmentOperator
+        {
+            internal static readonly string Equal = " = ";
+            internal static readonly string Colon = " : ";
+            
+        }
+
+        private void DumpProperties(object o, PropertyInfo[] properties, string assignmentOperator)
         {
             var propertiesAndValues = properties
                 .Select(p => new PropertyAndValue(o, p))
@@ -116,7 +137,7 @@ namespace ObjectDumping.Internal
 
                 if (this.CheckForCircularReference(value))
                 {
-                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))} = ");
+                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))}{assignmentOperator}");
                     this.FormatValue(propertiesAndValue.DefaultValue);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
@@ -145,7 +166,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))} = ");
+                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))}{assignmentOperator}");
                     this.FormatValue(value);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {

@@ -2,7 +2,7 @@
 
 namespace ObjectDumping.Tests.Testdata.RecordTypes
 {
-    public record class PersonRecord(int Age, Person Person);
+    public record class RecordWithNestedObject(int Age, Organization Organization);
 
     public record class DailyTemperature(double HighTemp, double LowTemp)
     {

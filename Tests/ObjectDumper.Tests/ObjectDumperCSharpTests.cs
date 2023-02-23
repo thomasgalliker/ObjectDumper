@@ -1629,7 +1629,10 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var recordClass = new RecordClass(Property1: 20, Property2: Test);");
+            dump.Should().Be("var recordClass = new RecordClass(\r\n" +
+                "  Property1: 20d,\r\n" +
+                "  Property2: \"Test\"\r\n" +
+                ");");
         }
 
         [Fact]
@@ -1644,7 +1647,8 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var emptyRecordClass = new EmptyRecordClass();");
+            dump.Should().Be(
+                "var emptyRecordClass = new EmptyRecordClass();");
         }
 
         [Fact]
@@ -1664,7 +1668,10 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be(
-                "var dailyTemperature = new DailyTemperature(HighTemp: 20, LowTemp: -2)\r\n" +
+                "var dailyTemperature = new DailyTemperature(\r\n" +
+                "  HighTemp: 20d,\r\n" +
+                "  LowTemp: -2d\r\n" +
+                ")\r\n" +
                 "{\r\n" +
                 "  InitOnlyProperty = \"init\",\r\n" +
                 "  ReadWriteProperty = true\r\n" +
@@ -1675,16 +1682,50 @@ namespace ObjectDumping.Tests
         public void ShouldDumpRecordType_WithObjectParameter()
         {
             // Arrange
-            var personRecord = new PersonRecord(Age: 20, Person: new Person { Name = "Thomas" });
+            var recordWithNestedObject = new RecordWithNestedObject(Age: 20, Organization: new Organization { Name = "Test Inc." });
 
             // Act
-            var dump = ObjectDumperCSharp.Dump(personRecord);
+            var dump = ObjectDumperCSharp.Dump(recordWithNestedObject);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Be(
-                "var personRecord = new PersonRecord(Age: 20, Person: ObjectDumping.Tests.Testdata.Person);");
+                "var recordWithNestedObject = new RecordWithNestedObject(\r\n" +
+                "  Age: 20,\r\n" +
+                "  Organization: new Organization\r\n" +
+                "  {\r\n" +
+                "    Name = \"Test Inc.\",\r\n" +
+                "    Persons = new HashSet<Person>\r\n" +
+                "    {\r\n" +
+                "    },\r\n" +
+                "    IsAfterCollection = true\r\n" +
+                "  }\r\n" +
+                ");");
+        }
+
+        [Fact]
+        public void ShouldDumpRecordType_Sprint()
+        {
+            // Arrange
+            var sprint = new Sprint(
+                SprintId: 12,
+                StartDate: DateTimeOffset.ParseExact("2021-02-18T00:00:00.0000000+01:00", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
+                EndDate: DateTimeOffset.ParseExact("2021-03-03T00:00:00.0000000+01:00", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
+            );
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(sprint);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var sprint = new Sprint(\r\n" +
+                "  SprintId: 12,\r\n" +
+                "  StartDate: DateTimeOffset.ParseExact(\"2021-02-18T00:00:00.0000000+01:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),\r\n" +
+                "  EndDate: DateTimeOffset.ParseExact(\"2021-03-03T00:00:00.0000000+01:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)\r\n" +
+                ");");
         }
 #endif
     }
