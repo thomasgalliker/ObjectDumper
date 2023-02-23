@@ -108,13 +108,6 @@ namespace ObjectDumping.Internal
             this.PopReferenceForCycleDetection(o);
         }
 
-        internal class AssignmentOperator
-        {
-            internal static readonly string Equal = " = ";
-            internal static readonly string Colon = " : ";
-            
-        }
-
         private void DumpProperties(object o, PropertyInfo[] properties, string assignmentOperator)
         {
             var propertiesAndValues = properties
