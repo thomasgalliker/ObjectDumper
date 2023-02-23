@@ -79,8 +79,17 @@ var listOfPersons = new List<Person>
 ```
 
 ### Links
-C# Escape / Unescape
+- Standard numeric format strings
+https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
+- Standard date and time format strings
+https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings
+- Standard timespan format strings
+https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-timespan-format-strings
+- C# Record Types
+https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/record
+- C# Escape / Unescape
 https://codebeautify.org/csharp-escape-unescape
 
+
 ### License
-This project is Copyright &copy; 2022 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2023 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.

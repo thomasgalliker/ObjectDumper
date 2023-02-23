@@ -19,8 +19,6 @@ namespace ObjectDumping.Internal
             this.isNewLine = true;
         }
 
-        protected abstract void FormatValue(object o, int intentLevel);
-
         public int Level
         {
             get => this.level;
