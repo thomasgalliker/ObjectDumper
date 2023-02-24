@@ -33,6 +33,7 @@
     <RootNamespace>ObjectDumping</RootNamespace>
     <PackageReleaseNotes>4.0.0
 - Add support for C# record types
+- Add assembly strong-naming
 
 3.4.0
 - Improve circular reference detection
