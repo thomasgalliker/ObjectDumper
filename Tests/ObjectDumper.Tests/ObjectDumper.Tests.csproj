@@ -8,6 +8,8 @@
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<RootNamespace>ObjectDumping.Tests</RootNamespace>
 		<NeutralLanguage>en</NeutralLanguage>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\..\ObjectDumper.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
 	<ItemGroup>
