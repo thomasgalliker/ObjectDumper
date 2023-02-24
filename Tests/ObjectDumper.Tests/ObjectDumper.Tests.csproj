@@ -44,6 +44,14 @@
 		<EmbeddedResource Include="Resources\**\*.*" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="xunit.runner.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="xunit.runner.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+	<ItemGroup>
 		<Folder Include="Properties\" />
 	</ItemGroup>
 	<ItemGroup>
