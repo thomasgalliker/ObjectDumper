@@ -164,7 +164,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        protected override void FormatValue(object o, int intentLevel = 0)
+        private void FormatValue(object o, int intentLevel = 0)
         {
             if (this.IsMaxLevel())
             {

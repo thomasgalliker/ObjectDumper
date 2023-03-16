@@ -8,6 +8,10 @@ namespace ObjectDumping.Internal
         {
             this.Value = propertyInfo.TryGetValue(source);
             this.DefaultValue = propertyInfo.PropertyType.TryGetDefault();
+
+#if NET5_0_OR_GREATER
+            this.IsInitOnly = propertyInfo.IsInitOnly();
+#endif
             this.Property = propertyInfo;
         }
 
@@ -17,12 +21,21 @@ namespace ObjectDumping.Internal
 
         public object DefaultValue { get; }
 
+#if NET5_0_OR_GREATER
+        public bool IsInitOnly { get; }
+#endif
+
         public bool IsDefaultValue
         {
             get
             {
                 return Equals(this.Value, this.DefaultValue);
             }
+        }
+
+        public override string ToString()
+        {
+            return $"PropertyAndValue: Property={this.Property}, Value={this.Value}";
         }
     }
 }

@@ -155,6 +155,21 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpObject_Empty()
+        {
+            // Arrange
+            var emptyClass = new EmptyClass();
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(emptyClass);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("{EmptyClass}\r\n");
+        }
+
+        [Fact]
         public void ShouldDumpObject_WithDumpOptions()
         {
             // Arrange
@@ -1151,13 +1166,13 @@ namespace ObjectDumping.Tests
                 "  Headers: ...\r\n" +
                 "  HeadersEncoding: null\r\n" +
                 "  Body: \"Body\"\r\n" +
-#if NET452
+#if NETFRAMEWORK
                 "  BodyEncoding: {ASCIIEncoding}\r\n" +
 #else
                 "  BodyEncoding: {ASCIIEncodingSealed}\r\n" +
 #endif
                 "    IsSingleByte: true\r\n" +
-#if NETCOREAPP3_1_OR_GREATER || NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER
                 "    Preamble: \"{NotSupportedException: Specified method is not supported.}\"\r\n" +
 #endif
                 "    BodyName: \"us-ascii\"\r\n" +

@@ -7,6 +7,10 @@ using ObjectDumping.Tests.Testdata;
 using Xunit;
 using Xunit.Abstractions;
 
+#if NET6_0_OR_GREATER
+using ObjectDumping.Tests.Testdata.RecordTypes;
+#endif
+
 namespace ObjectDumping.Tests.Internal
 {
     public class TypeExtensionsTests
@@ -211,5 +215,34 @@ namespace ObjectDumping.Tests.Internal
             // Assert
             isPrimitive.Should().Be(expectedResult);
         }
+
+#if NET6_0_OR_GREATER
+        [Theory]
+        [ClassData(typeof(RecordTypeTestData))]
+        public void ShouldReturnIsRecordType(Type type, bool expectedIsRecordType)
+        {
+            // Act
+            var isRecordType = type.IsRecordType();
+
+            // Assert
+            isRecordType.Should().Be(expectedIsRecordType);
+        }
+
+        public class RecordTypeTestData : TheoryData<Type, bool>
+        {
+            public RecordTypeTestData()
+            {
+                this.Add(typeof(RecordClass), true);
+                this.Add(typeof(EmptyRecordClass), true);
+                this.Add(typeof(RecordClassInherited), true);
+                this.Add(typeof(RecordStruct), true);
+                this.Add(typeof(EmptyRecordStruct), true);
+                this.Add(typeof(ReadonlyRecordStruct), true);
+
+                this.Add(typeof(EmptyClass), false);
+                this.Add(typeof(Person), false);
+            }
+        }
+#endif
     }
 }
