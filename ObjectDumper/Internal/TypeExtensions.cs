@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace ObjectDumping.Internal
 {
     internal static class TypeExtensions
     {
-        private static readonly Dictionary<Type, string> typeToKeywordMappings = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> TypeToKeywordMappings = new Dictionary<Type, string>
         {
             { typeof(string), "string" },
             { typeof(object), "object" },
@@ -30,12 +34,12 @@ namespace ObjectDumping.Internal
 
         internal static bool TryGetBuiltInTypeName(this Type type, out string value)
         {
-            return typeToKeywordMappings.TryGetValue(type, out value);
+            return TypeToKeywordMappings.TryGetValue(type, out value);
         }
 
         internal static bool IsKeyword(string value)
         {
-            return typeToKeywordMappings.Values.Contains(value);
+            return TypeToKeywordMappings.Values.Contains(value);
         }
 
         internal static string GetFormattedName(this Type type, bool useFullName = false, bool useValueTupleFormatting = true)
@@ -82,7 +86,7 @@ namespace ObjectDumping.Internal
 
         private static string RemoveGenericBackTick(this string typeName)
         {
-            int iBacktick = typeName.IndexOf('`');
+            var iBacktick = typeName.IndexOf('`');
             if (iBacktick > 0)
             {
                 typeName = typeName.Remove(iBacktick);
@@ -198,6 +202,58 @@ namespace ObjectDumping.Internal
                 //type.IsGenericType &&
                 type.FullName is string fullName &&
                 (fullName.StartsWith("System.ValueTuple") || fullName.StartsWith("System.ValueTuple`"));
+        }
+#endif
+
+#if NET6_0_OR_GREATER
+        private static readonly ConcurrentDictionary<Type, bool> RecordTypeCaches = new();
+
+        /// <summary>
+        /// Checks if <typeparamref name="T"/> is a record type.
+        /// </summary>
+        /// <typeparam name="T">The generic type.</typeparam>
+        public static bool IsRecordType<T>()
+        {
+            return IsRecordType(typeof(T));
+        }
+
+        /// <summary>
+        /// Checks if the <paramref name="type"/> is a record type.
+        /// </summary> 
+        /// <param name="type">The type.</param>
+        public static bool IsRecordType(this Type type)
+        {
+            return RecordTypeCaches.GetOrAdd(type, IsRecordTypeInternal);
+        }
+
+        private static bool IsRecordTypeInternal(Type t)
+        {
+            return
+             !t.IsInterface &&
+             !t.IsEnum &&
+             typeof(IEquatable<>).MakeGenericType(t).IsAssignableFrom(t) &&
+             t.GetMethod("ToString", (BindingFlags.Public | BindingFlags.Instance), Type.EmptyTypes) is MethodInfo toString && (IsOverridden(toString) || IsCompilerGenerated(toString)) &&
+             t.GetMethod("GetHashCode", (BindingFlags.Public | BindingFlags.Instance), Type.EmptyTypes) is MethodInfo getHashCode && (IsOverridden(getHashCode) || IsCompilerGenerated(getHashCode)) &&
+             t.GetMethod("PrintMembers", (BindingFlags.NonPublic | BindingFlags.Instance), new[] { typeof(StringBuilder) }) is MethodInfo printMembers && IsCompilerGenerated(printMembers) &&
+             t.GetMethod("op_Equality", (BindingFlags.Public | BindingFlags.Static), new[] { t, t }) is MethodInfo op_Equality && IsCompilerGenerated(op_Equality) &&
+             t.GetMethod("op_Inequality", (BindingFlags.Public | BindingFlags.Static), new[] { t, t }) is MethodInfo op_Inequality && IsCompilerGenerated(op_Inequality) &&
+             t.GetMethod("Equals", (BindingFlags.Public | BindingFlags.Instance), new[] { typeof(object) }) is MethodInfo equals && IsCompilerGenerated(equals) &&
+             t.GetMethod("Equals", (BindingFlags.Public | BindingFlags.Instance), new[] { t }) is MethodInfo typeEquals && IsCompilerGenerated(typeEquals) &&
+             (t.IsValueType || (
+                 t.GetMethod("<Clone>$", BindingFlags.Public | BindingFlags.Instance) is MethodInfo clone && IsCompilerGenerated(clone) &&
+                 t.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, new[] { t }) is ConstructorInfo forClone && IsCompilerGenerated(forClone) &&
+                 t.GetMethod("get_EqualityContract", BindingFlags.NonPublic | BindingFlags.Instance) is MethodInfo getEqualityContract && IsCompilerGenerated(getEqualityContract)))
+             ;
+        }
+
+        private static bool IsOverridden(MethodInfo methodInfo)
+        {
+            return methodInfo.GetBaseDefinition().DeclaringType != methodInfo.DeclaringType;
+        }
+
+        private static bool IsCompilerGenerated(MemberInfo memberInfo)
+        {
+            return memberInfo.IsDefined(typeof(CompilerGeneratedAttribute));
         }
 #endif
     }

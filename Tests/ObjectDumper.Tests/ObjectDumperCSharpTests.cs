@@ -12,6 +12,10 @@ using ObjectDumping.Tests.Utils;
 using Xunit;
 using Xunit.Abstractions;
 
+#if NET6_0_OR_GREATER
+using ObjectDumping.Tests.Testdata.RecordTypes;
+#endif
+
 namespace ObjectDumping.Tests
 {
     [Collection(TestCollections.CultureSpecific)]
@@ -121,6 +125,21 @@ namespace ObjectDumping.Tests
                 "  Byte = 0,\r\n" +
                 "  ByteArray = new byte[]\r\n" +
                 "  {\r\n    1,\r\n    2,\r\n    3,\r\n    4\r\n  },\r\n  SByte = 0,\r\n  Float = 0f,\r\n  Uint = 0u,\r\n  Long = 0L,\r\n  ULong = 0UL,\r\n  Short = 0,\r\n  UShort = 0,\r\n  Decimal = 0m,\r\n  Double = 0d,\r\n  DateTime = DateTime.MinValue,\r\n  NullableDateTime = null,\r\n  Enum = DateTimeKind.Unspecified\r\n};");
+        }
+
+        [Fact]
+        public void ShouldDumpObject_Empty()
+        {
+            // Arrange
+            var emptyClass = new EmptyClass();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(emptyClass);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var emptyClass = new EmptyClass();");
         }
 
         [Fact]
@@ -1554,14 +1573,14 @@ namespace ObjectDumping.Tests
                 "  },\r\n" +
                 "  HeadersEncoding = null,\r\n" +
                 "  Body = \"Body\",\r\n" +
-#if NET452
+#if NETFRAMEWORK
                 "  BodyEncoding = new ASCIIEncoding\r\n" +
 #else
                 "  BodyEncoding = new ASCIIEncodingSealed\r\n" +
 #endif
                 "  {\r\n" +
                 "    IsSingleByte = true,\r\n" +
-#if NETCOREAPP3_1_OR_GREATER || NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER
                 "    Preamble = \"{NotSupportedException: Specified method is not supported.}\",\r\n" +
 #endif
                 "    BodyName = \"us-ascii\",\r\n" +
@@ -1596,5 +1615,118 @@ namespace ObjectDumping.Tests
                 "  }\r\n" +
                 "};");
         }
+
+#if NET5_0_OR_GREATER
+        [Fact]
+        public void ShouldDumpRecordType_RecordClass()
+        {
+            // Arrange
+            var recordClass = new RecordClass(Property1: 20d, Property2: "Test");
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(recordClass);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be("var recordClass = new RecordClass(\r\n" +
+                "  Property1: 20d,\r\n" +
+                "  Property2: \"Test\"\r\n" +
+                ");");
+        }
+
+        [Fact]
+        public void ShouldDumpRecordType_EmptyRecordClass()
+        {
+            // Arrange
+            var emptyRecordClass = new EmptyRecordClass();
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(emptyRecordClass);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var emptyRecordClass = new EmptyRecordClass();");
+        }
+
+        [Fact]
+        public void ShouldDumpRecordType_WithAdditionalProperties()
+        {
+            // Arrange
+            var dailyTemperature = new DailyTemperature(HighTemp: 20d, LowTemp: -2d)
+            {
+                InitOnlyProperty = "init",
+                ReadWriteProperty = true,
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(dailyTemperature);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var dailyTemperature = new DailyTemperature(\r\n" +
+                "  HighTemp: 20d,\r\n" +
+                "  LowTemp: -2d\r\n" +
+                ")\r\n" +
+                "{\r\n" +
+                "  InitOnlyProperty = \"init\",\r\n" +
+                "  ReadWriteProperty = true\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpRecordType_WithObjectParameter()
+        {
+            // Arrange
+            var recordWithNestedObject = new RecordWithNestedObject(Age: 20, Organization: new Organization { Name = "Test Inc." });
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(recordWithNestedObject);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var recordWithNestedObject = new RecordWithNestedObject(\r\n" +
+                "  Age: 20,\r\n" +
+                "  Organization: new Organization\r\n" +
+                "  {\r\n" +
+                "    Name = \"Test Inc.\",\r\n" +
+                "    Persons = new HashSet<Person>\r\n" +
+                "    {\r\n" +
+                "    },\r\n" +
+                "    IsAfterCollection = true\r\n" +
+                "  }\r\n" +
+                ");");
+        }
+
+        [Fact]
+        public void ShouldDumpRecordType_Sprint()
+        {
+            // Arrange
+            var sprint = new Sprint(
+                SprintId: 12,
+                StartDate: DateTimeOffset.ParseExact("2021-02-18T00:00:00.0000000+01:00", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
+                EndDate: DateTimeOffset.ParseExact("2021-03-03T00:00:00.0000000+01:00", "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
+            );
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(sprint);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var sprint = new Sprint(\r\n" +
+                "  SprintId: 12,\r\n" +
+                "  StartDate: DateTimeOffset.ParseExact(\"2021-02-18T00:00:00.0000000+01:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),\r\n" +
+                "  EndDate: DateTimeOffset.ParseExact(\"2021-03-03T00:00:00.0000000+01:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)\r\n" +
+                ");");
+        }
+#endif
     }
 }

@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace ObjectDumping.Internal
 {
@@ -14,17 +14,14 @@ namespace ObjectDumping.Internal
     internal class ObjectDumperCSharp : DumperBase
     {
         private static readonly string[] LanguageKeywords = { "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while" };
-		
+
         public ObjectDumperCSharp(DumpOptions dumpOptions) : base(dumpOptions)
         {
         }
 
         public static string Dump(object element, DumpOptions dumpOptions = null)
         {
-            if (dumpOptions == null)
-            {
-                dumpOptions = new DumpOptions();
-            }
+            dumpOptions ??= new DumpOptions();
 
             var instance = new ObjectDumperCSharp(dumpOptions);
             if (!dumpOptions.TrimInitialVariableName)
@@ -47,47 +44,72 @@ namespace ObjectDumping.Internal
 
             var type = o.GetType();
 
-            var typeName = type.IsAnonymous() ? "" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+            var isAnonymousType = type.IsAnonymous();
+            var typeName = isAnonymousType ? "" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
 
-            this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}", intentLevel);
-            this.LineBreak();
-            this.Write("{");
-            this.LineBreak();
-            this.Level++;
-            this.DumpProperties(o, intentLevel);
-            this.Level--;
-            this.Write("}");
+            PropertyInfo[] properties = null;
+
+#if NET6_0_OR_GREATER
+            var isRecordType = type.IsRecordType();
+            if (isRecordType)
+            {
+                var initOnlyProperties = type.GetProperties()
+                    .Where(p => p.IsInitOnly())
+                    .ToList();
+
+                var recordCtor = type.GetConstructors()
+                    .Select(c => (Ctor: c, Parameters: c.GetParameters()
+                                                        .Select(p => (Parameter: p, PropertyInfo: initOnlyProperties.SingleOrDefault(x => x.Name == p.Name && x.PropertyType == p.ParameterType)))
+                                                        .ToArray()))
+                    .Where(c => c.Parameters.All(p => p.PropertyInfo != null))
+                    .OrderByDescending(c => c.Parameters.Length)
+                    .FirstOrDefault();
+
+                var recordCtorProperties = recordCtor.Parameters.Select(pv => pv.PropertyInfo).ToArray();
+                var recordCtorPropertiesAndValues = recordCtorProperties
+                    .Select(p => new PropertyAndValue(o, p))
+                    .ToArray();
+
+                properties = this.GetPropertyToDump(type, recordCtorProperties);
+
+                if (!recordCtorPropertiesAndValues.Any())
+                {
+                    this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}()", intentLevel);
+                }
+                else
+                {
+                    this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}(", intentLevel);
+                    this.LineBreak();
+                    this.Level++;
+                    this.DumpProperties(o, recordCtorPropertiesAndValues.Select(x => x.Property).ToArray(), ": ");
+                    this.Level--;
+                    this.Write(")");
+                }
+            }
+            else
+#endif
+            {
+                properties = this.GetPropertyToDump(type, recordCtorProperties: null);
+
+                this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}{(properties.Any() ? "" : "()")}", intentLevel);
+            }
+
+            if (properties.Any())
+            {
+                this.LineBreak();
+                this.Write("{");
+                this.LineBreak();
+                this.Level++;
+                this.DumpProperties(o, properties, " = ");
+                this.Level--;
+                this.Write("}");
+            }
 
             this.PopReferenceForCycleDetection(o);
         }
 
-        private void DumpProperties(object o, int intentLevel)
+        private void DumpProperties(object o, PropertyInfo[] properties, string assignmentOperator)
         {
-            var properties = o.GetType().GetRuntimeProperties()
-                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
-                .ToList();
-
-            if (this.DumpOptions.ExcludeProperties != null && this.DumpOptions.ExcludeProperties.Any())
-            {
-                properties = properties
-                    .Where(p => !this.DumpOptions.ExcludeProperties.Contains(p.Name))
-                    .ToList();
-            }
-
-            if (this.DumpOptions.SetPropertiesOnly)
-            {
-                properties = properties
-                    .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
-                    .ToList();
-            }
-
-            if (this.DumpOptions.PropertyOrderBy != null)
-            {
-                properties = properties
-                    .OrderBy(this.DumpOptions.PropertyOrderBy.Compile())
-                    .ToList();
-            }
-
             var propertiesAndValues = properties
                 .Select(p => new PropertyAndValue(o, p))
                 .ToList();
@@ -108,7 +130,7 @@ namespace ObjectDumping.Internal
 
                 if (this.CheckForCircularReference(value))
                 {
-                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))} = ");
+                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))}{assignmentOperator}");
                     this.FormatValue(propertiesAndValue.DefaultValue);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
@@ -137,7 +159,7 @@ namespace ObjectDumping.Internal
                 }
                 else
                 {
-                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))} = ");
+                    this.Write($"{this.EscapeCSharpKeywords(this.ResolvePropertyName(propertiesAndValue.Property.Name))}{assignmentOperator}");
                     this.FormatValue(value);
                     if (!Equals(propertiesAndValue, lastProperty))
                     {
@@ -147,6 +169,43 @@ namespace ObjectDumping.Internal
                     this.LineBreak();
                 }
             }
+        }
+
+        private PropertyInfo[] GetPropertyToDump(Type type, PropertyInfo[] recordCtorProperties)
+        {
+            var properties = type.GetRuntimeProperties()
+                    .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
+                    .ToArray();
+
+            if (recordCtorProperties?.Any() ?? false)
+            {
+                properties = properties
+                    .Where(p => !recordCtorProperties.Contains(p))
+                    .ToArray();
+            }
+
+            if (this.DumpOptions.ExcludeProperties != null && this.DumpOptions.ExcludeProperties.Any())
+            {
+                properties = properties
+                    .Where(p => !this.DumpOptions.ExcludeProperties.Contains(p.Name))
+                    .ToArray();
+            }
+
+            if (this.DumpOptions.SetPropertiesOnly)
+            {
+                properties = properties
+                    .Where(p => p.SetMethod != null && p.SetMethod.IsPublic && p.SetMethod.IsStatic == false)
+                    .ToArray();
+            }
+
+            if (this.DumpOptions.PropertyOrderBy != null)
+            {
+                properties = properties
+                    .OrderBy(this.DumpOptions.PropertyOrderBy.Compile())
+                    .ToArray();
+            }
+
+            return properties;
         }
 
         private void DumpIntegerArrayIndexer(object o, PropertyInfo property, ParameterInfo[] indexParameters)
@@ -191,7 +250,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        protected override void FormatValue(object o, int intentLevel = 0)
+        private void FormatValue(object o, int intentLevel = 0)
         {
             if (this.IsMaxLevel())
             {
@@ -635,7 +694,7 @@ namespace ObjectDumping.Internal
 
             return variableName.ToLowerFirst();
         }
-        
+
         private string EscapeCSharpKeywords(string name)
         {
             if (LanguageKeywords.Contains(name))

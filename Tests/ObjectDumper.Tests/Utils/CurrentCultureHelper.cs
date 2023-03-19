@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-#if NET452
+#if NETFRAMEWORK
 using System.Threading;
 #endif
 
@@ -16,7 +16,7 @@ namespace ObjectDumping.Tests.Utils
                 throw new ArgumentNullException(nameof(temporaryCultureInfo));
             }
 
-#if NET452
+#if NETFRAMEWORK
             var currentCulture = Thread.CurrentThread.CurrentCulture;
             var currentUiCulture = Thread.CurrentThread.CurrentUICulture;
 #else
@@ -26,7 +26,7 @@ namespace ObjectDumping.Tests.Utils
 
             var revertCurrentCultureHandler = new CurrentCultureHandler(currentCulture, currentUiCulture);
 
-#if NET452
+#if NETFRAMEWORK
             Thread.CurrentThread.CurrentCulture = temporaryCultureInfo;
             Thread.CurrentThread.CurrentUICulture = temporaryCultureInfo;
 #else
@@ -56,7 +56,7 @@ namespace ObjectDumping.Tests.Utils
         {
             try
             {
-#if NET452
+#if NETFRAMEWORK
                 Thread.CurrentThread.CurrentCulture = this.currentCulture;
                 Thread.CurrentThread.CurrentUICulture = this.currentCulture;
 #else
