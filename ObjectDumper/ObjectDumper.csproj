@@ -34,6 +34,7 @@
     <PackageReleaseNotes>4.1.0
 - Raise minimum .NET framework version from net45 to net48
 - Remove support for net5.0
+- Bug fix for constructorless record types
 
 4.0.0
 - Add support for C# record types
