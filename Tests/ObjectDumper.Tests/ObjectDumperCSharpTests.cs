@@ -1728,5 +1728,30 @@ namespace ObjectDumping.Tests
                 ");");
         }
 #endif
+
+#if NET7_0_OR_GREATER
+
+        [Fact]
+        public void ShouldDumpRecordType_CtorlessReadonlyRecord()
+        {
+            // Arrange
+            var ctorlessReadonlyRecord = new CtorlessReadonlyRecord()
+            {
+                Name = "Test"
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(ctorlessReadonlyRecord);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var ctorlessReadonlyRecord = new CtorlessReadonlyRecord()\r\n" +
+                "{\r\n" +
+                "  Name = \"Test\"\r\n" +
+                "};");
+        }
+#endif
     }
 }
