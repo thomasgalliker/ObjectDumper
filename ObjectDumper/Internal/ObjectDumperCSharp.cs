@@ -53,24 +53,34 @@ namespace ObjectDumping.Internal
             var isRecordType = type.IsRecordType();
             if (isRecordType)
             {
+                var recordCtorPropertiesAndValues = new List<PropertyAndValue>();
                 var initOnlyProperties = type.GetProperties()
                     .Where(p => p.IsInitOnly())
                     .ToList();
 
-                var recordCtor = type.GetConstructors()
-                    .Select(c => (Ctor: c, Parameters: c.GetParameters()
-                                                        .Select(p => (Parameter: p, PropertyInfo: initOnlyProperties.SingleOrDefault(x => x.Name == p.Name && x.PropertyType == p.ParameterType)))
-                                                        .ToArray()))
-                    .Where(c => c.Parameters.All(p => p.PropertyInfo != null))
-                    .OrderByDescending(c => c.Parameters.Length)
-                    .FirstOrDefault();
+                var constructors = type.GetConstructors();
+                if (constructors.Any())
+                {
+                    var recordCtor = constructors
+                      .Select(c => (Ctor: c, Parameters: c.GetParameters()
+                                                          .Select(p => (Parameter: p, PropertyInfo: initOnlyProperties.SingleOrDefault(x => x.Name == p.Name && x.PropertyType == p.ParameterType)))
+                                                          .ToArray()))
+                      .Where(c => c.Parameters.All(p => p.PropertyInfo != null))
+                      .OrderByDescending(c => c.Parameters.Length)
+                      .FirstOrDefault();
 
-                var recordCtorProperties = recordCtor.Parameters.Select(pv => pv.PropertyInfo).ToArray();
-                var recordCtorPropertiesAndValues = recordCtorProperties
-                    .Select(p => new PropertyAndValue(o, p))
-                    .ToArray();
 
-                properties = this.GetPropertyToDump(type, recordCtorProperties);
+                    var recordCtorProperties = recordCtor.Parameters.Select(pv => pv.PropertyInfo).ToArray();
+                    recordCtorPropertiesAndValues = recordCtorProperties
+                        .Select(p => new PropertyAndValue(o, p))
+                        .ToList();
+
+                    properties = this.GetPropertiesToDump(type, recordCtorProperties);
+                }
+                else
+                {
+                    properties = this.GetPropertiesToDump(type, recordCtorProperties: null);
+                }
 
                 if (!recordCtorPropertiesAndValues.Any())
                 {
@@ -89,7 +99,7 @@ namespace ObjectDumping.Internal
             else
 #endif
             {
-                properties = this.GetPropertyToDump(type, recordCtorProperties: null);
+                properties = this.GetPropertiesToDump(type, recordCtorProperties: null);
 
                 this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}{(properties.Any() ? "" : "()")}", intentLevel);
             }
@@ -171,7 +181,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        private PropertyInfo[] GetPropertyToDump(Type type, PropertyInfo[] recordCtorProperties)
+        private PropertyInfo[] GetPropertiesToDump(Type type, PropertyInfo[] recordCtorProperties)
         {
             var properties = type.GetRuntimeProperties()
                     .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
