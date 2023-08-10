@@ -77,6 +77,11 @@ public class CustomInstanceFormatters
         this.customFormatters.Add(typeof(T), new CustomInstanceFormatter(typeof(T), o => formatInstance((T)o)));
     }
 
+    public void AddFormatter(Type type, Func<object, string> formatInstance)
+    {
+        this.customFormatters.Add(type, new CustomInstanceFormatter(type, o => formatInstance(o)));
+    }
+
     public bool HasFormatterFor<T>()
     {
         return this.customFormatters.ContainsKey(typeof(T));
