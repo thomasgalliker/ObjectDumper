@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 
 namespace ObjectDumping.Internal
 {
@@ -12,15 +13,32 @@ namespace ObjectDumping.Internal
         {
         }
 
+        public ObjectDumperConsole(TextWriter writer, DumpOptions? dumpOptions = null) : base(writer, dumpOptions ?? new())
+        {
+        }
+
         public static string Dump(object? element, DumpOptions? dumpOptions = null)
         {
             dumpOptions ??= new DumpOptions();
 
-            var instance = new ObjectDumperConsole(dumpOptions);
+            var writer = new StringWriter(new StringBuilder());
+            Dump(element, writer, dumpOptions);
+            return writer.ToString();
+        }
 
+        public static void Dump(object? element, TextWriter writer, DumpOptions? dumpOptions = null)
+        {
+            if (writer == null)
+            {
+                throw new ArgumentNullException(nameof(writer), $"Parameter 'nameof(writer)' must not be null.");
+            }
+
+            dumpOptions ??= new DumpOptions();
+
+            var instance = new ObjectDumperConsole(writer, dumpOptions);
             instance.FormatValue(element);
 
-            return instance.ToString();
+            writer.Flush();
         }
 
         private void CreateObject(object o, int intentLevel = 0)
