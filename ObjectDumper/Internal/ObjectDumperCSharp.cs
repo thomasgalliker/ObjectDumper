@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 
 namespace ObjectDumping.Internal
 {
@@ -13,6 +14,11 @@ namespace ObjectDumping.Internal
         private const string CircularReferenceDetectedComment = "// Circular reference detected";
         private static readonly string[] LanguageKeywords = { "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while" };
 
+        public ObjectDumperCSharp(TextWriter writer, DumpOptions? dumpOptions = null)
+           : base(writer, dumpOptions ?? new DumpOptions())
+        {
+
+        }
         public ObjectDumperCSharp(DumpOptions dumpOptions) : base(dumpOptions)
         {
         }
@@ -20,8 +26,9 @@ namespace ObjectDumping.Internal
         public static string Dump(object? element, DumpOptions? dumpOptions = null)
         {
             dumpOptions ??= new DumpOptions();
+            var writer = new StringWriter(new StringBuilder());
 
-            var instance = new ObjectDumperCSharp(dumpOptions);
+            var instance = new ObjectDumperCSharp(writer, dumpOptions);
             if (!dumpOptions.TrimInitialVariableName)
             {
                 instance.Write($"var {instance.GetVariableName(element)} = ");
@@ -35,6 +42,27 @@ namespace ObjectDumping.Internal
 
             return instance.ToString();
         }
+
+        public static void Dump(object element, TextWriter writer, DumpOptions? dumpOptions = null)
+        {
+            dumpOptions ??= new DumpOptions();
+            writer ??= new StringWriter(new StringBuilder());
+
+            var instance = new ObjectDumperCSharp(writer, dumpOptions);
+            if (!dumpOptions.TrimInitialVariableName)
+            {
+                instance.Write($"var {instance.GetVariableName(element)} = ");
+            }
+
+            instance.FormatValue(element);
+            if (!dumpOptions.TrimTrailingColonName)
+            {
+                instance.Write(";");
+            }
+
+            writer.Flush();
+        }
+
 
         private void CreateObject(object o, int intentLevel = 0)
         {
