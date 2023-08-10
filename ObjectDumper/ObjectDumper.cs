@@ -1,3 +1,4 @@
+using System.IO;
 using ObjectDumping.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -46,4 +47,31 @@ public static class ObjectDumper
 
         return ObjectDumperCSharp.Dump(element, dumpOptions);
     }
+
+    /// <summary>
+    ///     Serializes the given <see cref="element" /> to string with additional options <see cref="dumpOptions" />.
+    /// </summary>
+    /// <param name="element">Object to be dumped to string using the given <paramref name="dumpOptions" />.</param>
+    /// <param name="writer">Where <paramref name="element"/> is write.</param>
+    /// <param name="dumpOptions">Further options to customize the dump output.</param>
+    public static void Dump(object element, TextWriter writer, DumpOptions dumpOptions)
+    {
+        if (dumpOptions == null)
+        {
+            dumpOptions = new DumpOptions();
+        }
+
+        switch (dumpOptions.DumpStyle)
+        {
+            case DumpStyle.Console:
+                ObjectDumperCSharp.Dump(element, writer, dumpOptions);
+                break;
+            case DumpStyle.CSharp:
+                ObjectDumperConsole.Dump(element, writer, dumpOptions);
+                break;
+            default:
+                break;
+        }
+    }
+
 }

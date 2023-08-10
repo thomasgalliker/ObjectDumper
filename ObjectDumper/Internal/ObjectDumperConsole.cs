@@ -2,14 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace ObjectDumping.Internal
 {
     internal class ObjectDumperConsole : DumperBase
     {
-        public ObjectDumperConsole(DumpOptions dumpOptions) : base(dumpOptions)
+        public ObjectDumperConsole(TextWriter writer, DumpOptions dumpOptions) : base(writer, dumpOptions)
         {
         }
 
@@ -20,11 +22,25 @@ namespace ObjectDumping.Internal
                 dumpOptions = new DumpOptions();
             }
 
-            var instance = new ObjectDumperConsole(dumpOptions);
+            var writer = new StringWriter(new StringBuilder());
+
+            var instance = new ObjectDumperConsole(writer, dumpOptions);
 
             instance.FormatValue(element);
 
             return instance.ToString();
+        }
+
+        public static void Dump(object element, TextWriter writer, DumpOptions dumpOptions = null)
+        {
+            if (dumpOptions == null)
+            {
+                dumpOptions = new DumpOptions();
+            }
+
+            var instance = new ObjectDumperConsole(writer, dumpOptions);
+
+            instance.FormatValue(element);
         }
 
         private void CreateObject(object o, int intentLevel = 0)
