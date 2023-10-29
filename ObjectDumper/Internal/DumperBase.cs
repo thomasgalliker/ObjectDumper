@@ -214,7 +214,7 @@ namespace ObjectDumping.Internal
             return name;
         }
 
-        protected async Task FluskAsync()
+        protected async Task FlushAsync()
         {
             await this.writer.FlushAsync();
         }
