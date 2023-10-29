@@ -17,30 +17,24 @@ namespace ObjectDumping.Internal
 
         public static string Dump(object element, DumpOptions dumpOptions = null)
         {
-            if (dumpOptions == null)
-            {
-                dumpOptions = new DumpOptions();
-            }
-
             var writer = new StringWriter(new StringBuilder());
-
-            var instance = new ObjectDumperConsole(writer, dumpOptions);
-
-            instance.FormatValue(element);
-
-            return instance.ToString();
+            Dump(element, writer, dumpOptions);
+            return writer.ToString();
         }
 
         public static void Dump(object element, TextWriter writer, DumpOptions dumpOptions = null)
         {
-            if (dumpOptions == null)
+            if (writer == null)
             {
-                dumpOptions = new DumpOptions();
+                throw new ArgumentNullException(nameof(writer), $"Parameter 'nameof(writer)' must not be null.");
             }
 
-            var instance = new ObjectDumperConsole(writer, dumpOptions);
+            dumpOptions ??= new DumpOptions();
 
+            var instance = new ObjectDumperConsole(writer, dumpOptions);
             instance.FormatValue(element);
+
+            writer.Flush();
         }
 
         private void CreateObject(object o, int intentLevel = 0)
