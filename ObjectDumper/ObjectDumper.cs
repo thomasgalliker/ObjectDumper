@@ -5,7 +5,7 @@ using ObjectDumping.Internal;
 public static class ObjectDumper
 {
     /// <summary>
-    ///     Serializes the given <see cref="element" /> to string.
+    /// Serializes the given <see cref="element" /> to string.
     /// </summary>
     /// <param name="element">Object to be dumped to string using the default dump options.</param>
     /// <returns></returns>
@@ -16,7 +16,7 @@ public static class ObjectDumper
     }
 
     /// <summary>
-    ///     Serializes the given <see cref="element" /> to string.
+    /// Serializes the given <see cref="element" /> to string.
     /// </summary>
     /// <param name="element">Object to be dumped to string using the given <paramref name="dumpStyle" />.</param>
     /// <param name="dumpStyle">The formatting style.</param>
@@ -28,7 +28,7 @@ public static class ObjectDumper
     }
 
     /// <summary>
-    ///     Serializes the given <see cref="element" /> to string with additional options <see cref="dumpOptions" />.
+    /// Serializes the given <see cref="element" /> to string with additional options <see cref="dumpOptions" />.
     /// </summary>
     /// <param name="element">Object to be dumped to string using the given <paramref name="dumpOptions" />.</param>
     /// <param name="dumpOptions">Further options to customize the dump output.</param>
@@ -49,7 +49,7 @@ public static class ObjectDumper
     }
 
     /// <summary>
-    ///     Serializes the given <see cref="element" /> to string with additional options <see cref="dumpOptions" />.
+    /// Serializes the given <see cref="element" /> to string with additional options <see cref="dumpOptions" />.
     /// </summary>
     /// <param name="element">Object to be dumped to string using the given <paramref name="dumpOptions" />.</param>
     /// <param name="writer">Where <paramref name="element"/> is write.</param>
