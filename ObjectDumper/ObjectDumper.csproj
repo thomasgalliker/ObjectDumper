@@ -12,7 +12,6 @@
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/thomasgalliker/ObjectDumper</PackageProjectUrl>
-    <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/thomasgalliker/ObjectDumper</RepositoryUrl>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
@@ -116,6 +115,7 @@
 - Initial release</PackageReleaseNotes>
     <Copyright>Copyright 2017-$([System.DateTime]::Now.ToString(`yyyy`)) &#169; Thomas Galliker</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
