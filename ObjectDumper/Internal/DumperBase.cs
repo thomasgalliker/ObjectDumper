@@ -13,8 +13,8 @@ namespace ObjectDumping.Internal
         private bool isNewLine;
         private int level;
 
-        protected DumperBase(DumpOptions dumpOptions) :
-            this(new StringWriter(new StringBuilder()), dumpOptions)
+        protected DumperBase(DumpOptions dumpOptions)
+            : this(new StringWriter(new StringBuilder()), dumpOptions)
         {
         }
 
@@ -76,11 +76,13 @@ namespace ObjectDumping.Internal
         /// <param name="indentLevel">number of indentions to prepend default 0</param>
         protected void Write(string value, int indentLevel = 0)
         {
-            for (int i = 0; i < indentLevel * this.DumpOptions.IndentSize; i++)
+            for (var i = 0; i < indentLevel * this.DumpOptions.IndentSize; i++)
             {
                 this.writer.Write(this.DumpOptions.IndentChar);
             }
+
             this.writer.Write(value);
+
             if (value.EndsWith(this.DumpOptions.LineBreakChar))
             {
                 this.isNewLine = true;
@@ -93,15 +95,18 @@ namespace ObjectDumping.Internal
 
         protected async Task WriteAsync(string value, int indentLevel = 0, CancellationToken token = default)
         {
-            for (int i = 0; i < indentLevel * this.DumpOptions.IndentSize; i++)
+            for (var i = 0; i < indentLevel * this.DumpOptions.IndentSize; i++)
             {
                 if (token.IsCancellationRequested)
                 {
                     return;
                 }
+
                 this.writer.Write(this.DumpOptions.IndentChar);
             }
+
             await this.writer.WriteAsync(value);
+
             if (value.EndsWith(this.DumpOptions.LineBreakChar))
             {
                 this.isNewLine = true;
