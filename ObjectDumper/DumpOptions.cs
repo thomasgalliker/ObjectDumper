@@ -72,11 +72,21 @@ public class CustomInstanceFormatters
 {
     private readonly Dictionary<Type, CustomInstanceFormatter> customFormatters = new Dictionary<Type, CustomInstanceFormatter>();
 
+    /// <summary>
+    /// Adds a custom type formatter for type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The target type.</typeparam>
+    /// <param name="formatInstance">The function which formats an object of type <typeparamref name="T"/> to string.</param>
     public void AddFormatter<T>(Func<T, string> formatInstance)
     {
-        this.customFormatters.Add(typeof(T), new CustomInstanceFormatter(typeof(T), o => formatInstance((T)o)));
+        this.AddFormatter(typeof(T), x => formatInstance((T)x));
     }
 
+    /// <summary>
+    /// Adds a custom type formatter for the given <paramref name="type"/>.
+    /// </summary>
+    /// <param name="type">The target type.</param>
+    /// <param name="formatInstance">The function which formats an object of type <typeparamref name="T"/> to string.</param>
     public void AddFormatter(Type type, Func<object, string> formatInstance)
     {
         this.customFormatters.Add(type, new CustomInstanceFormatter(type, o => formatInstance(o)));
