@@ -10,7 +10,7 @@
     <AssemblyName>ObjectDumping</AssemblyName>
     <PackageId>ObjectDumper.NET</PackageId>
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png</PackageIconUrl>
+    <PackageIcon>ObjectDumper.png</PackageIcon>
     <PackageProjectUrl>https://github.com/thomasgalliker/ObjectDumper</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/thomasgalliker/ObjectDumper</RepositoryUrl>
@@ -124,6 +124,10 @@
 
   <ItemGroup>
     <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\ObjectDumper.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
