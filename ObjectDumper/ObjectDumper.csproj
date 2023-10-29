@@ -113,7 +113,7 @@
       
 1.0.0
 - Initial release</PackageReleaseNotes>
-    <Copyright>Copyright 2023</Copyright>
+    <Copyright>Copyright 2017-$([System.DateTime]::Now.ToString(`yyyy`)) &#169; Thomas Galliker</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
