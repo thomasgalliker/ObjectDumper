@@ -10,9 +10,8 @@
     <AssemblyName>ObjectDumping</AssemblyName>
     <PackageId>ObjectDumper.NET</PackageId>
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObjectDumper/master/ObjectDumper.png</PackageIconUrl>
+    <PackageIcon>ObjectDumper.png</PackageIcon>
     <PackageProjectUrl>https://github.com/thomasgalliker/ObjectDumper</PackageProjectUrl>
-    <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/thomasgalliker/ObjectDumper</RepositoryUrl>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
@@ -114,8 +113,9 @@
       
 1.0.0
 - Initial release</PackageReleaseNotes>
-    <Copyright>Copyright 2023</Copyright>
+    <Copyright>Copyright 2017-$([System.DateTime]::Now.ToString(`yyyy`)) &#169; Thomas Galliker</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
@@ -124,6 +124,10 @@
 
   <ItemGroup>
     <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\ObjectDumper.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
