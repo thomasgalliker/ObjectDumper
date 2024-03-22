@@ -30,57 +30,61 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>4.1.0
+    <PackageReleaseNotes>4.2
+- Internal refactoring: TextWriter is used to dump strings to.
+- New Dump method which takes a TextWriter as parameter.
+		
+4.1
 - Raise minimum .NET framework version from net45 to net48
 - Remove support for net5.0
 - Bug fix for constructorless record types
 
-4.0.0
+4.0
 - Add support for C# record types
 - Add assembly strong-naming
 
-3.4.0
+3.4
 - Improve circular reference detection
 
-3.3.0
+3.3
 - Bug fix for generic default value creation
 - Bug fix for anonymous object dumping
 
-3.2.0
+3.2
 - New versioning schema
 
-3.1.0
+3.1
 - Add support for dumping anonymous types
 - Add support for .NET 5
 - Detect circular references for hash combinations h(value, type)
 - Dump warning for circular references
 - Performance improvement for property dumps
 
-3.0.0
+3.0
 - New formatting logic for DumpStyle.Console (default)
 - Bug fix for dumping decimal numbers in different cultures
 - Dump MinValue, MaxValue for built-in types (where available)
 
-2.5.0
+2.5
 - Handle CultureInfo formatting
 - Extend GetFormattedName to handle nested generics and multi-dimensional arrays
 - Optimize variable naming for generic types
 
-2.4.0
+2.4
 - Handle Guid formatting
 - Handle DateTimeOffset formatting 
 - Handle TimeSpan formatting
 - Set LineBreakChar default to Environment.NewLine
 
-2.3.0
+2.3
 - Fix escape sequences in string values
 
-2.2.0
+2.2
 - Add bool property DumpOptions.IgnoreDefaultValues to filter properties which contain default values
 - Refactor namespaces: Move ObjectDumper to root namespace
 - Add support for netstandard2.0
       
-2.0.0
+2.0
 - Migrate to netstandard1.2
 - Bug fixes
 
