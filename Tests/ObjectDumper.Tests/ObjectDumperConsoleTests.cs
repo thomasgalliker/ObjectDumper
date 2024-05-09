@@ -1251,8 +1251,8 @@ namespace ObjectDumping.Tests
         public void ShouldDumpRegexObject()
         {
             // Arrange 
-            string pattern = @"\ba\w*\b";
-            string input = "An extraordinary day dawns with each new day.";
+            var pattern = @"\ba\w*\b";
+            var input = "An extraordinary day dawns with each new day.";
             var match = Regex.Match(input, pattern, RegexOptions.IgnoreCase);
 
             // Act
@@ -1271,7 +1271,14 @@ namespace ObjectDumping.Tests
                 "    null --> Circular reference detected\r\n" +
                 "  Index: 0\r\n" +
                 "  Length: 2\r\n" +
-                "  Value: \"An\"");
+                "  Value: \"An\"" +
+#if NET5_0_OR_GREATER
+                "\r\n" +
+                "  ValueSpan: \"{NotSupportedException: Specified method is not supported.}\""
+#else
+                ""
+#endif
+                );
         }
     }
 }

@@ -1841,7 +1841,13 @@ namespace ObjectDumping.Tests
                 "  },\r\n" +
                 "  Index = 0,\r\n" +
                 "  Length = 2,\r\n" +
-                "  Value = \"An\"\r\n" +
+                "  Value = \"An\"" +
+#if NET5_0_OR_GREATER
+                ",\r\n" +
+                "  ValueSpan = \"{NotSupportedException: Specified method is not supported.}\"\r\n" +
+#else
+                "\r\n" +
+#endif
                 "};");
         }
     }
