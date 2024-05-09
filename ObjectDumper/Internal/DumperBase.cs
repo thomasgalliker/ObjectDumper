@@ -94,6 +94,11 @@ namespace ObjectDumping.Internal
 
         protected void PushReferenceForCycleDetection(object value)
         {
+            if (value == null)
+            {
+                return;
+            }
+
             var type = value.GetType();
             if (type.IsAnonymous())
             {
@@ -116,6 +121,11 @@ namespace ObjectDumping.Internal
 
         protected void PopReferenceForCycleDetection(object value)
         {
+            if (value == null)
+            {
+                return;
+            }
+
             var type = value.GetType();
             if (type.IsAnonymous())
             {
@@ -171,7 +181,11 @@ namespace ObjectDumping.Internal
         /// <returns>string</returns>
         public override string ToString()
         {
-            this.circularReferenceDetector.EnsureEmpty();
+            if (!this.circularReferenceDetector.IsEmpty)
+            {
+                throw new InvalidOperationException(
+                    "CircularReferenceDetector: Something went wrong if the circular reference detector stack is not empty at this time");
+            }
 
             return this.stringBuilder.ToString();
         }

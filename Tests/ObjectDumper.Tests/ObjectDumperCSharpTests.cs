@@ -266,6 +266,33 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpEnumerable_NestedEmptyCollections()
+        {
+            // Arrange
+            var objectWithArrays = new ObjectWithArrays
+            {
+                IntArray = new int[] { },
+                StringArray = new string[] { },
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(objectWithArrays);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var objectWithArrays = new ObjectWithArrays\r\n" +
+                "{\r\n" +
+                "  IntArray = new int[]\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  StringArray = new string[]\r\n" +
+                "  {\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+        [Fact]
         public void ShouldDumpException()
         {
             // Arrange
@@ -700,6 +727,36 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case6()
+        {
+            // Arrange 
+
+            var array = new object[]
+            {
+                0,
+                null,
+                2,
+                null
+            };
+            array[1] = array;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var objectArray = new object[]\r\n" +
+                "{\r\n" +
+                "  0,\r\n" +
+                "  null, // Circular reference detected\r\n" +  // TODO: No commat at the end of the comment here
+                "  2,\r\n" +
+                "  null\r\n" +
+                "};");
+        }
+
+        [Fact]
         public void ShouldExcludeProperties()
         {
             // Arrange
@@ -947,15 +1004,15 @@ namespace ObjectDumping.Tests
         public void ShouldDumpEnum_WithMultipleFlags()
         {
             // Arrange
-            var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
+            var enumWithFlags = EnumWithFlags.Private | EnumWithFlags.Public | EnumWithFlags.Static;
 
             // Act
-            var dump = ObjectDumperCSharp.Dump(methodAttributes);
+            var dump = ObjectDumperCSharp.Dump(enumWithFlags);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;");
+            dump.Should().Be("var enumWithFlags = EnumWithFlags.Private | EnumWithFlags.Public | EnumWithFlags.Static;");
         }
 
         [Fact]

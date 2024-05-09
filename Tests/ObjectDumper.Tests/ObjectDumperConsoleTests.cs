@@ -285,6 +285,28 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpEnumerable_NestedEmptyCollections()
+        {
+            // Arrange
+            var objectWithArrays = new ObjectWithArrays
+            {
+                IntArray = new int[] { },
+                StringArray = new string[] { },
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(objectWithArrays);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{ObjectWithArrays}\r\n" +
+                "  IntArray: ...\r\n" +
+                "  StringArray: ...");
+        }
+
+        [Fact]
         public void ShouldDumpException()
         {
             // Arrange
@@ -701,6 +723,32 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case6()
+        {
+            // Arrange 
+            var array = new object[]
+            {
+                0,
+                null,
+                2,
+                null
+            };
+            array[1] = array;
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "0\r\n" +
+                "null --> Circular reference detected\r\n" +
+                "2\r\n" +
+                "null");
+        }
+
+        [Fact]
         public void ShouldDumpRecursiveTypes_RuntimeProperties()
         {
             // Arrange
@@ -801,15 +849,15 @@ namespace ObjectDumping.Tests
         public void ShouldDumpEnum_WithMultipleFlags()
         {
             // Arrange
-            var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
+            var enumWithFlags = EnumWithFlags.Private | EnumWithFlags.Public | EnumWithFlags.Static;
 
             // Act
-            var dump = ObjectDumperConsole.Dump(methodAttributes);
+            var dump = ObjectDumperConsole.Dump(enumWithFlags);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("PrivateScope | Public | Static | HideBySig");
+            dump.Should().Be("Private | Public | Static");
         }
 
         [Fact]
