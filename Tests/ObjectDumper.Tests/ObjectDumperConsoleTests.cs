@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
@@ -1244,6 +1245,33 @@ namespace ObjectDumping.Tests
                 "  IsBodyHtml: false\r\n" +
                 "  Attachments: ...\r\n" +
                 "  AlternateViews: ...");
+        }
+
+        [Fact]
+        public void ShouldDumpRegexObject()
+        {
+            // Arrange 
+            string pattern = @"\ba\w*\b";
+            string input = "An extraordinary day dawns with each new day.";
+            var match = Regex.Match(input, pattern, RegexOptions.IgnoreCase);
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(match);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{Match}\r\n" +
+                "  Groups: ...\r\n" +
+                "    null --> Circular reference detected\r\n" +
+                "  Success: true\r\n" +
+                "  Name: \"0\"\r\n" +
+                "  Captures: ...\r\n" +
+                "    null --> Circular reference detected\r\n" +
+                "  Index: 0\r\n" +
+                "  Length: 2\r\n" +
+                "  Value: \"An\"");
         }
     }
 }
