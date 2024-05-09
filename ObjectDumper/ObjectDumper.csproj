@@ -6,7 +6,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <Version>1.0.0</Version>
     <Authors>Thomas Galliker</Authors>
-    <TargetFrameworks>net48;netstandard1.2;netstandard2.0;netstandard2.1;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net48;netstandard1.2;netstandard2.0;netstandard2.1;net7.0;net8.0</TargetFrameworks>
     <AssemblyName>ObjectDumping</AssemblyName>
     <PackageId>ObjectDumper.NET</PackageId>
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/thomasgalliker/ObjectDumper</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/thomasgalliker/ObjectDumper</RepositoryUrl>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'net48' ">win10-x64</RuntimeIdentifiers>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.2' ">$(PackageTargetFallback);netcoreapp1.0</PackageTargetFallback>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.2' ">1.6.1</NetStandardImplicitPackageVersion>
     <SignAssembly>True</SignAssembly>
