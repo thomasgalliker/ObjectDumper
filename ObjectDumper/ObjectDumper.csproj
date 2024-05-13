@@ -33,6 +33,7 @@
     <PackageReleaseNotes>4.2
 - Bug fix for circular references in collections
 - Internal refactoring to handle collection dumping more efficiently
+- Print element count for IEnumerables for DumpStyle.Console
 
 4.1
 - Raise minimum .NET framework version from net45 to net48
