@@ -504,7 +504,8 @@ namespace ObjectDumping.Internal
 
                 if (this.Level > 0)
                 {
-                    this.Write($"...", intentLevel);
+                    var typeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+                    this.Write($"{{{typeName}}}", intentLevel);
                 }
 
                 this.WriteItems(arrayOfObjects);

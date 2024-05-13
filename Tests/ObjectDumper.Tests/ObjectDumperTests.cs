@@ -37,7 +37,7 @@ namespace ObjectDumping.Tests
                 "  GetOnly: 11\r\n" +
                 "  Bool: false\r\n" +
                 "  Byte: 0\r\n" +
-                "  ByteArray: ...\r\n" +
+                "  ByteArray: {byte[]}\r\n" +
                 "    1\r\n" +
                 "    2\r\n" +
                 "    3\r\n" +
