@@ -293,6 +293,41 @@ namespace ObjectDumping.Tests
                 "  }\r\n" +
                 "};");
         }
+
+        [Fact]
+        public void ShouldDumpEnumerable_NestedCollections()
+        {
+            // Arrange
+            var objectWithArrays = new ObjectWithArrays
+            {
+                IntArray = new int[] { 1, 2, 3 },
+                StringArray = new string[] { "1", "2", "3" },
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(objectWithArrays);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var objectWithArrays = new ObjectWithArrays\r\n" +
+                "{\r\n" +
+                "  IntArray = new int[]\r\n" +
+                "  {\r\n" +
+                "    1,\r\n" +
+                "    2,\r\n" +
+                "    3\r\n" +
+                "  },\r\n" +
+                "  StringArray = new string[]\r\n" +
+                "  {\r\n" +
+                "    \"1\",\r\n" +
+                "    \"2\",\r\n" +
+                "    \"3\"\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
         [Fact]
         public void ShouldDumpException()
         {

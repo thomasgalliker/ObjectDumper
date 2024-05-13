@@ -118,8 +118,11 @@ namespace ObjectDumping.Tests
                 "  GetOnly: 11\r\n" +
                 "  Bool: false\r\n" +
                 "  Byte: 0\r\n" +
-                "  ByteArray: ...\r\n" +
-                "    1\r\n    2\r\n    3\r\n    4\r\n" +
+                "  ByteArray: {byte[4]}\r\n" +
+                "    1\r\n" +
+                "    2\r\n" +
+                "    3\r\n" +
+                "    4\r\n" +
                 "  SByte: 0\r\n" +
                 "  Float: 0\r\n" +
                 "  Uint: 0\r\n" +
@@ -152,7 +155,12 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{My.TestObject2}\r\n  body: null\r\n  name: null\r\n  Body: null\r\n  Name: null\r\n");
+            dump.Should().Be(
+                "{My.TestObject2}\r\n" +
+                "  body: null\r\n" +
+                "  name: null\r\n" +
+                "  Body: null\r\n" +
+                "  Name: null\r\n");
         }
 
         [Fact]
@@ -196,7 +204,8 @@ namespace ObjectDumping.Tests
                 "	Char: ''\n" +
                 "	Age: 2\n" +
                 "	Bool: false\n" +
-                "	Byte: 0\n	ByteArray: ...\n" +
+                "	Byte: 0\n" +
+                "	ByteArray: {byte[4]}\n" +
                 "		1\n" +
                 "		2\n" +
                 "		3\n" +
@@ -204,7 +213,8 @@ namespace ObjectDumping.Tests
                 "	SByte: 0\n" +
                 "	Float: 0\n" +
                 "	Uint: 0\n" +
-                "	Long: 0\n	ULong: 0\n" +
+                "	Long: 0\n" +
+                "	ULong: 0\n" +
                 "	Short: 0\n" +
                 "	UShort: 0\n" +
                 "	Decimal: 0\n" +
@@ -233,8 +243,11 @@ namespace ObjectDumping.Tests
                 "  GetOnly: 11\r\n" +
                 "  Bool: false\r\n" +
                 "  Byte: 0\r\n" +
-                "  ByteArray: ...\r\n" +
-                "    1\r\n    2\r\n    3\r\n    4\r\n" +
+                "  ByteArray: {byte[4]}\r\n" +
+                "    1\r\n" +
+                "    2\r\n" +
+                "    3\r\n" +
+                "    4\r\n" +
                 "  SByte: 0\r\n" +
                 "  Float: 0\r\n" +
                 "  Uint: 0\r\n" +
@@ -254,8 +267,11 @@ namespace ObjectDumping.Tests
                 "  GetOnly: 11\r\n" +
                 "  Bool: false\r\n" +
                 "  Byte: 0\r\n" +
-                "  ByteArray: ...\r\n" +
-                "    1\r\n    2\r\n    3\r\n    4\r\n" +
+                "  ByteArray: {byte[4]}\r\n" +
+                "    1\r\n" +
+                "    2\r\n" +
+                "    3\r\n" +
+                "    4\r\n" +
                 "  SByte: 0\r\n" +
                 "  Float: 0\r\n" +
                 "  Uint: 0\r\n" +
@@ -303,8 +319,36 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be(
                 "{ObjectWithArrays}\r\n" +
-                "  IntArray: ...\r\n" +
-                "  StringArray: ...");
+                "  IntArray: {int[0]}\r\n" +
+                "  StringArray: {string[0]}");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_NestedCollections()
+        {
+            // Arrange
+            var objectWithArrays = new ObjectWithArrays
+            {
+                IntArray = new int[] { 1, 2, 3 },
+                StringArray = new string[] { "1", "2", "3" },
+            };
+
+            // Act
+            var dump = ObjectDumperConsole.Dump(objectWithArrays);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "{ObjectWithArrays}\r\n" +
+                "  IntArray: {int[3]}\r\n" +
+                "    1\r\n" +
+                "    2\r\n" +
+                "    3\r\n" +
+                "  StringArray: {string[3]}\r\n" +
+                "    \"1\"\r\n" +
+                "    \"2\"\r\n" +
+                "    \"3\"");
         }
 
         [Fact]
@@ -323,7 +367,7 @@ namespace ObjectDumping.Tests
             dump.Should().Be(
                 "{KeyNotFoundException}\r\n" +
                 "  Message: \"message text\"\r\n" +
-                "  Data: ...\r\n" +
+                "  Data: {ListDictionaryInternal, Count=0}\r\n" +
                 "  HResult: -2146232969");
         }
 
@@ -398,7 +442,11 @@ namespace ObjectDumping.Tests
         {
             // Arrange
             var persons = PersonFactory.GeneratePersons(count: 2).ToList();
-            var organization = new Organization { Name = "superdev gmbh", Persons = persons };
+            var organization = new Organization
+            {
+                Name = "superdev gmbh",
+                Persons = persons
+            };
 
             // Act
             var dump = ObjectDumperConsole.Dump(organization);
@@ -410,7 +458,7 @@ namespace ObjectDumping.Tests
             dump.Should().Be(
                 "{Organization}\r\n" +
                 "  Name: \"superdev gmbh\"\r\n" +
-                "  Persons: ...\r\n" +
+                "  Persons: {List<Person>, Count=2}\r\n" +
                 "    {Person}\r\n" +
                 "      Name: \"Person 1\"\r\n" +
                 "      Char: ''\r\n" +
@@ -418,7 +466,7 @@ namespace ObjectDumping.Tests
                 "      GetOnly: 11\r\n" +
                 "      Bool: false\r\n" +
                 "      Byte: 0\r\n" +
-                "      ByteArray: ...\r\n" +
+                "      ByteArray: {byte[4]}\r\n" +
                 "        1\r\n" +
                 "        2\r\n" +
                 "        3\r\n" +
@@ -442,7 +490,7 @@ namespace ObjectDumping.Tests
                 "      GetOnly: 11\r\n" +
                 "      Bool: false\r\n" +
                 "      Byte: 0\r\n" +
-                "      ByteArray: ...\r\n" +
+                "      ByteArray: {byte[4]}\r\n" +
                 "        1\r\n" +
                 "        2\r\n" +
                 "        3\r\n" +
@@ -492,7 +540,7 @@ namespace ObjectDumping.Tests
                 "    GetOnly: 11\r\n" +
                 "    Bool: false\r\n" +
                 "    Byte: 0\r\n" +
-                "    ByteArray: ...\r\n" +
+                "    ByteArray: {byte[4]}\r\n" +
                 "      1\r\n" +
                 "      2\r\n" +
                 "      3\r\n" +
@@ -550,8 +598,15 @@ namespace ObjectDumping.Tests
         {
             // Arrange
             var persons = PersonFactory.GeneratePersons(count: 2).ToList();
-            var organization = new Organization { Name = "superdev gmbh", Persons = persons };
-            var options = new DumpOptions { MaxLevel = 1 };
+            var organization = new Organization
+            {
+                Name = "superdev gmbh",
+                Persons = persons
+            };
+            var options = new DumpOptions
+            {
+                MaxLevel = 1
+            };
 
             // Act
             var dump = ObjectDumperConsole.Dump(organization, options);
@@ -563,7 +618,7 @@ namespace ObjectDumping.Tests
             dump.Should().Be(
                 "{Organization}\r\n" +
                 "  Name: \"superdev gmbh\"\r\n" +
-                "  Persons: ...\r\n" +
+                "  Persons: {List<Person>, Count=2}\r\n" +
                 "  IsAfterCollection: true");
         }
 
@@ -1199,20 +1254,20 @@ namespace ObjectDumping.Tests
                 "    Address: \"sender@mail.com\"\r\n" +
                 "  Sender: null\r\n" +
                 "  ReplyTo: null\r\n" +
-                "  ReplyToList: ...\r\n" +
-                "  To: ...\r\n" +
+                "  ReplyToList: {MailAddressCollection, Count=0}\r\n" +
+                "  To: {MailAddressCollection, Count=1}\r\n" +
                 "    {MailAddress}\r\n" +
                 "      DisplayName: \"\"\r\n" +
                 "      User: \"receiver\"\r\n" +
                 "      Host: \"mail.com\"\r\n" +
                 "      Address: \"receiver@mail.com\"\r\n" +
-                "  Bcc: ...\r\n" +
-                "  CC: ...\r\n" +
+                "  Bcc: {MailAddressCollection, Count=0}\r\n" +
+                "  CC: {MailAddressCollection, Count=0}\r\n" +
                 "  Priority: MailPriority.Normal\r\n" +
                 "  DeliveryNotificationOptions: DeliveryNotificationOptions.None\r\n" +
                 "  Subject: \"Subject\"\r\n" +
                 "  SubjectEncoding: null\r\n" +
-                "  Headers: ...\r\n" +
+                "  Headers: {HeaderCollection, Count=0}\r\n" +
                 "  HeadersEncoding: null\r\n" +
                 "  Body: \"Body\"\r\n" +
 #if NETFRAMEWORK
@@ -1243,8 +1298,8 @@ namespace ObjectDumping.Tests
                 "    CodePage: 20127\r\n" +
                 "  BodyTransferEncoding: TransferEncoding.Unknown\r\n" +
                 "  IsBodyHtml: false\r\n" +
-                "  Attachments: ...\r\n" +
-                "  AlternateViews: ...");
+                "  Attachments: {AttachmentCollection, Count=0}\r\n" +
+                "  AlternateViews: {AlternateViewCollection, Count=0}");
         }
 
         [Fact]
@@ -1263,11 +1318,11 @@ namespace ObjectDumping.Tests
             dump.Should().NotBeNull();
             dump.Should().Be(
                 "{Match}\r\n" +
-                "  Groups: ...\r\n" +
+                "  Groups: {GroupCollection, Count=1}\r\n" +
                 "    null --> Circular reference detected\r\n" +
                 "  Success: true\r\n" +
                 "  Name: \"0\"\r\n" +
-                "  Captures: ...\r\n" +
+                "  Captures: {CaptureCollection, Count=1}\r\n" +
                 "    null --> Circular reference detected\r\n" +
                 "  Index: 0\r\n" +
                 "  Length: 2\r\n" +

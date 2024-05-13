@@ -504,7 +504,19 @@ namespace ObjectDumping.Internal
 
                 if (this.Level > 0)
                 {
-                    this.Write($"...", intentLevel);
+                    string typeNameWithCount;
+                    if (type.IsArray)
+                    {
+                        var elementTypeName = type.GetElementType().GetFormattedName(this.DumpOptions.UseTypeFullName);
+                        typeNameWithCount = $"{elementTypeName}[{arrayOfObjects.Length}]";
+                    }
+                    else
+                    {
+                        var typeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
+                        typeNameWithCount = $"{typeName}, Count={arrayOfObjects.Length}";
+                    }
+
+                    this.Write($"{{{typeNameWithCount}}}", intentLevel);
                 }
 
                 this.WriteItems(arrayOfObjects);

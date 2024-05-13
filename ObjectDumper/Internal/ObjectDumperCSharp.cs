@@ -668,11 +668,7 @@ namespace ObjectDumping.Internal
                     continue;
                 }
 
-                //this.PushReferenceForCycleDetection(item.Value);
-
                 this.FormatValue(item.Value, this.Level);
-
-                //this.PopReferenceForCycleDetection(item.Value);
 
                 if (!item.IsLast)
                 {
