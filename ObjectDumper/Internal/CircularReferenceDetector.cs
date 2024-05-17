@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ObjectDumping.Internal
 {
@@ -19,17 +19,19 @@ namespace ObjectDumping.Internal
             return this.stack.Contains(wrapper);
         }
 
-        internal void EnsureEmpty()
-        {
-            Debug.Assert(
-                condition: this.stack.Count == 0,
-                message: "Something went wrong if the circular reference detector stack is not empty at this time");
-        }
+        public bool IsEmpty => this.stack.Count == 0;
 
         internal void PushReferenceForCycleDetection(object value)
         {
             var wrapper = new ReferenceEqualsWrapper(value);
-            Debug.Assert(!this.stack.Contains(wrapper));
+
+            if (this.stack.Contains(wrapper))
+            {
+                throw new InvalidOperationException(
+                    $"CircularReferenceDetector failed to push object of type '{value.GetType().GetFormattedName()}': " +
+                    $"The same object is already exists.");
+            }
+
             this.stack.Push(wrapper);
         }
     }
