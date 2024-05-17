@@ -6,7 +6,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <Version>1.0.0</Version>
     <Authors>Thomas Galliker</Authors>
-    <TargetFrameworks>net48;netstandard1.2;netstandard2.0;netstandard2.1;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net48;netstandard1.2;netstandard2.0;netstandard2.1;net7.0;net8.0</TargetFrameworks>
     <AssemblyName>ObjectDumping</AssemblyName>
     <PackageId>ObjectDumper.NET</PackageId>
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/thomasgalliker/ObjectDumper</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/thomasgalliker/ObjectDumper</RepositoryUrl>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'net48' ">win10-x64</RuntimeIdentifiers>
     <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.2' ">$(PackageTargetFallback);netcoreapp1.0</PackageTargetFallback>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.2' ">1.6.1</NetStandardImplicitPackageVersion>
     <SignAssembly>True</SignAssembly>
@@ -30,10 +30,14 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>4.2
+    <PackageReleaseNotes>4.3
 - Internal refactoring: TextWriter is used to dump strings to.
 - New Dump method which takes a TextWriter as parameter.
-		
+4.2
+- Bug fix for circular references in collections
+- Internal refactoring to handle collection dumping more efficiently
+- Print element count for IEnumerables for DumpStyle.Console
+
 4.1
 - Raise minimum .NET framework version from net45 to net48
 - Remove support for net5.0
@@ -85,39 +89,24 @@
 - Add support for netstandard2.0
       
 2.0
-- Migrate to netstandard1.2
+- Migration to netstandard1.2
 - Bug fixes
 
-1.0.8
+1.0
+- Initial release
 - Bugfix for .NET Standard: CSharp initializer code generation for KeyValuePairs is currently disabled in this release
-
-1.0.7
 - Change DateTime formatting to ISO 8601 standard
 - Add formatting for IDictionary&amp;lt;TKey, TValue&amp;gt; and KeyValuePair&amp;lt;TKey, TValue&amp;gt;
-
-1.0.6
 - Replace long suffix 'l' with 'L'
-
-1.0.5
 - Optimization for DateTime.MinValue and DateTime.MaxValue serialization
-
-1.0.4
 - Bug fix: Use default dump options if not specified
-
-1.0.3
 - Add support for .NET Standard
 - Add DumpOptions several serialization options, e.g. C#-like DumpStyle
-
-1.0.2
 - Bug fix: Filter COM objects
 - Bug fix: Catch exceptions if properties/fields cannot be accessed
-
-1.0.1
 - Bug fix: Ignore non-public properties
-      
-1.0.0
-- Initial release</PackageReleaseNotes>
-    <Copyright>Copyright 2017-$([System.DateTime]::Now.ToString(`yyyy`)) &#169; Thomas Galliker</Copyright>
+  </PackageReleaseNotes>
+    <Copyright>Copyright 2017-$([System.DateTime]::Now.ToString(`yyyy`)) © Thomas Galliker</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>

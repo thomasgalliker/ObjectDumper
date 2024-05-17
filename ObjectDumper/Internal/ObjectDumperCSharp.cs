@@ -14,6 +14,7 @@ namespace ObjectDumping.Internal
     /// </summary>
     internal class ObjectDumperCSharp : DumperBase
     {
+        private const string CircularReferenceDetectedComment = "// Circular reference detected";
         private static readonly string[] LanguageKeywords = { "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while" };
 
         public ObjectDumperCSharp(TextWriter writer, DumpOptions dumpOptions)
@@ -160,7 +161,7 @@ namespace ObjectDumping.Internal
                     {
                         this.Write(",");
                     }
-                    this.Write(" // Circular reference detected");
+                    this.Write($" {CircularReferenceDetectedComment}");
                     this.LineBreak();
                     continue;
                 }
@@ -604,13 +605,19 @@ namespace ObjectDumping.Internal
 
             if (o is IEnumerable enumerable)
             {
+                this.PushReferenceForCycleDetection(o);
+
+                var arrayOfObjects = enumerable.GetLastEnumerable().ToArray();
+
                 var typeName = type.GetFormattedName(this.DumpOptions.UseTypeFullName);
                 this.Write($"new{(string.IsNullOrEmpty(typeName) ? "" : " ")}{typeName}", intentLevel);
                 this.LineBreak();
                 this.Write("{");
                 this.LineBreak();
-                this.WriteItems(enumerable);
+                this.WriteItems(arrayOfObjects);
                 this.Write("}");
+
+                this.PopReferenceForCycleDetection(o);
                 return;
             }
 
@@ -644,8 +651,13 @@ namespace ObjectDumping.Internal
         }
 #endif
 
-        private void WriteItems(IEnumerable items)
+        private void WriteItems(MetaEnumerableItem<object>[] enumerable)
         {
+            if (!enumerable.Any())
+            {
+                return;
+            }
+
             this.Level++;
             if (this.IsMaxLevel())
             {
@@ -653,17 +665,29 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            var e = items.GetEnumerator();
-            if (e.MoveNext())
+            foreach (var item in enumerable)
             {
-                this.FormatValue(e.Current, this.Level);
+                if (this.CheckForCircularReference(item.Value))
+                {
+                    var defaultValue = item.Value.GetType().TryGetDefault();
+                    this.FormatValue(defaultValue, this.Level);
 
-                while (e.MoveNext())
+                    if (!item.IsLast)
+                    {
+                        this.Write(",");
+                    }
+
+                    this.Write($" {CircularReferenceDetectedComment}");
+
+                    this.LineBreak();
+                    continue;
+                }
+
+                this.FormatValue(item.Value, this.Level);
+
+                if (!item.IsLast)
                 {
                     this.Write(",");
-                    this.LineBreak();
-
-                    this.FormatValue(e.Current, this.Level);
                 }
 
                 this.LineBreak();

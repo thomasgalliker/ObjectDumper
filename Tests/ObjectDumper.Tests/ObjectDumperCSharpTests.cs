@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using ObjectDumping.Internal;
 using ObjectDumping.Tests.Testdata;
@@ -262,6 +263,68 @@ namespace ObjectDumping.Tests
             dump.Should().Be(
                 "var listOfPersons = new List<Person>\r\n" +
                 "{\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_NestedEmptyCollections()
+        {
+            // Arrange
+            var objectWithArrays = new ObjectWithArrays
+            {
+                IntArray = new int[] { },
+                StringArray = new string[] { },
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(objectWithArrays);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var objectWithArrays = new ObjectWithArrays\r\n" +
+                "{\r\n" +
+                "  IntArray = new int[]\r\n" +
+                "  {\r\n" +
+                "  },\r\n" +
+                "  StringArray = new string[]\r\n" +
+                "  {\r\n" +
+                "  }\r\n" +
+                "};");
+        }
+
+        [Fact]
+        public void ShouldDumpEnumerable_NestedCollections()
+        {
+            // Arrange
+            var objectWithArrays = new ObjectWithArrays
+            {
+                IntArray = new int[] { 1, 2, 3 },
+                StringArray = new string[] { "1", "2", "3" },
+            };
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(objectWithArrays);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var objectWithArrays = new ObjectWithArrays\r\n" +
+                "{\r\n" +
+                "  IntArray = new int[]\r\n" +
+                "  {\r\n" +
+                "    1,\r\n" +
+                "    2,\r\n" +
+                "    3\r\n" +
+                "  },\r\n" +
+                "  StringArray = new string[]\r\n" +
+                "  {\r\n" +
+                "    \"1\",\r\n" +
+                "    \"2\",\r\n" +
+                "    \"3\"\r\n" +
+                "  }\r\n" +
                 "};");
         }
 
@@ -700,6 +763,36 @@ namespace ObjectDumping.Tests
         }
 
         [Fact]
+        public void ShouldDumpRecursiveTypes_CircularReference_Case6()
+        {
+            // Arrange 
+
+            var array = new object[]
+            {
+                0,
+                null,
+                2,
+                null
+            };
+            array[1] = array;
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(array);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var objectArray = new object[]\r\n" +
+                "{\r\n" +
+                "  0,\r\n" +
+                "  null, // Circular reference detected\r\n" +  // TODO: No commat at the end of the comment here
+                "  2,\r\n" +
+                "  null\r\n" +
+                "};");
+        }
+
+        [Fact]
         public void ShouldExcludeProperties()
         {
             // Arrange
@@ -947,15 +1040,15 @@ namespace ObjectDumping.Tests
         public void ShouldDumpEnum_WithMultipleFlags()
         {
             // Arrange
-            var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
+            var enumWithFlags = EnumWithFlags.Private | EnumWithFlags.Public | EnumWithFlags.Static;
 
             // Act
-            var dump = ObjectDumperCSharp.Dump(methodAttributes);
+            var dump = ObjectDumperCSharp.Dump(enumWithFlags);
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var methodAttributes = MethodAttributes.PrivateScope | MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;");
+            dump.Should().Be("var enumWithFlags = EnumWithFlags.Private | EnumWithFlags.Public | EnumWithFlags.Static;");
         }
 
         [Fact]
@@ -1753,5 +1846,44 @@ namespace ObjectDumping.Tests
                 "};");
         }
 #endif
+
+        [Fact]
+        public void ShouldDumpRegexObject()
+        {
+            // Arrange 
+            var pattern = @"\ba\w*\b";
+            var input = "An extraordinary day dawns with each new day.";
+            var match = Regex.Match(input, pattern, RegexOptions.IgnoreCase);
+
+            // Act
+            var dump = ObjectDumperCSharp.Dump(match);
+
+            // Assert
+            this.testOutputHelper.WriteLine(dump);
+            dump.Should().NotBeNull();
+            dump.Should().Be(
+                "var match = new Match\r\n" +
+                "{\r\n" +
+                "  Groups = new GroupCollection\r\n" +
+                "  {\r\n" +
+                "    null // Circular reference detected\r\n" +
+                "  },\r\n" +
+                "  Success = true,\r\n" +
+                "  Name = \"0\",\r\n" +
+                "  Captures = new CaptureCollection\r\n" +
+                "  {\r\n" +
+                "    null // Circular reference detected\r\n" +
+                "  },\r\n" +
+                "  Index = 0,\r\n" +
+                "  Length = 2,\r\n" +
+                "  Value = \"An\"" +
+#if NET5_0_OR_GREATER
+                ",\r\n" +
+                "  ValueSpan = \"{NotSupportedException: Specified method is not supported.}\"\r\n" +
+#else
+                "\r\n" +
+#endif
+                "};");
+        }
     }
 }
