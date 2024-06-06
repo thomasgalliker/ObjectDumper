@@ -14,8 +14,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5B2E3BCA-E4CD-4F89-9165-C968EABB6825}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		README.md = README.md
 		azure-pipelines.yml = azure-pipelines.yml
+		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
+		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
+		README.md = README.md
+		.github\ISSUE_TEMPLATE\refactoring.md = .github\ISSUE_TEMPLATE\refactoring.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectDumperConsoleApp", "Samples\ObjectDumperConsoleApp\ObjectDumperConsoleApp.csproj", "{9CB2B8E7-41FB-4FBF-9412-B77359117F5B}"
