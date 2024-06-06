@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace ObjectDumping.Internal
 {
@@ -11,22 +13,30 @@ namespace ObjectDumping.Internal
     {
         private const string CircularReferenceDetectedComment = "--> Circular reference detected";
 
-        public ObjectDumperConsole(DumpOptions dumpOptions) : base(dumpOptions)
+        public ObjectDumperConsole(TextWriter writer, DumpOptions dumpOptions) : base(writer, dumpOptions)
         {
         }
 
         public static string Dump(object element, DumpOptions dumpOptions = null)
         {
-            if (dumpOptions == null)
+            var writer = new StringWriter(new StringBuilder());
+            Dump(element, writer, dumpOptions);
+            return writer.ToString();
+        }
+
+        public static void Dump(object element, TextWriter writer, DumpOptions dumpOptions = null)
+        {
+            if (writer == null)
             {
-                dumpOptions = new DumpOptions();
+                throw new ArgumentNullException(nameof(writer), $"Parameter 'nameof(writer)' must not be null.");
             }
 
-            var instance = new ObjectDumperConsole(dumpOptions);
+            dumpOptions ??= new DumpOptions();
 
+            var instance = new ObjectDumperConsole(writer, dumpOptions);
             instance.FormatValue(element);
 
-            return instance.ToString();
+            writer.Flush();
         }
 
         private void CreateObject(object o, int intentLevel = 0)

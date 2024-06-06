@@ -30,7 +30,10 @@
     <Product>ObjectDumper.NET</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObjectDumping</RootNamespace>
-    <PackageReleaseNotes>4.2
+    <PackageReleaseNotes>4.3
+- Internal refactoring: TextWriter is used to dump strings to.
+- New Dump method which takes a TextWriter as parameter.
+4.2
 - Bug fix for circular references in collections
 - Internal refactoring to handle collection dumping more efficiently
 - Print element count for IEnumerables for DumpStyle.Console
