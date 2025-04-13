@@ -1,5 +1,5 @@
 # ObjectDumper.NET
-[![Version](https://img.shields.io/nuget/v/ObjectDumper.NET.svg)](https://www.nuget.org/packages/ObjectDumper.NET)  [![Downloads](https://img.shields.io/nuget/dt/ObjectDumper.NET.svg)](https://www.nuget.org/packages/ObjectDumper.NET)
+[![Version](https://img.shields.io/nuget/v/ObjectDumper.NET.svg)](https://www.nuget.org/packages/ObjectDumper.NET) [![Downloads](https://img.shields.io/nuget/dt/ObjectDumper.NET.svg)](https://www.nuget.org/packages/ObjectDumper.NET) [![Buy Me a Coffee](https://img.shields.io/badge/support-buy%20me%20a%20coffee-FFDD00)](https://buymeacoffee.com/thomasgalliker)
 
 ObjectDumper is a utility which aims to serialize C# objects to string for debugging and logging purposes.
 
@@ -107,4 +107,9 @@ https://codebeautify.org/csharp-escape-unescape
 
 
 ### License
-This project is Copyright &copy; 2023 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is offered under a dual license:
+- **Free for non-commercial use**, including private and educational purposes.
+- **Commercial use requires a license**, please support the project by making a one-time donation of $50+ via https://buymeacoffee.com/thomasgalliker.
+
+Recurring or more generous sponsorships are sincerely appreciated and help sustain ongoing development. Thank you for your support!
+If you have any questions about licensing, feel free to contact [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker).
