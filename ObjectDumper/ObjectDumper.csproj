@@ -123,4 +123,5 @@
     </None>
   </ItemGroup>
 
+  <Import Project="..\SourceLink.props"/>
 </Project>
