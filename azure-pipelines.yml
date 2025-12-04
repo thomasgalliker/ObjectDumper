@@ -46,7 +46,7 @@ steps:
     targetType: 'inline'
     script: 'env | sort'
    
-- task: Assembly-Info-NetCore@2
+- task: Assembly-Info-NetCore@3
   displayName: 'Update Assembly Info'
   inputs:
     Path: '$(Build.SourcesDirectory)'
@@ -91,7 +91,7 @@ steps:
     projects: '**/*.Tests.csproj'
     arguments: '--no-restore --no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:Exclude="[Microsoft*]*%2C[Mono*]*%2C[xunit*]*%2C[*.Testdata]*" /p:CoverletOutput=UnitTests.coverage.cobertura.xml /p:MergeWith=$(Build.SourcesDirectory)/Tests/CoverletOutput/coverage.json /p:CoverletOutputFormat=cobertura'
     
-- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+- task: reportgenerator@5
   displayName: 'Create Code Coverage Report'
   inputs:
     reports: '$(Build.SourcesDirectory)/Tests/**/*.coverage.cobertura*.xml'
@@ -117,7 +117,7 @@ steps:
       **\ReleaseNotes.txt
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
      
-- task: PublishCodeCoverageResults@1
+- task: PublishCodeCoverageResults@2
   displayName: 'Publish code coverage'
   inputs:
     codeCoverageTool: Cobertura
