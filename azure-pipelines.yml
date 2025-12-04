@@ -12,7 +12,7 @@ pool:
 trigger:
   branches:
     include:
-    - master
+    - main
     - develop
     - feature/*
     - bugfix/*
@@ -28,10 +28,10 @@ variables:
   majorVersion: 4
   minorVersion: 4
   patchVersion: $[counter(format('{0}.{1}', variables.majorVersion, variables.minorVersion), 0)]
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
     # Versioning: 1.0.0
     semVersion: $[format('{0}.{1}.{2}', variables.majorVersion, variables.minorVersion, variables.patchVersion)]
-  ${{ if and(ne(variables['Build.SourceBranch'], 'refs/heads/master'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/'))) }}:
+  ${{ if and(ne(variables['Build.SourceBranch'], 'refs/heads/main'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/'))) }}:
     # Versioning: 1.0.0-pre
     semVersion: $[format('{0}.{1}.{2}-pre', variables.majorVersion, variables.minorVersion, variables.patchVersion)]
   ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
