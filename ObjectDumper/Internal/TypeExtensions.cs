@@ -1,17 +1,9 @@
 
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
-<<<<<<< TODO: Unmerged change from project 'ObjectDumper (net8.0)', Before:
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-=======
-using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
->>>>>>> After
 
 namespace ObjectDumping.Internal
 {
