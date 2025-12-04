@@ -1,12 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+<<<<<<< TODO: Unmerged change from project 'ObjectDumper (net8.0)', Before:
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
+=======
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+>>>>>>> After
 
 namespace ObjectDumping.Internal
 {
@@ -240,13 +245,13 @@ namespace ObjectDumping.Internal
              !t.IsInterface &&
              !t.IsEnum &&
              typeof(IEquatable<>).MakeGenericType(t).IsAssignableFrom(t) &&
-             t.GetMethod("ToString", (BindingFlags.Public | BindingFlags.Instance), Type.EmptyTypes) is MethodInfo toString && (IsOverridden(toString) || IsCompilerGenerated(toString)) &&
-             t.GetMethod("GetHashCode", (BindingFlags.Public | BindingFlags.Instance), Type.EmptyTypes) is MethodInfo getHashCode && (IsOverridden(getHashCode) || IsCompilerGenerated(getHashCode)) &&
-             t.GetMethod("PrintMembers", (BindingFlags.NonPublic | BindingFlags.Instance), new[] { typeof(StringBuilder) }) is MethodInfo printMembers && IsCompilerGenerated(printMembers) &&
-             t.GetMethod("op_Equality", (BindingFlags.Public | BindingFlags.Static), new[] { t, t }) is MethodInfo op_Equality && IsCompilerGenerated(op_Equality) &&
-             t.GetMethod("op_Inequality", (BindingFlags.Public | BindingFlags.Static), new[] { t, t }) is MethodInfo op_Inequality && IsCompilerGenerated(op_Inequality) &&
-             t.GetMethod("Equals", (BindingFlags.Public | BindingFlags.Instance), new[] { typeof(object) }) is MethodInfo equals && IsCompilerGenerated(equals) &&
-             t.GetMethod("Equals", (BindingFlags.Public | BindingFlags.Instance), new[] { t }) is MethodInfo typeEquals && IsCompilerGenerated(typeEquals) &&
+             t.GetMethod("ToString", BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes) is MethodInfo toString && (IsOverridden(toString) || IsCompilerGenerated(toString)) &&
+             t.GetMethod("GetHashCode", BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes) is MethodInfo getHashCode && (IsOverridden(getHashCode) || IsCompilerGenerated(getHashCode)) &&
+             t.GetMethod("PrintMembers", BindingFlags.NonPublic | BindingFlags.Instance, new[] { typeof(StringBuilder) }) is MethodInfo printMembers && IsCompilerGenerated(printMembers) &&
+             t.GetMethod("op_Equality", BindingFlags.Public | BindingFlags.Static, new[] { t, t }) is MethodInfo op_Equality && IsCompilerGenerated(op_Equality) &&
+             t.GetMethod("op_Inequality", BindingFlags.Public | BindingFlags.Static, new[] { t, t }) is MethodInfo op_Inequality && IsCompilerGenerated(op_Inequality) &&
+             t.GetMethod("Equals", BindingFlags.Public | BindingFlags.Instance, new[] { typeof(object) }) is MethodInfo equals && IsCompilerGenerated(equals) &&
+             t.GetMethod("Equals", BindingFlags.Public | BindingFlags.Instance, new[] { t }) is MethodInfo typeEquals && IsCompilerGenerated(typeEquals) &&
              (t.IsValueType || (
                  t.GetMethod("<Clone>$", BindingFlags.Public | BindingFlags.Instance) is MethodInfo clone && IsCompilerGenerated(clone) &&
                  t.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, new[] { t }) is ConstructorInfo forClone && IsCompilerGenerated(forClone) &&

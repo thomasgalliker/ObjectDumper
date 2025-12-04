@@ -4,7 +4,6 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using ObjectDumping.Internal;
@@ -799,7 +798,7 @@ namespace ObjectDumping.Tests
             var testObject = new TestObject();
             var options = new DumpOptions
             {
-                ExcludeProperties = new [] { "Id", "NonExistent" }
+                ExcludeProperties = new[] { "Id", "NonExistent" }
             };
 
             // Act
@@ -941,7 +940,7 @@ namespace ObjectDumping.Tests
         public void ShouldDumpTimeSpan_Negative()
         {
             // Arrange
-            var timeSpan = (new TimeSpan(1, 2, 3, 4, 5)).Negate();
+            var timeSpan = new TimeSpan(1, 2, 3, 4, 5).Negate();
 
             // Act
             var dump = ObjectDumperCSharp.Dump(timeSpan);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-
-namespace ObjectDumping.Internal
+﻿namespace ObjectDumping.Internal
 {
     internal struct ReferenceEqualsWrapper : IEquatable<ReferenceEqualsWrapper>
     {

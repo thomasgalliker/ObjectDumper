@@ -329,8 +329,8 @@ namespace ObjectDumping.Tests
             // Arrange
             var objectWithArrays = new ObjectWithArrays
             {
-                IntArray = new [] { 1, 2, 3 },
-                StringArray = new [] { "1", "2", "3" },
+                IntArray = new[] { 1, 2, 3 },
+                StringArray = new[] { "1", "2", "3" },
             };
 
             // Act
@@ -825,7 +825,7 @@ namespace ObjectDumping.Tests
         {
             // Arrange
             var testObject = new TestObject();
-            var options = new DumpOptions { ExcludeProperties = new [] { "Id", "NonExistent" } };
+            var options = new DumpOptions { ExcludeProperties = new[] { "Id", "NonExistent" } };
 
             // Act
             var dump = ObjectDumperConsole.Dump(testObject, options);
@@ -996,7 +996,7 @@ namespace ObjectDumping.Tests
                 SetPropertiesOnly = true,
                 IgnoreDefaultValues = true,
                 MaxLevel = 1,
-                ExcludeProperties = new [] { "ByteArray" }
+                ExcludeProperties = new[] { "ByteArray" }
             };
 
             // Act
