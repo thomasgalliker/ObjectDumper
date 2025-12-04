@@ -12,19 +12,19 @@ namespace ObjectDumping.Internal
             this.value = value;
         }
 
-        public override bool Equals(object value)
+        public bool Equals(ReferenceEqualsWrapper other)
         {
-            return value is ReferenceEqualsWrapper wrapper && this.Equals(wrapper);
+            return this.value.Equals(other.value);
         }
 
-        public bool Equals(ReferenceEqualsWrapper wrapper)
+        public override bool Equals(object? obj)
         {
-            return ReferenceEquals(this.value, wrapper.value);
+            return obj is ReferenceEqualsWrapper other && this.Equals(other);
         }
 
         public override int GetHashCode()
         {
-            return RuntimeHelpers.GetHashCode(this.value);
+            return this.value.GetHashCode();
         }
     }
 }

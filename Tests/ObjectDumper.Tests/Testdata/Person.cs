@@ -11,7 +11,7 @@ namespace ObjectDumping.Tests.Testdata
             this.ByteArray = new byte[] { 1, 2, 3, 4 };
         }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public char Char { get; set; }
 

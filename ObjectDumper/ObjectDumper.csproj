@@ -19,7 +19,8 @@
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.2' ">1.6.1</NetStandardImplicitPackageVersion>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>ObjectDumper.snk</AssemblyOriginatorKeyFile>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>

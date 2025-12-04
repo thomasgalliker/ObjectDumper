@@ -15,12 +15,9 @@ namespace ObjectDumping.Internal
         {
         }
 
-        public static string Dump(object element, DumpOptions dumpOptions = null)
+        public static string Dump(object? element, DumpOptions? dumpOptions = null)
         {
-            if (dumpOptions == null)
-            {
-                dumpOptions = new DumpOptions();
-            }
+            dumpOptions ??= new DumpOptions();
 
             var instance = new ObjectDumperConsole(dumpOptions);
 
@@ -67,7 +64,7 @@ namespace ObjectDumping.Internal
                   .Select(p => new PropertyAndValue(o, p))
                   .ToList();
 
-            PropertyAndValue lastProperty;
+            PropertyAndValue? lastProperty;
             if (this.DumpOptions.IgnoreDefaultValues)
             {
                 lastProperty = propertiesAndValues.LastOrDefault(pv => !pv.IsDefaultValue);
@@ -139,7 +136,8 @@ namespace ObjectDumping.Internal
                 {
                     try
                     {
-                        arrayValues.Add(property.GetValue(o, new object[] { index }));
+                        var arrayValue = property.GetValue(o, new object[] { index });
+                        arrayValues.Add(arrayValue!);
                         index++;
                     }
                     catch (TargetInvocationException) { break; }
@@ -166,7 +164,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        private void FormatValue(object o, int intentLevel = 0)
+        private void FormatValue(object? o, int intentLevel = 0)
         {
             if (this.IsMaxLevel())
             {
@@ -181,7 +179,7 @@ namespace ObjectDumping.Internal
 
             if (o is bool)
             {
-                this.Write($"{o.ToString().ToLower()}", intentLevel);
+                this.Write($"{o.ToString()?.ToLower()}", intentLevel);
                 return;
             }
 
@@ -194,7 +192,7 @@ namespace ObjectDumping.Internal
 
             if (o is char)
             {
-                var c = o.ToString().Replace("\0", "").Trim();
+                var c = o.ToString()?.Replace("\0", "").Trim();
                 this.Write($"\'{c}\'", intentLevel);
                 return;
             }
@@ -477,8 +475,8 @@ namespace ObjectDumping.Internal
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
-                var kvpKey = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Key)).GetValue(o, null);
-                var kvpValue = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Value)).GetValue(o, null);
+                var kvpKey = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Key))?.GetValue(o, null);
+                var kvpValue = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Value))?.GetValue(o, null);
 
                 this.Write("{ ", intentLevel);
                 this.FormatValue(kvpKey);
@@ -507,7 +505,7 @@ namespace ObjectDumping.Internal
                     string typeNameWithCount;
                     if (type.IsArray)
                     {
-                        var elementTypeName = type.GetElementType().GetFormattedName(this.DumpOptions.UseTypeFullName);
+                        var elementTypeName = type.GetElementType()?.GetFormattedName(this.DumpOptions.UseTypeFullName);
                         typeNameWithCount = $"{elementTypeName}[{arrayOfObjects.Length}]";
                     }
                     else

@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
 // ReSharper disable once CheckNamespace
 public class DumpOptions
 {
+    private ICollection<string> excludeProperties;
+    private IDictionary<Type, Func<Type, string>> customTypeFormatter;
+
     public DumpOptions()
     {
         this.DumpStyle = DumpStyle.Console;
@@ -14,11 +18,11 @@ public class DumpOptions
         this.LineBreakChar = Environment.NewLine;
         this.SetPropertiesOnly = false;
         this.MaxLevel = int.MaxValue;
-        this.ExcludeProperties = new HashSet<string>();
+        this.excludeProperties = new HashSet<string>();
         this.PropertyOrderBy = null;
         this.IgnoreDefaultValues = false;
         this.IgnoreIndexers = true;
-        this.CustomTypeFormatter = new Dictionary<Type, Func<Type, string>>();
+        this.customTypeFormatter = new Dictionary<Type, Func<Type, string>>();
         this.CustomInstanceFormatters = new CustomInstanceFormatters();
         this.TrimInitialVariableName = false;
         this.UseTypeFullName = false;
@@ -36,16 +40,24 @@ public class DumpOptions
 
     public int MaxLevel { get; set; }
 
-    public ICollection<string> ExcludeProperties { get; set; }
+    public ICollection<string> ExcludeProperties
+    {
+        get => this.excludeProperties;
+        set => this.excludeProperties = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
-    public IDictionary<Type, Func<Type, string>> CustomTypeFormatter { get; set; }
+    public IDictionary<Type, Func<Type, string>> CustomTypeFormatter
+    {
+        get => this.customTypeFormatter;
+        set => this.customTypeFormatter = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
-    public Expression<Func<PropertyInfo, object>> PropertyOrderBy { get; set; }
+    public Expression<Func<PropertyInfo, object>>? PropertyOrderBy { get; set; }
 
     /// <summary>
     /// Allows to rename properties and fields before they are dumped.
     /// </summary>
-    public Func<string, string> MemberRenamer { get; set; }
+    public Func<string, string>? MemberRenamer { get; set; }
 
     /// <summary>
     /// Ignores default values if set to <c>true</c>.
@@ -102,7 +114,7 @@ public class CustomInstanceFormatters
         return this.customFormatters.ContainsKey(obj.GetType());
     }
 
-    public bool TryGetFormatter(Type type, out Func<object, string> formatter)
+    public bool TryGetFormatter(Type type, [MaybeNullWhen(false)] out Func<object, string> formatter)
     {
         if (this.customFormatters.TryGetValue(type, out var customInstanceFormatter))
         {

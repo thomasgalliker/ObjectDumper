@@ -2,8 +2,8 @@
 {
     public class ObjectWithArrays
     {
-        public int[] IntArray { get; set; }
+        public int[]? IntArray { get; set; }
 
-        public string[] StringArray { get; set; }
+        public string[]? StringArray { get; set; }
     }
 }

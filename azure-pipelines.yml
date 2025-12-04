@@ -7,7 +7,7 @@
 name: $[format('{0}', variables['buildName'])]
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'windows-latest'
 
 trigger:
   branches:

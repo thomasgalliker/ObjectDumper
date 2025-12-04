@@ -368,7 +368,7 @@ namespace ObjectDumping.Tests
             var options = new DumpOptions
             {
                 IgnoreDefaultValues = true,
-                ExcludeProperties =
+                ExcludeProperties = new[]
                 {
                     "CustomAttributes",
                     "Module",
@@ -681,7 +681,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpRecursiveTypes_CircularReference_Case4()
         {
-            // Arrange 
+            // Arrange
             var example1 = new Example { Name = "Name1" };
             var example2 = new Example { Name = "Name2", Reference = example1 };
 
@@ -724,7 +724,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpRecursiveTypes_CircularReference_Case5()
         {
-            // Arrange 
+            // Arrange
             var example1 = new Example { Name = "Name1" };
             var example2 = new Example { Name = "Name2", Reference = example1 };
             example1.Reference = example2; // This assignment causes a circular reference
@@ -765,9 +765,9 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpRecursiveTypes_CircularReference_Case6()
         {
-            // Arrange 
+            // Arrange
 
-            var array = new object[]
+            var array = new object?[]
             {
                 0,
                 null,
@@ -797,7 +797,10 @@ namespace ObjectDumping.Tests
         {
             // Arrange
             var testObject = new TestObject();
-            var options = new DumpOptions { ExcludeProperties = { "Id", "NonExistent" } };
+            var options = new DumpOptions
+            {
+                ExcludeProperties = new [] { "Id", "NonExistent" }
+            };
 
             // Act
             var dump = ObjectDumperCSharp.Dump(testObject, options);
@@ -1146,7 +1149,7 @@ namespace ObjectDumping.Tests
                 SetPropertiesOnly = true,
                 IgnoreDefaultValues = true,
                 MaxLevel = 1,
-                ExcludeProperties = { "ByteArray" }
+                ExcludeProperties = new[] { "ByteArray" }
             };
 
             // Act
@@ -1293,7 +1296,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpCustomConstructor()
         {
-            // Arrange 
+            // Arrange
             var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
 
             var dumpOptions = new DumpOptions();
@@ -1311,7 +1314,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpTrimmedCustomConstructor()
         {
-            // Arrange 
+            // Arrange
             var myObj = ObjectWithComplexConstructorFactory.BuildIt("string", 1, 32.4F);
 
             var dumpOptions = new DumpOptions
@@ -1457,7 +1460,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpAnonymousObject_List()
         {
-            // Arrange 
+            // Arrange
             var list = new List<dynamic>
             {
                 new { Prop = new { SomeInnerProp = "test_test_test" } },
@@ -1493,7 +1496,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpAnonymousObject_Enumerable()
         {
-            // Arrange 
+            // Arrange
             var obj = new { Prop = new { SomeInnerProp = "test_test_test" } };
             var list = Enumerable.Range(0, 2).Select(_ => obj).ToList();
 
@@ -1551,7 +1554,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpValueTuple_Arity0()
         {
-            // Arrange 
+            // Arrange
             var valueTuple = ValueTuple.Create();
 
             // Act
@@ -1566,7 +1569,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpValueTuple_Arity3()
         {
-            // Arrange 
+            // Arrange
             var valueTuple = (1, "Bill", "Gates");
 
             // Act
@@ -1581,7 +1584,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpValueTuple_WithDefaultValue()
         {
-            // Arrange 
+            // Arrange
             (int Id, string FirstName, string LastName) valueTuple = default;
 
             // Act
@@ -1596,7 +1599,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpEnumerable_ValueTuples()
         {
-            // Arrange 
+            // Arrange
             var persons = PersonFactory.GeneratePersons(count: 2).ToList();
             var valueTuples = persons.Select(s => (s.Name, s.Age)).ToList();
 
@@ -1850,7 +1853,7 @@ namespace ObjectDumping.Tests
         [Fact]
         public void ShouldDumpRegexObject()
         {
-            // Arrange 
+            // Arrange
             var pattern = @"\ba\w*\b";
             var input = "An extraordinary day dawns with each new day.";
             var match = Regex.Match(input, pattern, RegexOptions.IgnoreCase);

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net48;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
 		<AssemblyName>ObjectDumper.Tests</AssemblyName>
 		<PackageId>ObjectDumper.Tests</PackageId>
     <RuntimeIdentifiers Condition=" '$(TargetFramework)' == 'net48' ">win10-x64</RuntimeIdentifiers>
@@ -10,6 +10,8 @@
 		<NeutralLanguage>en</NeutralLanguage>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>ObjectDumper.snk</AssemblyOriginatorKeyFile>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -14,7 +14,7 @@ namespace ObjectDumping.Tests.Testdata.RecordTypes
         {
         }
 
-        public string InitOnlyProperty { get; init; }
+        public string? InitOnlyProperty { get; init; }
 
         public bool ReadWriteProperty { get; set; }
     }
