@@ -11,5 +11,16 @@ namespace System.Diagnostics.CodeAnalysis
             this.ReturnValue = returnValue;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class NotNullWhenAttribute : Attribute
+    {
+        public bool ReturnValue { get; }
+
+        public NotNullWhenAttribute(bool returnValue)
+        {
+            this.ReturnValue = returnValue;
+        }
+    }
 }
 #endif

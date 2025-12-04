@@ -118,29 +118,29 @@ namespace ObjectDumping.Internal
             return typeName;
         }
 
-        private static void TryGetInnerElementType(ref Type type, out string? arrayBrackets)
+        private static bool TryGetInnerElementType(ref Type type, [NotNullWhen(true)] out string? arrayBrackets)
         {
             arrayBrackets = null;
 
-            var targetType = type;
-
-            if (!targetType.IsArray)
+            if (type.IsArray == false)
             {
-                return;
+                return false;
             }
 
             do
             {
-                arrayBrackets += "[" + new string(',', targetType.GetArrayRank() - 1) + "]";
-                targetType = targetType.GetElementType();
+                arrayBrackets += "[" + new string(',', type.GetArrayRank() - 1) + "]";
+                type = type.GetElementType()!;
             }
-            while (targetType is { IsArray: true });
+            while (type.IsArray);
+
+            return true;
         }
 
         public static object? GetDefault(this Type t)
         {
             //var defaultValue = FastDefault.Get(t);
-            
+
             var defaultValue = typeof(TypeExtensions)
                 .GetRuntimeMethod("GetDefaultGeneric", new Type[] { })?
                 .MakeGenericMethod(t)
