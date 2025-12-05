@@ -110,7 +110,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Person}\r\n" +
                 "  Name: \"Person 1\"\r\n" +
                 "  Char: ''\r\n" +
@@ -175,7 +175,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{EmptyClass}\r\n");
+            dump.ShouldBeEquivalent("{EmptyClass}\r\n");
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Person}\r\n" +
                 "  Name: \"Person 1\"\r\n" +
                 "  Char: ''\r\n" +
@@ -317,7 +317,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{ObjectWithArrays}\r\n" +
                 "  IntArray: {int[0]}\r\n" +
                 "  StringArray: {string[0]}");
@@ -339,7 +339,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{ObjectWithArrays}\r\n" +
                 "  IntArray: {int[3]}\r\n" +
                 "    1\r\n" +
@@ -364,7 +364,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{KeyNotFoundException}\r\n" +
                 "  Message: \"message text\"\r\n" +
                 "  Data: {ListDictionaryInternal, Count=0}\r\n" +
@@ -455,7 +455,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Organization}\r\n" +
                 "  Name: \"superdev gmbh\"\r\n" +
                 "  Persons: {List<Person>, Count=2}\r\n" +
@@ -528,8 +528,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{GenericClass<string, float, Person>}\r\n" +
                 "  Prop1: \"Test\"\r\n" +
                 "  Prop2: 123.45\r\n" +
@@ -615,7 +614,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Organization}\r\n" +
                 "  Name: \"superdev gmbh\"\r\n" +
                 "  Persons: {List<Person>, Count=2}\r\n" +
@@ -656,7 +655,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{RecursivePerson}\r\n" +
                 "  Id: 0\r\n" +
                 "  Parent: null --> Circular reference detected");
@@ -682,7 +681,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{NestedItemA}\r\n" +
                 "  Next: {NestedItemB}\r\n" +
                 "    Next: null\r\n" +
@@ -714,7 +713,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{NestedItemA}\r\n" +
                 "  Next: {NestedItemB}\r\n" +
                 "    Next: null --> Circular reference detected\r\n" +
@@ -737,7 +736,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().NotContain("// Circular reference detected");
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Example}\r\n" +
                 "  Name: \"Name1\"\r\n" +
                 "  Reference: null\r\n" +
@@ -765,7 +764,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Contain("--> Circular reference detected");
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Example}\r\n" +
                 "  Name: \"Name1\"\r\n" +
                 "  Reference: {Example}\r\n" +
@@ -797,7 +796,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "0\r\n" +
                 "null --> Circular reference detected\r\n" +
                 "2\r\n" +
@@ -834,7 +833,9 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("{TestObject}\r\n  NullableDateTime: null");
+            dump.ShouldBeEquivalent(
+                "{TestObject}\r\n" +
+                "  NullableDateTime: null");
         }
 
         [Fact]
@@ -851,7 +852,11 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("{OrderPropertyTestObject}\r\n  A: null\r\n  B: null\r\n  C: null");
+            dump.ShouldBeEquivalent(
+                "{OrderPropertyTestObject}\r\n" +
+                "  A: null\r\n" +
+                "  B: null\r\n" +
+                "  C: null");
         }
 
         [Fact]
@@ -948,7 +953,10 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("{ 1, \"Value1\" }\r\n{ 2, \"Value2\" }\r\n{ 3, \"Value3\" }");
+            dump.ShouldBeEquivalent(
+                "{ 1, \"Value1\" }\r\n" +
+                "{ 2, \"Value2\" }\r\n" +
+                "{ 3, \"Value3\" }");
         }
 
         [Fact]
@@ -963,7 +971,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("\"aaa\"\r\n\"bbb\"");
+            dump.ShouldBeEquivalent("\"aaa\"\r\n\"bbb\"");
         }
 
         [Fact(Skip = "to be implemented")]
@@ -1075,7 +1083,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{X509ChainStatus}\r\n" +
                 "  Status: X509ChainStatusFlags.NoError\r\n" +
                 "  StatusInformation: \"Test status\"");
@@ -1098,7 +1106,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{AnonymousObject}\r\n" +
                 "  IntProperty: 10\r\n" +
                 "  StringProperty: \"hello\"\r\n" +
@@ -1121,7 +1129,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{AnonymousObject}\r\n" +
                 "  Prop: {AnonymousObject}\r\n" +
                 "    SomeInnerProp: \"test_test_test\"\r\n" +
@@ -1143,7 +1151,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{AnonymousObject}\r\n" +
                 "  Prop: {AnonymousObject}\r\n" +
                 "    SomeInnerProp: \"test_test_test\"\r\n" +
@@ -1167,7 +1175,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{ \"IntProperty\", 10 }\r\n" +
                 "{ \"StringProperty\", \"hello\" }\r\n" +
                 "{ \"DoubleProperty\", 3.14 }");
@@ -1233,7 +1241,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "(\"Person 1\", 3)\r\n" +
                 "(\"Person 2\", 3)");
         }
@@ -1268,7 +1276,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Match}\r\n" +
                 "  Groups: {GroupCollection, Count=1}\r\n" +
                 "    null --> Circular reference detected\r\n" +

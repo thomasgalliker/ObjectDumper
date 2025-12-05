@@ -29,7 +29,7 @@ namespace ObjectDumping.Tests
         }
 
         [Theory]
-        [ClassData(typeof(BuiltInTypeTestdata))]
+        [ClassData(typeof(BuiltInTypeTestData))]
         public void ShouldDumpValueOfBuiltInType(object value, string expectedOutput)
         {
             // Act
@@ -41,9 +41,9 @@ namespace ObjectDumping.Tests
             dump.Should().Be(expectedOutput);
         }
 
-        public class BuiltInTypeTestdata : TheoryData<object, string>
+        public class BuiltInTypeTestData : TheoryData<object, string>
         {
-            public BuiltInTypeTestdata()
+            public BuiltInTypeTestData()
             {
                 // string
                 this.Add("", "var stringValue = \"\";");
@@ -114,7 +114,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var person = new Person\r\n" +
                 "{\r\n" +
                 "  Name = \"Person 1\",\r\n" +
@@ -202,7 +202,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var listOfPersons = new List<Person>\r\n" +
                 "{\r\n" +
                 "  new Person\r\n" +
@@ -259,7 +259,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var listOfPersons = new List<Person>\r\n" +
                 "{\r\n" +
                 "};");
@@ -281,7 +281,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var objectWithArrays = new ObjectWithArrays\r\n" +
                 "{\r\n" +
                 "  IntArray = new int[]\r\n" +
@@ -309,7 +309,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var objectWithArrays = new ObjectWithArrays\r\n" +
                 "{\r\n" +
                 "  IntArray = new int[]\r\n" +
@@ -340,7 +340,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var keyNotFoundException = new KeyNotFoundException\r\n" +
                 "{\r\n" +
                 "  Message = \"message text\",\r\n" +
@@ -385,7 +385,7 @@ namespace ObjectDumping.Tests
 
 
 #if NETCORE
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                "var keyNotFoundException = new KeyNotFoundException\r\n" +
                "{\r\n" +
                "  TargetSite = new RuntimeMethodInfo\r\n" +
@@ -444,7 +444,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var organization = new Organization\r\n" +
                 "{\r\n" +
                 "  Name = \"superdev gmbh\",\r\n" +
@@ -524,7 +524,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var genericClass = new GenericClass<string, float, Person>\r\n" +
                 "{\r\n" +
                 "  Prop1 = \"Test\",\r\n" +
@@ -555,7 +555,11 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var dictionary = new Dictionary<string[,], List<Nullable<int>[,][]>[,,]>[]\r\n{\r\n  new Dictionary<string[,], List<Nullable<int>[,][]>[,,]>\r\n  {\r\n  }\r\n};");
+            dump.ShouldBeEquivalent(
+                "var dictionary = new Dictionary<string[,], List<Nullable<int>[,][]>[,,]>[]\r\n{\r\n  new Dictionary<string[,], List<Nullable<int>[,][]>[,,]>\r\n" +
+                "  {\r\n" +
+                "  }\r\n" +
+                "};");
         }
 
         [Fact]
@@ -573,7 +577,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var organization = new Organization\r\n" +
                 "{\r\n" +
                 "  Name = \"superdev gmbh\",\r\n" +
@@ -602,7 +606,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var recursivePerson = new RecursivePerson\r\n" +
+            dump.ShouldBeEquivalent("var recursivePerson = new RecursivePerson\r\n" +
                 "{\r\n" +
                 "  Id = 0,\r\n" +
                 "  Parent = null // Circular reference detected\r\n" +
@@ -629,7 +633,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var nestedItemA = new NestedItemA\r\n" +
                 "{\r\n" +
                 "  Next = new NestedItemB\r\n" +
@@ -665,7 +669,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var nestedItemA = new NestedItemA\r\n" +
                 "{\r\n" +
                 "  Next = new NestedItemB\r\n" +
@@ -699,8 +703,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().NotContain("// Circular reference detected");
-
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var exampleArray = new Example[]\r\n" +
                 "{\r\n" +
                 "  new Example\r\n" +
@@ -737,7 +740,7 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
             dump.Should().Contain("// Circular reference detected");
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var exampleArray = new Example[]\r\n" +
                 "{\r\n" +
                 "  new Example\r\n" +
@@ -781,11 +784,11 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var objectArray = new object[]\r\n" +
                 "{\r\n" +
                 "  0,\r\n" +
-                "  null, // Circular reference detected\r\n" +  // TODO: No commat at the end of the comment here
+                "  null, // Circular reference detected\r\n" +
                 "  2,\r\n" +
                 "  null\r\n" +
                 "};");
@@ -808,7 +811,11 @@ namespace ObjectDumping.Tests
             this.testOutputHelper.WriteLine(dump);
 
             dump.Should().NotBeNull();
-            dump.Should().Be("var testObject = new TestObject\r\n{\r\n  NullableDateTime = null\r\n};");
+            dump.ShouldBeEquivalent(
+                "var testObject = new TestObject\r\n" +
+                "{\r\n" +
+                "  NullableDateTime = null\r\n" +
+                "};");
         }
 
         [Fact]
@@ -823,9 +830,14 @@ namespace ObjectDumping.Tests
 
             // Assert
             this.testOutputHelper.WriteLine(dump);
-
             dump.Should().NotBeNull();
-            dump.Should().Be("var orderPropertyTestObject = new OrderPropertyTestObject\r\n{\r\n  A = null,\r\n  B = null,\r\n  C = null\r\n};");
+            dump.ShouldBeEquivalent(
+                "var orderPropertyTestObject = new OrderPropertyTestObject\r\n" +
+                "{\r\n" +
+                "  A = null,\r\n" +
+                "  B = null,\r\n" +
+                "  C = null\r\n" +
+                "};");
         }
 
         [Fact]
@@ -1085,7 +1097,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var dictionary = new Dictionary<int, string>\r\n" +
                 "{\r\n" +
                 "  { 1, \"Value1\" },\r\n" +
@@ -1106,7 +1118,12 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var stringArray = new string[]\r\n{\r\n  \"aaa\",\r\n  \"bbb\"\r\n};");
+            dump.ShouldBeEquivalent(
+                "var stringArray = new string[]\r\n" +
+                "{\r\n" +
+                "  \"aaa\",\r\n" +
+                "  \"bbb\"\r\n" +
+                "};");
         }
 
         [Fact(Skip = "to be implemented")]
@@ -1126,7 +1143,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var array = new int[3, 2]\r\n" +
                 "{\r\n" +
                 "  {1, 2},\r\n" +
@@ -1157,7 +1174,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            /*dump.Should().Be(
+            /*dump.ShouldBeEquivalent(
                 "var person = new Person\r\n" +
                 "{\r\n" +
                 "  Name = \"Boris \\\"The Blade\\\", \\\\GANGSTA\\\\ aka \\\'The Bullet Dodger\\\' \\a \\b \\f \r\nOn a new\\twith tab \\v \\0\"\r\n" +
@@ -1199,7 +1216,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be($"var dateTimeOffset = DateTimeOffset.MinValue;");
+            dump.Should().Be("var dateTimeOffset = DateTimeOffset.MinValue;");
         }
 
         [Fact]
@@ -1289,7 +1306,15 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var typeMap = new TypeMap\r\n{\r\n  Map = new Dictionary<Type, Type>\r\n  {\r\n    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },\r\n    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }\r\n  }\r\n};");
+            dump.ShouldBeEquivalent(
+                "var typeMap = new TypeMap\r\n" +
+                "{\r\n" +
+                "  Map = new Dictionary<Type, Type>\r\n" +
+                "  {\r\n" +
+                "    { typeof(KeyTypeOne), typeof(HandlerTypeOne) },\r\n" +
+                "    { typeof(KeyTypeTwo), typeof(HandlerTypeTwo) }\r\n" +
+                "  }\r\n" +
+                "};");
         }
 
         [Fact]
@@ -1349,7 +1374,12 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var tempRecord = new TempRecord\r\n{\r\n  AProp = 0,\r\n  ZProp = null\r\n};");
+            dump.ShouldBeEquivalent(
+                "var tempRecord = new TempRecord\r\n" +
+                "{\r\n" +
+                "  AProp = 0,\r\n" +
+                "  ZProp = null\r\n" +
+                "};");
         }
 
         [Fact]
@@ -1375,7 +1405,14 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var tempRecord = new TempRecord\r\n{\r\n  AProp = 99,\r\n  [0] = 58.3f,\r\n  [1] = 60.1f,\r\n  ZProp = \"ZZ\"\r\n};");
+            dump.ShouldBeEquivalent(
+                "var tempRecord = new TempRecord\r\n" +
+                "{\r\n" +
+                "  AProp = 99,\r\n" +
+                "  [0] = 58.3f,\r\n" +
+                "  [1] = 60.1f,\r\n" +
+                "  ZProp = \"ZZ\"\r\n" +
+                "};");
         }
 
         [Fact]
@@ -1399,7 +1436,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var viewModelValidation = new ViewModelValidation\r\n" +
                 "{\r\n" +
                 "  Errors = null, // Circular reference detected\r\n" +
@@ -1422,7 +1459,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var x509ChainStatus = new X509ChainStatus\r\n" +
                 "{\r\n" +
                 "  Status = X509ChainStatusFlags.NoError,\r\n" +
@@ -1447,7 +1484,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var x = new\r\n" +
                 "{\r\n" +
                 "  IntProperty = 10,\r\n" +
@@ -1472,7 +1509,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var listOfobjects = new List<object>\r\n" +
                 "{\r\n" +
                 "  new\r\n" +
@@ -1505,7 +1542,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var listOfdynamics = new List<dynamic>\r\n" +
                 "{\r\n" +
                 "  new\r\n" +
@@ -1540,7 +1577,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var expandoObject = new ExpandoObject\r\n" +
                 "{\r\n" +
                 "  { \"IntProperty\", 10 },\r\n" +
@@ -1608,7 +1645,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var list = new List<(string, int)>\r\n" +
                 "{\r\n" +
                 "  (\"Person 1\", 3),\r\n" +
@@ -1644,7 +1681,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var recordClass = new RecordClass(\r\n" +
+            dump.ShouldBeEquivalent("var recordClass = new RecordClass(\r\n" +
                 "  Property1: 20d,\r\n" +
                 "  Property2: \"Test\"\r\n" +
                 ");");
@@ -1662,8 +1699,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
-                "var emptyRecordClass = new EmptyRecordClass();");
+            dump.Should().Be("var emptyRecordClass = new EmptyRecordClass();");
         }
 
         [Fact]
@@ -1682,7 +1718,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var dailyTemperature = new DailyTemperature(\r\n" +
                 "  HighTemp: 20d,\r\n" +
                 "  LowTemp: -2d\r\n" +
@@ -1705,7 +1741,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var recordWithNestedObject = new RecordWithNestedObject(\r\n" +
                 "  Age: 20,\r\n" +
                 "  Organization: new Organization\r\n" +
@@ -1735,7 +1771,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var sprint = new Sprint(\r\n" +
                 "  SprintId: 12,\r\n" +
                 "  StartDate: DateTimeOffset.ParseExact(\"2021-02-18T00:00:00.0000000+01:00\", \"O\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),\r\n" +
@@ -1761,7 +1797,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var ctorlessReadonlyRecord = new CtorlessReadonlyRecord()\r\n" +
                 "{\r\n" +
                 "  Name = \"Test\"\r\n" +
@@ -1783,7 +1819,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "var match = new Match\r\n" +
                 "{\r\n" +
                 "  Groups = new GroupCollection\r\n" +
