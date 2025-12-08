@@ -1,7 +1,7 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.4
+# Azure DevOps Build Configuration
 #
-# (c)2022 superdev GmbH
+# (c)2025 superdev GmbH
 ####################################################################
 
 name: $[format('{0}', variables['buildName'])]
