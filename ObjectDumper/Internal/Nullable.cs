@@ -14,6 +14,7 @@ namespace System.Diagnostics.CodeAnalysis
      */
 
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    [ExcludeFromCodeCoverage, DebuggerNonUserCode]
     internal sealed class MaybeNullWhenAttribute : Attribute
     {
         public bool ReturnValue { get; }
@@ -25,6 +26,7 @@ namespace System.Diagnostics.CodeAnalysis
     }
 
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    [ExcludeFromCodeCoverage, DebuggerNonUserCode]
     internal sealed class NotNullWhenAttribute : Attribute
     {
         public bool ReturnValue { get; }
@@ -34,5 +36,34 @@ namespace System.Diagnostics.CodeAnalysis
             this.ReturnValue = returnValue;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue,
+        Inherited = false)]
+    [ExcludeFromCodeCoverage, DebuggerNonUserCode]
+    internal sealed class NotNullAttribute : Attribute
+    {
+        public NotNullAttribute() { }
+    }
+
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue,
+        AllowMultiple = true,
+        Inherited = false)]
+    [ExcludeFromCodeCoverage, DebuggerNonUserCode]
+    internal sealed class NotNullIfNotNullAttribute : Attribute
+    {
+        public string ParameterName { get; }
+
+        public NotNullIfNotNullAttribute(string parameterName)
+        {
+            this.ParameterName = parameterName;
+        }
+    }
+
+#if NETSTANDARD1_2
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    internal sealed class ExcludeFromCodeCoverage : Attribute
+    {
+    }
+#endif
 }
 #endif
