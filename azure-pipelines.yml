@@ -1,7 +1,7 @@
 ####################################################################
 # Azure DevOps Build Configuration
 #
-# (c)2025 superdev GmbH
+# (c)2026 superdev GmbH
 ####################################################################
 
 name: $[format('{0}', variables['buildName'])]
