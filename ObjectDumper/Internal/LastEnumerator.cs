@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace ObjectDumping.Internal
 {
@@ -15,14 +14,9 @@ namespace ObjectDumping.Internal
                     bool isLast;
                     do
                     {
-                        var current = enumerator.Current;
+                        var value = enumerator.Current;
                         isLast = !enumerator.MoveNext();
-                        yield return new MetaEnumerableItem<T>
-                        {
-                            Value = current,
-                            IsLast = isLast,
-                            IsFirst = isFirst
-                        };
+                        yield return new MetaEnumerableItem<T>(value, isFirst, isLast);
                         isFirst = false;
                     } while (!isLast);
                 }
@@ -39,14 +33,9 @@ namespace ObjectDumping.Internal
                     bool isLast;
                     do
                     {
-                        var current = enumerator.Current;
+                        var value = enumerator.Current!;
                         isLast = !enumerator.MoveNext();
-                        yield return new MetaEnumerableItem<object>
-                        {
-                            Value = current,
-                            IsLast = isLast,
-                            IsFirst = isFirst
-                        };
+                        yield return new MetaEnumerableItem<object>(value, isFirst, isLast);
                         isFirst = false;
                     } while (!isLast);
                 }
@@ -54,12 +43,19 @@ namespace ObjectDumping.Internal
         }
     }
 
-    public class MetaEnumerableItem<T>
+    internal class MetaEnumerableItem<T>
     {
-        public T Value { get; set; }
+        public MetaEnumerableItem(T value, bool isFirst, bool isLast)
+        {
+            this.Value = value;
+            this.IsFirst = isFirst;
+            this.IsLast = isLast;
+        }
 
-        public bool IsLast { get; set; }
+        internal T Value { get; }
 
-        public bool IsFirst { get; set; }
+        internal bool IsFirst { get; }
+
+        internal bool IsLast { get; }
     }
 }

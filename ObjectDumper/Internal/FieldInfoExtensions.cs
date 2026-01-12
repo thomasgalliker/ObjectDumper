@@ -1,13 +1,12 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ObjectDumping.Internal
 {
     internal static class FieldInfoExtensions
     {
-        internal static object TryGetValue(this FieldInfo field, object element)
+        internal static object? TryGetValue(this FieldInfo field, object element)
         {
-            object value;
+            object? value;
             try
             {
                 value = field.GetValue(element);

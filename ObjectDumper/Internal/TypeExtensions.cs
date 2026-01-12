@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace ObjectDumping.Internal
@@ -32,7 +29,7 @@ namespace ObjectDumping.Internal
             { typeof(void), "void" }
         };
 
-        internal static bool TryGetBuiltInTypeName(this Type type, out string value)
+        internal static bool TryGetBuiltInTypeName(this Type type, out string? value)
         {
             return TypeToKeywordMappings.TryGetValue(type, out value);
         }
@@ -42,7 +39,7 @@ namespace ObjectDumping.Internal
             return TypeToKeywordMappings.Values.Contains(value);
         }
 
-        internal static string GetFormattedName(this Type type, bool useFullName = false, bool useValueTupleFormatting = true)
+        internal static string? GetFormattedName(this Type type, bool useFullName = false, bool useValueTupleFormatting = true)
         {
             TryGetInnerElementType(ref type, out var arrayBrackets);
 
@@ -63,7 +60,7 @@ namespace ObjectDumping.Internal
 #if NETSTANDARD2_0_OR_GREATER
             if (useValueTupleFormatting && type.IsValueTuple())
             {
-                return typeName.RemoveGenericBackTick();
+                return typeName?.RemoveGenericBackTick();
             }
 #endif
 
@@ -79,7 +76,7 @@ namespace ObjectDumping.Internal
                 genericTypeParametersString = $"{string.Join(", ", typeInfo.GenericTypeArguments.Select(t => t.GetFormattedName(useFullName, useValueTupleFormatting)))}";
             }
 
-            typeName = typeName.RemoveGenericBackTick();
+            typeName = typeName?.RemoveGenericBackTick();
 
             return $"{typeName}<{genericTypeParametersString}>{arrayBrackets}";
         }
@@ -95,9 +92,9 @@ namespace ObjectDumping.Internal
             return typeName;
         }
 
-        private static string GetTypeName(Type type, bool useFullName, bool useValueTupleFormatting)
+        private static string? GetTypeName(Type type, bool useFullName, bool useValueTupleFormatting)
         {
-            string typeName;
+            string? typeName;
 
             if (useFullName == false && type.TryGetBuiltInTypeName(out var keyword))
             {
@@ -118,32 +115,40 @@ namespace ObjectDumping.Internal
             return typeName;
         }
 
-        private static void TryGetInnerElementType(ref Type type, out string arrayBrackets)
+        private static bool TryGetInnerElementType(ref Type type, [NotNullWhen(true)] out string? arrayBrackets)
         {
             arrayBrackets = null;
-            if (!type.IsArray)
+
+            if (type.IsArray == false)
             {
-                return;
+                return false;
             }
 
             do
             {
                 arrayBrackets += "[" + new string(',', type.GetArrayRank() - 1) + "]";
-                type = type.GetElementType();
+                type = type.GetElementType()!;
             }
             while (type.IsArray);
+
+            return true;
         }
 
-        public static object GetDefault(this Type t)
+        public static object? GetDefault(this Type t)
         {
             //var defaultValue = FastDefault.Get(t);
-            var defaultValue = typeof(TypeExtensions).GetRuntimeMethod("GetDefaultGeneric", new Type[] { }).MakeGenericMethod(t).Invoke(null, null);
+
+            var defaultValue = typeof(TypeExtensions)
+                .GetRuntimeMethod("GetDefaultGeneric", new Type[] { })?
+                .MakeGenericMethod(t)
+                .Invoke(null, null);
+
             return defaultValue;
         }
 
-        public static object TryGetDefault(this Type t)
+        public static object? TryGetDefault(this Type t)
         {
-            object value;
+            object? value;
 
             try
             {
@@ -157,7 +162,7 @@ namespace ObjectDumping.Internal
             return value;
         }
 
-        public static T GetDefaultGeneric<T>()
+        public static T? GetDefaultGeneric<T>()
         {
             return default;
         }
@@ -219,7 +224,7 @@ namespace ObjectDumping.Internal
 
         /// <summary>
         /// Checks if the <paramref name="type"/> is a record type.
-        /// </summary> 
+        /// </summary>
         /// <param name="type">The type.</param>
         public static bool IsRecordType(this Type type)
         {
@@ -232,13 +237,13 @@ namespace ObjectDumping.Internal
              !t.IsInterface &&
              !t.IsEnum &&
              typeof(IEquatable<>).MakeGenericType(t).IsAssignableFrom(t) &&
-             t.GetMethod("ToString", (BindingFlags.Public | BindingFlags.Instance), Type.EmptyTypes) is MethodInfo toString && (IsOverridden(toString) || IsCompilerGenerated(toString)) &&
-             t.GetMethod("GetHashCode", (BindingFlags.Public | BindingFlags.Instance), Type.EmptyTypes) is MethodInfo getHashCode && (IsOverridden(getHashCode) || IsCompilerGenerated(getHashCode)) &&
-             t.GetMethod("PrintMembers", (BindingFlags.NonPublic | BindingFlags.Instance), new[] { typeof(StringBuilder) }) is MethodInfo printMembers && IsCompilerGenerated(printMembers) &&
-             t.GetMethod("op_Equality", (BindingFlags.Public | BindingFlags.Static), new[] { t, t }) is MethodInfo op_Equality && IsCompilerGenerated(op_Equality) &&
-             t.GetMethod("op_Inequality", (BindingFlags.Public | BindingFlags.Static), new[] { t, t }) is MethodInfo op_Inequality && IsCompilerGenerated(op_Inequality) &&
-             t.GetMethod("Equals", (BindingFlags.Public | BindingFlags.Instance), new[] { typeof(object) }) is MethodInfo equals && IsCompilerGenerated(equals) &&
-             t.GetMethod("Equals", (BindingFlags.Public | BindingFlags.Instance), new[] { t }) is MethodInfo typeEquals && IsCompilerGenerated(typeEquals) &&
+             t.GetMethod("ToString", BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes) is MethodInfo toString && (IsOverridden(toString) || IsCompilerGenerated(toString)) &&
+             t.GetMethod("GetHashCode", BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes) is MethodInfo getHashCode && (IsOverridden(getHashCode) || IsCompilerGenerated(getHashCode)) &&
+             t.GetMethod("PrintMembers", BindingFlags.NonPublic | BindingFlags.Instance, new[] { typeof(StringBuilder) }) is MethodInfo printMembers && IsCompilerGenerated(printMembers) &&
+             t.GetMethod("op_Equality", BindingFlags.Public | BindingFlags.Static, new[] { t, t }) is MethodInfo op_Equality && IsCompilerGenerated(op_Equality) &&
+             t.GetMethod("op_Inequality", BindingFlags.Public | BindingFlags.Static, new[] { t, t }) is MethodInfo op_Inequality && IsCompilerGenerated(op_Inequality) &&
+             t.GetMethod("Equals", BindingFlags.Public | BindingFlags.Instance, new[] { typeof(object) }) is MethodInfo equals && IsCompilerGenerated(equals) &&
+             t.GetMethod("Equals", BindingFlags.Public | BindingFlags.Instance, new[] { t }) is MethodInfo typeEquals && IsCompilerGenerated(typeEquals) &&
              (t.IsValueType || (
                  t.GetMethod("<Clone>$", BindingFlags.Public | BindingFlags.Instance) is MethodInfo clone && IsCompilerGenerated(clone) &&
                  t.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, new[] { t }) is ConstructorInfo forClone && IsCompilerGenerated(forClone) &&

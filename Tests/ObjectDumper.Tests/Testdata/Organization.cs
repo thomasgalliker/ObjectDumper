@@ -9,7 +9,7 @@ namespace ObjectDumping.Tests.Testdata
             this.Persons = new HashSet<Person>();
         }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public ICollection<Person> Persons { get; set; }
 

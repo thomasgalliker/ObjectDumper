@@ -5,7 +5,7 @@ namespace ObjectDumping.Tests.Testdata
 {
     public class TypeMap
     {
-        public Dictionary<Type, Type> Map { get; set; }
+        public Dictionary<Type, Type>? Map { get; set; }
     }
 
     public class KeyTypeOne

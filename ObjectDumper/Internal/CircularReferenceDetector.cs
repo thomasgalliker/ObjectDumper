@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ObjectDumping.Internal
+﻿namespace ObjectDumping.Internal
 {
     internal sealed class CircularReferenceDetector
     {

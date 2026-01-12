@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 
 namespace ObjectDumping.Internal
@@ -12,6 +9,7 @@ namespace ObjectDumping.Internal
     /// </summary>
     internal class ObjectDumperCSharp : DumperBase
     {
+        private const string DefaultVariableName = "x";
         private const string CircularReferenceDetectedComment = "// Circular reference detected";
         private static readonly string[] LanguageKeywords = { "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while" };
 
@@ -19,7 +17,7 @@ namespace ObjectDumping.Internal
         {
         }
 
-        public static string Dump(object element, DumpOptions dumpOptions = null)
+        public static string Dump(object? element, DumpOptions? dumpOptions = null)
         {
             dumpOptions ??= new DumpOptions();
 
@@ -47,7 +45,7 @@ namespace ObjectDumping.Internal
             var isAnonymousType = type.IsAnonymous();
             var typeName = isAnonymousType ? "" : type.GetFormattedName(this.DumpOptions.UseTypeFullName);
 
-            PropertyInfo[] properties = null;
+            PropertyInfo[] properties;
 
 #if NET6_0_OR_GREATER
             var isRecordType = type.IsRecordType();
@@ -70,7 +68,7 @@ namespace ObjectDumping.Internal
                       .FirstOrDefault();
 
 
-                    var recordCtorProperties = recordCtor.Parameters.Select(pv => pv.PropertyInfo).ToArray();
+                    var recordCtorProperties = recordCtor.Parameters.Select(pv => pv.PropertyInfo!).ToArray();
                     recordCtorPropertiesAndValues = recordCtorProperties
                         .Select(p => new PropertyAndValue(o, p))
                         .ToList();
@@ -124,7 +122,7 @@ namespace ObjectDumping.Internal
                 .Select(p => new PropertyAndValue(o, p))
                 .ToList();
 
-            PropertyAndValue lastProperty;
+            PropertyAndValue? lastProperty;
             if (this.DumpOptions.IgnoreDefaultValues)
             {
                 lastProperty = propertiesAndValues.LastOrDefault(pv => !pv.IsDefaultValue);
@@ -181,7 +179,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        private PropertyInfo[] GetPropertiesToDump(Type type, PropertyInfo[] recordCtorProperties)
+        private PropertyInfo[] GetPropertiesToDump(Type type, PropertyInfo[]? recordCtorProperties)
         {
             var properties = type.GetRuntimeProperties()
                     .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.GetMethod.IsStatic == false)
@@ -233,7 +231,8 @@ namespace ObjectDumping.Internal
                 {
                     try
                     {
-                        arrayValues.Add(property.GetValue(o, new object[] { index }));
+                        var arrayValue = property.GetValue(o, new object[] { index });
+                        arrayValues.Add(arrayValue!);
                         index++;
                     }
                     catch (TargetInvocationException) { break; }
@@ -260,7 +259,7 @@ namespace ObjectDumping.Internal
             }
         }
 
-        private void FormatValue(object o, int intentLevel = 0)
+        private void FormatValue(object? o, int intentLevel = 0)
         {
             if (this.IsMaxLevel())
             {
@@ -275,7 +274,7 @@ namespace ObjectDumping.Internal
 
             if (o is bool)
             {
-                this.Write($"{o.ToString().ToLower()}", intentLevel);
+                this.Write($"{o.ToString()?.ToLower()}", intentLevel);
                 return;
             }
 
@@ -288,7 +287,7 @@ namespace ObjectDumping.Internal
 
             if (o is char)
             {
-                var c = o.ToString().Replace("\0", "").Trim();
+                var c = o.ToString()?.Replace("\0", "").Trim();
                 this.Write($"\'{c}\'", intentLevel);
                 return;
             }
@@ -401,31 +400,31 @@ namespace ObjectDumping.Internal
                 return;
             }
 
-            if (o is double @double)
+            if (o is double doubleValue)
             {
-                if (@double == double.MinValue)
+                if (Equals(doubleValue, double.MinValue))
                 {
                     this.Write($"double.MinValue", intentLevel);
                 }
-                else if (@double == double.MaxValue)
+                else if (Equals(doubleValue, double.MaxValue))
                 {
                     this.Write($"double.MaxValue", intentLevel);
                 }
-                else if (double.IsNaN(@double))
+                else if (double.IsNaN(doubleValue))
                 {
                     this.Write($"double.NaN", intentLevel);
                 }
-                else if (double.IsPositiveInfinity(@double))
+                else if (double.IsPositiveInfinity(doubleValue))
                 {
                     this.Write($"double.PositiveInfinity", intentLevel);
                 }
-                else if (double.IsNegativeInfinity(@double))
+                else if (double.IsNegativeInfinity(doubleValue))
                 {
                     this.Write($"double.NegativeInfinity", intentLevel);
                 }
                 else
                 {
-                    this.Write($"{@double.ToString(CultureInfo.InvariantCulture)}d", intentLevel);
+                    this.Write($"{doubleValue.ToString(CultureInfo.InvariantCulture)}d", intentLevel);
                 }
 
                 return;
@@ -569,8 +568,8 @@ namespace ObjectDumping.Internal
             var typeInfo = type.GetTypeInfo();
             if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
-                var kvpKey = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Key)).GetValue(o, null);
-                var kvpValue = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Value)).GetValue(o, null);
+                var kvpKey = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Key))?.GetValue(o, null);
+                var kvpValue = type.GetRuntimeProperty(nameof(KeyValuePair<object, object>.Value))?.GetValue(o, null);
 
                 this.Write("{ ", intentLevel);
                 this.FormatValue(kvpKey);
@@ -681,20 +680,25 @@ namespace ObjectDumping.Internal
             this.Level--;
         }
 
-        private string GetVariableName(object element)
+        private string GetVariableName(object? element)
         {
             if (element == null)
             {
-                return "x";
+                return DefaultVariableName;
             }
 
             var type = element.GetType();
             if (type.IsAnonymous())
             {
-                return "x";
+                return DefaultVariableName;
             }
 
             var className = type.GetFormattedName(useFullName: false, useValueTupleFormatting: false);
+            if (className == null)
+            {
+                return DefaultVariableName;
+            }
+
             string variableName;
 
             var splitGenerics = className.Split('<');

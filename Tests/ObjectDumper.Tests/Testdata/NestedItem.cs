@@ -10,11 +10,11 @@ namespace ObjectDumping.Tests.Testdata
     {
     }
 
-    public class NestedItem<TNext> : NestedItem, IEquatable<NestedItem<TNext>> where TNext : NestedItem
+    public class NestedItem<TNext> : NestedItem, IEquatable<NestedItem<TNext>?> where TNext : NestedItem
     {
-        public TNext Next { get; set; }
+        public TNext? Next { get; set; }
 
-        public bool Equals(NestedItem<TNext> other)
+        public bool Equals(NestedItem<TNext>? other)
         {
             if (other == null)
             {
@@ -24,19 +24,19 @@ namespace ObjectDumping.Tests.Testdata
             return this.Property == other.Property;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            if (!(obj is NestedItem<TNext> nesteditem))
+            if (!(obj is NestedItem<TNext> nestedItem))
             {
                 return false;
             }
 
-            return this.Equals(nesteditem);
+            return this.Equals(nestedItem);
         }
 
         public override int GetHashCode()

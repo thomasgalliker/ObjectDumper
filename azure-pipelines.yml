@@ -1,18 +1,18 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.4
+# Azure DevOps Build Configuration
 #
-# (c)2022 superdev GmbH
+# (c)2026 superdev GmbH
 ####################################################################
 
 name: $[format('{0}', variables['buildName'])]
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'windows-latest'
 
 trigger:
   branches:
     include:
-    - master
+    - main
     - develop
     - feature/*
     - bugfix/*
@@ -26,12 +26,12 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   majorVersion: 4
-  minorVersion: 3
+  minorVersion: 4
   patchVersion: $[counter(format('{0}.{1}', variables.majorVersion, variables.minorVersion), 0)]
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
     # Versioning: 1.0.0
     semVersion: $[format('{0}.{1}.{2}', variables.majorVersion, variables.minorVersion, variables.patchVersion)]
-  ${{ if and(ne(variables['Build.SourceBranch'], 'refs/heads/master'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/'))) }}:
+  ${{ if and(ne(variables['Build.SourceBranch'], 'refs/heads/main'), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/'))) }}:
     # Versioning: 1.0.0-pre
     semVersion: $[format('{0}.{1}.{2}-pre', variables.majorVersion, variables.minorVersion, variables.patchVersion)]
   ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
@@ -46,7 +46,7 @@ steps:
     targetType: 'inline'
     script: 'env | sort'
    
-- task: Assembly-Info-NetCore@2
+- task: Assembly-Info-NetCore@3
   displayName: 'Update Assembly Info'
   inputs:
     Path: '$(Build.SourcesDirectory)'
@@ -65,7 +65,7 @@ steps:
     PackageVersion: '$(Build.BuildNumber)'
     LogLevel: 'verbose'
     FailOnWarning: false
-    DisableTelemetry: false'
+    DisableTelemetry: true
 
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 6.x'
@@ -91,7 +91,7 @@ steps:
     projects: '**/*.Tests.csproj'
     arguments: '--no-restore --no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:Exclude="[Microsoft*]*%2C[Mono*]*%2C[xunit*]*%2C[*.Testdata]*" /p:CoverletOutput=UnitTests.coverage.cobertura.xml /p:MergeWith=$(Build.SourcesDirectory)/Tests/CoverletOutput/coverage.json /p:CoverletOutputFormat=cobertura'
     
-- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+- task: reportgenerator@5
   displayName: 'Create Code Coverage Report'
   inputs:
     reports: '$(Build.SourcesDirectory)/Tests/**/*.coverage.cobertura*.xml'
@@ -106,19 +106,19 @@ steps:
     packagesToPack: ObjectDumper/ObjectDumper.csproj
     versioningScheme: byEnvVar
     versionEnvVar: semVersion
+    nobuild: true
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
-
     Contents: |
-     **\bin\$(BuildConfiguration)\**
-     **\bin\*.nupkg
-
+      **\bin\*.nupkg
+      **\bin\*.snupkg
+      **\ReleaseNotes.txt
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
      
-- task: PublishCodeCoverageResults@1
+- task: PublishCodeCoverageResults@2
   displayName: 'Publish code coverage'
   inputs:
     codeCoverageTool: Cobertura

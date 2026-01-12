@@ -167,7 +167,7 @@ namespace ObjectDumping.Tests.Internal
         [InlineData(typeof(char), default(char))]
         [InlineData(typeof(int), default(int))]
         [InlineData(typeof(MailMessage), default(MailMessage))]
-        public void ShouldGetDefault(Type type, object expectedDefaultValue)
+        public void ShouldGetDefault(Type type, object? expectedDefaultValue)
         {
             // Act
             var dump = type.GetDefault();
