@@ -14,6 +14,6 @@
             set => this.temps[index] = value;
         }
 
-        public string ZProp { get; set; }
+        public string? ZProp { get; set; }
     }
 }

@@ -2,9 +2,9 @@
 {
     public class Example
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public object Reference { get; set; }
+        public object? Reference { get; set; }
 
         public override string ToString()
         {

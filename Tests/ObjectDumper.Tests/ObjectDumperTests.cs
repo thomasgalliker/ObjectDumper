@@ -29,7 +29,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be(
+            dump.ShouldBeEquivalent(
                 "{Person}\r\n" +
                 "  Name: \"Person 1\"\r\n" +
                 "  Char: ''\r\n" +
@@ -69,7 +69,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\r\n" +
+            dump.ShouldBeEquivalent("var person = new Person\r\n" +
                 "{\r\n" +
                 "  Name = \"Thomas\",\r\n" +
                 "  Char = '',\r\n" +
@@ -122,7 +122,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\n" +
+            dump.ShouldBeEquivalent("var person = new Person\n" +
                 "{\n" +
                 "        Age = 30,\n" +
                 "        Bool = false,\n" +
@@ -162,7 +162,7 @@ namespace ObjectDumping.Tests
             // Assert
             this.testOutputHelper.WriteLine(dump);
             dump.Should().NotBeNull();
-            dump.Should().Be("var person = new Person\r\n" +
+            dump.ShouldBeEquivalent("var person = new Person\r\n" +
                 "{\r\n" +
                 "  Name = \"Thomas\",\r\n" +
                 "  Age = 30,\r\n" +

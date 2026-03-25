@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ObjectDumping.Internal
 {
     internal static class PropertyInfoExtensions
     {
-        internal static object TryGetValue(this PropertyInfo property, object element)
+        internal static object? TryGetValue(this PropertyInfo property, object element)
         {
-            object value;
+            object? value;
             try
             {
                 value = property.GetValue(element);

@@ -1,10 +1,8 @@
-## Added / Fixed
-
+#### Added / Fixed
 - Added a new feature
 - Fixed a bug
 
-## Todo List
-
+#### Todo List
 - [ ] I have reviewed my changes
 - [ ] I have added unit tests
 - [ ] I have documented public APIs

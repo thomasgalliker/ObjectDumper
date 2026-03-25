@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace ObjectDumping.Internal
 {
@@ -42,7 +41,7 @@ namespace ObjectDumping.Internal
 
         /// <summary>
         /// Calls <see cref="Write(string, int)"/> using the current Level as indentLevel if the current
-        /// position is at a the beginning of a new line or 0 otherwise. 
+        /// position is at the beginning of a new line or 0 otherwise.
         /// </summary>
         /// <param name="value">string to be written</param>
         protected void Write(string value)
@@ -92,7 +91,7 @@ namespace ObjectDumping.Internal
             this.isNewLine = true;
         }
 
-        protected void PushReferenceForCycleDetection(object value)
+        protected void PushReferenceForCycleDetection(object? value)
         {
             if (value == null)
             {
@@ -119,7 +118,7 @@ namespace ObjectDumping.Internal
             this.circularReferenceDetector.PushReferenceForCycleDetection(value);
         }
 
-        protected void PopReferenceForCycleDetection(object value)
+        protected void PopReferenceForCycleDetection(object? value)
         {
             if (value == null)
             {
@@ -143,7 +142,7 @@ namespace ObjectDumping.Internal
         /// <summary>
         /// Checks if the given <paramref name="value"/> is part of an infinite recursion.
         /// </summary>
-        protected bool CheckForCircularReference(object value)
+        protected bool CheckForCircularReference(object? value)
         {
             if (value == null)
             {

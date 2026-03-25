@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public RecursivePerson Parent { get; set; }
+        public RecursivePerson? Parent { get; set; }
 
     }
 }

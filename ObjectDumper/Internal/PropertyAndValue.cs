@@ -17,9 +17,9 @@ namespace ObjectDumping.Internal
 
         public PropertyInfo Property { get; }
 
-        public object Value { get; }
+        public object? Value { get; }
 
-        public object DefaultValue { get; }
+        public object? DefaultValue { get; }
 
 #if NET5_0_OR_GREATER
         public bool IsInitOnly { get; }

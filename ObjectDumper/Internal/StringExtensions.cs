@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ObjectDumping.Internal
@@ -45,9 +43,9 @@ namespace ObjectDumping.Internal
 
         private static string EscapeMatchEval(Match m)
         {
-            if (EscapeMapping.ContainsKey(m.Value))
+            if (EscapeMapping.TryGetValue(m.Value, out var value))
             {
-                return EscapeMapping[m.Value];
+                return value;
             }
 
             return EscapeMapping[Regex.Escape(m.Value)];
